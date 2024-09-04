@@ -1,0 +1,6 @@
+# For every KiCad project, ignore these files:
+/**/KiCad/*-backups
+/**/KiCad/fp-info-cache
+/**/KiCad/*.kicad_prl
+/**/KiCad/*.bak
+/**/KiCad/*.lck
