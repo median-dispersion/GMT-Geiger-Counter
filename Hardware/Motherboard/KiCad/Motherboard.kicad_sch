@@ -6,7 +6,7 @@
 	(paper "A4")
 	(title_block
 		(title "Motherboard")
-		(date "2024-09-06")
+		(date "2024-09-07")
 		(rev "1.0")
 		(company "https://github.com/median-dispersion/GMT-Geiger-Counter")
 	)
@@ -3457,10 +3457,6 @@
 		(uuid "2fe96aad-9ce8-412e-8848-ac4d67f268c7")
 	)
 	(no_connect
-		(at 236.22 77.47)
-		(uuid "4302c27a-450f-4e35-9149-1ed3b92892ef")
-	)
-	(no_connect
 		(at 236.22 62.23)
 		(uuid "52b5270c-bed8-4fa1-a930-ba5e00110131")
 	)
@@ -3503,6 +3499,10 @@
 	(no_connect
 		(at 207.01 52.07)
 		(uuid "a7c65c5e-c2d4-4341-98ea-38b06c6e3363")
+	)
+	(no_connect
+		(at 236.22 74.93)
+		(uuid "d32f76e6-3ecb-4c1f-89a4-3bf8e28ce355")
 	)
 	(no_connect
 		(at 236.22 59.69)
@@ -3565,6 +3565,16 @@
 			(type default)
 		)
 		(uuid "0905acfe-c4ee-4eab-8f4b-c1220121f9c1")
+	)
+	(wire
+		(pts
+			(xy 237.49 74.93) (xy 240.03 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0a9ea3af-2cfb-4eb2-b423-ee96f2773c13")
 	)
 	(wire
 		(pts
@@ -3808,6 +3818,16 @@
 	)
 	(wire
 		(pts
+			(xy 236.22 77.47) (xy 237.49 77.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4b73552c-da5a-40fc-8df5-812913a4f22d")
+	)
+	(wire
+		(pts
 			(xy 99.06 34.29) (xy 99.06 36.83)
 		)
 		(stroke
@@ -4015,6 +4035,16 @@
 			(type default)
 		)
 		(uuid "66fff37c-1a8f-4d73-a62c-0947648a8c56")
+	)
+	(wire
+		(pts
+			(xy 237.49 77.47) (xy 237.49 74.93)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "70b7a1bd-c1d9-48f9-ad42-24985a3ab336")
 	)
 	(wire
 		(pts
@@ -5309,7 +5339,7 @@
 	)
 	(global_label "BUZZER"
 		(shape input)
-		(at 236.22 74.93 0)
+		(at 240.03 74.93 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -5319,7 +5349,7 @@
 		)
 		(uuid "a8dc3beb-12ae-4ce0-af11-603e9f460f0f")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 246.6437 74.93 0)
+			(at 250.4537 74.93 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5779,7 +5809,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23_Handsoldering"
 			(at 77.47 53.975 0)
 			(effects
 				(font
@@ -5989,7 +6019,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23_Handsoldering"
 			(at 92.71 43.815 0)
 			(effects
 				(font
@@ -6065,7 +6095,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23_Handsoldering"
 			(at 116.84 56.515 0)
 			(effects
 				(font
@@ -6946,7 +6976,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23_Handsoldering"
 			(at 134.62 92.075 0)
 			(effects
 				(font
@@ -7222,7 +7252,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23_Handsoldering"
 			(at 57.15 154.305 0)
 			(effects
 				(font
@@ -7910,7 +7940,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23_Handsoldering"
 			(at 134.62 81.915 0)
 			(effects
 				(font
@@ -8179,7 +8209,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23_Handsoldering"
 			(at 101.6 66.675 0)
 			(effects
 				(font
@@ -8389,7 +8419,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23_Handsoldering"
 			(at 149.86 74.295 0)
 			(effects
 				(font
@@ -8805,7 +8835,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical"
+		(property "Footprint" "Footprints:USB_Pin_Header"
 			(at 246.38 82.55 0)
 			(effects
 				(font
