@@ -6,7 +6,7 @@
 	(paper "A4")
 	(title_block
 		(title "Tube Driver")
-		(date "2024-09-06")
+		(date "2024-09-10")
 		(rev "1.0")
 		(company "https://github.com/median-dispersion/GMT-Geiger-Counter")
 	)
@@ -4252,6 +4252,28 @@
 		)
 		(uuid eaaa64a0-a214-4038-b8d6-f6ace9a364cb)
 	)
+	(text "200V"
+		(exclude_from_sim no)
+		(at 150.114 58.928 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 0 100 100 1)
+			)
+		)
+		(uuid "02b00818-a383-4ef4-b0c2-dd6f573d73ca")
+	)
+	(text "1kV"
+		(exclude_from_sim no)
+		(at 119.38 57.404 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 0 100 100 1)
+			)
+		)
+		(uuid "039df6b1-cf90-46d6-a2db-0875aae6def4")
+	)
 	(text "GMT"
 		(exclude_from_sim no)
 		(at 180.086 18.542 0)
@@ -4282,6 +4304,39 @@
 		)
 		(uuid "1f459ef6-ef7d-4104-9c38-20b19dd375e7")
 	)
+	(text "200V"
+		(exclude_from_sim no)
+		(at 150.114 73.914 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 0 100 100 1)
+			)
+		)
+		(uuid "248b2d36-29aa-414d-b487-6a4e79324c4e")
+	)
+	(text "200V"
+		(exclude_from_sim no)
+		(at 127.254 66.294 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 0 100 100 1)
+			)
+		)
+		(uuid "292a12f5-947f-4f08-8b91-556c0ba20c8d")
+	)
+	(text "200V"
+		(exclude_from_sim no)
+		(at 150.114 51.054 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 0 100 100 1)
+			)
+		)
+		(uuid "4d5971e4-2282-4ff2-9e07-6a986711ecb7")
+	)
 	(text "Pulse Generator & I/O\n"
 		(exclude_from_sim no)
 		(at 238.506 18.796 0)
@@ -4291,6 +4346,61 @@
 			)
 		)
 		(uuid "6b55687a-a24d-410f-8740-dcf6bba9b7f8")
+	)
+	(text "200V"
+		(exclude_from_sim no)
+		(at 127.254 58.928 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 0 100 100 1)
+			)
+		)
+		(uuid "905b90c6-6d95-4cf8-8452-e26eb708a51a")
+	)
+	(text "1kV"
+		(exclude_from_sim no)
+		(at 142.494 57.404 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 0 100 100 1)
+			)
+		)
+		(uuid "bb9c77a8-8f49-44f5-90e4-9df24312b27e")
+	)
+	(text "200V"
+		(exclude_from_sim no)
+		(at 127.254 51.054 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 0 100 100 1)
+			)
+		)
+		(uuid "d6043fd1-a902-49b3-ab6f-2b4048ffed65")
+	)
+	(text "200V"
+		(exclude_from_sim no)
+		(at 150.114 66.294 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 0 100 100 1)
+			)
+		)
+		(uuid "dc8398ed-148f-492b-b3da-5285d2c6f648")
+	)
+	(text "200V"
+		(exclude_from_sim no)
+		(at 127.254 73.914 90)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(color 0 100 100 1)
+			)
+		)
+		(uuid "ed83faf3-5ddd-4c18-ad3d-19e583cba6d5")
 	)
 	(symbol
 		(lib_id "Device:C")
@@ -4310,7 +4420,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "47pF"
+		(property "Value" "47nF"
 			(at 144.272 55.372 0)
 			(effects
 				(font
@@ -7024,7 +7134,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "47pF"
+		(property "Value" "47nF"
 			(at 121.412 55.118 0)
 			(effects
 				(font

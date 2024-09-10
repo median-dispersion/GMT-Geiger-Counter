@@ -9,7 +9,7 @@
 	(paper "A4")
 	(title_block
 		(title "Tube Driver")
-		(date "2024-09-06")
+		(date "2024-09-10")
 		(rev "1.0")
 		(company "https://github.com/median-dispersion/GMT-Geiger-Counter")
 	)
@@ -661,7 +661,7 @@
 				)
 			)
 		)
-		(property "Value" "47pF"
+		(property "Value" "47nF"
 			(at 0 2.5 -90)
 			(layer "F.Fab")
 			(uuid "14bc3aed-dcc6-48c0-a73a-b8ff7b75f704")
@@ -3309,7 +3309,7 @@
 				)
 			)
 		)
-		(property "Value" "47pF"
+		(property "Value" "47nF"
 			(at 0 -3 -90)
 			(layer "F.Fab")
 			(uuid "c37b5498-e9d9-4572-a945-9ad61a6555d5")
@@ -15022,7 +15022,7 @@
 			(justify left bottom mirror)
 		)
 	)
-	(gr_text ": Tube Driver\n: 1.0\n: 2024-09-06"
+	(gr_text ": Tube Driver\n: 1.0\n: 2024-09-10"
 		(at 215.8 104 90)
 		(layer "B.SilkS")
 		(uuid "70f11e5c-f2a8-4b57-a323-101f979cdaaa")
