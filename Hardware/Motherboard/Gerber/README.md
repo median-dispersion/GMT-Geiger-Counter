@@ -3,7 +3,7 @@
 ## 🗓️ Date
 2024-09-10
 
-## ℹ️ Revision:
+## ℹ️ Revision
 1.0
 
 ## 💿 CAD Software
