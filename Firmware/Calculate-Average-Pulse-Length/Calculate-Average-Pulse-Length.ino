@@ -27,8 +27,10 @@
 // Global variables
 // ================================================================================================
 volatile uint64_t totalPulseTimeMicroseconds = 0;
+volatile uint64_t maxPulseTimeMicroseconds = 0;
+volatile uint64_t minPulseTimeMicroseconds = UINT64_MAX;
 volatile uint16_t pulseIndex = 0;
-uint64_t tubeTimer = 0;
+volatile uint64_t tubeTimer = 0;
 uint64_t loopTimer = 0;
 uint8_t finished = false;
 
@@ -47,13 +49,19 @@ void IRAM_ATTR measurePulseLength() {
   } else {
 
     // Calculate the difference between the current and starting time in microseconds
-    uint16_t pulseLength = micros() - tubeTimer;
+    uint64_t pulseLength = micros() - tubeTimer;
 
     // If the pulse length is higher than the noise threshold
     if (pulseLength > NOISE_THRESHOLD_MICROSECONDS) {
 
       // Add the pulse length to the total pulse time
       totalPulseTimeMicroseconds += pulseLength;
+
+      // Set the maximum pulse length
+      if (pulseLength > maxPulseTimeMicroseconds) { maxPulseTimeMicroseconds = pulseLength; }
+
+      // Set the minimum pulse length
+      if (pulseLength < minPulseTimeMicroseconds) { minPulseTimeMicroseconds = pulseLength; }
 
       // Increase the index by one until the sample count is reached
       if (pulseIndex < SAMPLE_COUNT) { pulseIndex++; }
@@ -117,7 +125,9 @@ void loop() {
       Serial.println("\n\n\n");
       Serial.println("Finished!");
       Serial.println("=========\n");
-      Serial.println("Total time for " + String(SAMPLE_COUNT) + " samples: " + String(totalPulseTimeMicroseconds) + " µs");
+      Serial.println("Total accumulative pulse time for " + String(SAMPLE_COUNT) + " samples: " + String(totalPulseTimeMicroseconds) + " µs");
+      Serial.println("Maximum pulse length: " + String(maxPulseTimeMicroseconds) + "µs");
+      Serial.println("Minimum pulse length: " + String(minPulseTimeMicroseconds) + "µs");
       Serial.println("Average pulse length: " + String(averagePulseLengthMicroseconds) + "µs");
       
       // Set the finished flag to true
