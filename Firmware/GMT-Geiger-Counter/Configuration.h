@@ -3,6 +3,10 @@
 // Baud rate for serial communication 
 #define SERIAL_BAUD_RATE 115200
 
+// ================================================================================================
+// Geiger Counter / Tube Settings
+// ================================================================================================
+
 // Enable pulse counting on a specific tube pin header
 #define ENABLE_MAIN_TUBE     1
 #define ENABLE_FOLLOWER_TUBE 0
@@ -37,6 +41,28 @@
 // The integration time is the number of seconds the Geiger counter will average over to calculate the CPM value
 // A shorter integration time give more accurate values for high levels of radiation, a lower in integration time for lower levels
 #define DEFAULT_INTEGRATION_TIME 30
+
+// ================================================================================================
+// Buzzer settings
+// ================================================================================================
+
+// Enable the buzzer
+#define ENABLE_BUZZER 1
+
+// The buzzers base frequency in Hertz
+// This should be provided by the buzzer manufacture
+// Most buzzers have a base frequency of around 2000 Hertz
+#define BUZZER_FREQUENCY_HERTZ 2400
+
+// The value in µSv/h at which the warning sound is played
+#define BUZZER_WARNING_LEVEL_USVH 2
+
+// The value in µS/h at which the alarm sound is played
+#define BUZZER_ALARM_LEVEL_USVH 10
+
+// ================================================================================================
+// Pin assignments
+// ================================================================================================
 
 // Pin assignments (these should not be changed!)
 #define MOSI_PIN            11
