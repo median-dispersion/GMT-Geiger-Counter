@@ -1,5 +1,43 @@
 // The main configuration file for the GMT-Geiger-Counter firmware
 
+// Baud rate for serial communication 
+#define SERIAL_BAUD_RATE 115200
+
+// Enable pulse counting on a specific tube pin header
+#define ENABLE_MAIN_TUBE     1
+#define ENABLE_FOLLOWER_TUBE 0
+
+// The total number of tubes connected to the motherboard (both main and follower)
+#define NUMBER_OF_TUBES 1
+
+// Conversion factor to convert counts per minute to micro severs per hour
+// This is different for each type of tube and must be read off the datasheet
+// SMB-20: 0.008095385
+#define CONVERSION_FACTOR_CPM_TO_USVH 0.008095385
+
+// CURRENTLY NOT USED, PLEASE IGNORE FOR NOW!
+// The average length of a pulse in microseconds
+// This is not the tube's dead time, but the length of the pulse the tube driver board generates
+// To get an accurate value for a specific tube type, use the Calculate-Average-Pulse-Length firmware to measure it
+// SBM-20: 115 µs
+#define PULSE_LENGTH_MICROSECONDS 115
+
+// Noise threshold, the minimum length in microseconds a pulse must be to count as an actual pulse
+// Anything shorter than that will be ignored as noise
+// This should be around 30% of the pulse length in microseconds
+#define NOISE_THRESHOLD_MICROSECONDS 30
+
+// Size of the moving average array
+// The moving average array stores samples of counts per second 
+// The size of the array defines how many seconds are being kept tack of
+// A value of 60 (seconds) is recommended
+#define MOVING_AVERAGE_SIZE 60
+
+// The default integration time the Geiger counter starts at
+// The integration time is the number of seconds the Geiger counter will average over to calculate the CPM value
+// A shorter integration time give more accurate values for high levels of radiation, a lower in integration time for lower levels
+#define DEFAULT_INTEGRATION_TIME 30
+
 // Pin assignments (these should not be changed!)
 #define MOSI_PIN            11
 #define MISO_PIN            13
