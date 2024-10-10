@@ -13,6 +13,26 @@ To render images using a microcontroller like the ESP32 S3 directly without exte
 7. Set opacity to 100%
 8. Press Export
 
+## 📝 Modifying Export
+
+1. Add `#pragma once` to the first line of the exported `.c` file to ensures that it will only be processed once per compilation.
+
+```c++
+#pragma once
+```
+
+2. Change the struct definition by adding `PROGMEM` to ensure the image is stored in program memory instead of RAM.
+
+From:
+```c++
+static const struct { ...
+```
+
+To:
+```c++
+static const struct PROGMEM { ...
+```
+
 ## ⏬ Importing an image
 
 Include the exported C source code into the project with:
