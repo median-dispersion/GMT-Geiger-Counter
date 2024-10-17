@@ -1,38 +1,43 @@
-#include <Arduino.h>
+#include "Arduino.h"
+#include "GeigerMullerTube.h"
 #include "Configuration.h"
 
 class GeigerCounter {
 
+  // ----------------------------------------------------------------------------------------------
+  // Public
+
   public:
 
-    void begin();   // Initialize everything
-    void enable();  // Enable pulse counting
-    void disable(); // Disable pulse counting
+    // Constructor
+    GeigerCounter();
 
-    void setIntegrationTime(uint8_t integrationTimeSeconds); // Set the integration time
+    void     begin();                                  // Initialize everything
+    void     enable();                                 // Enable the Geiger counter
+    void     disable();                                // Disable the Geiger counter
+    void     setIntegrationTime(uint16_t timeSeconds); // Set the integration time
+    double   getCountsPerMinute();                     // Get the counts per minute
+    uint64_t getAccumulativeCount();                   // Get the total number of recorded counts since power on
+    double   getMicroSievertPerHour();                 // Convert counts per minute to micro Sievert per hour
+    uint16_t getIntegrationTime();                     // Get the set integration time
 
-    double   getCountsPerMinute();     // Get the counts per minute
-    uint64_t getAccumulativeCount();   // Get the total number of counts that were recorded since power on
-    double   getMicroSievertPerHour(); // Get micro Sievert per hour by converting CPM to µSv/h
+  // ----------------------------------------------------------------------------------------------
+  // Private
 
   private:
 
-    static GeigerCounter* _instance; // Static pointer to the class instance
+    static GeigerCounter *_instance; // Static instance pointer to itself
 
-    volatile uint64_t _mainTubeTimerMicroseconds          = 0;     // Timer for measuring the main pulse length
-    volatile uint64_t _followerTubeTimerMicroseconds      = 0;     // Timer for measuring the follower pulse length
-    volatile uint16_t _movingAverage[MOVING_AVERAGE_SIZE] = {0};   // Array for storing counts per second for a duration of *SIZE* seconds
-    volatile uint16_t _movingAverageIndex                 = 0;     // Index for the moving average array
-    hw_timer_t        *_movingAverageTimer                = NULL;  // Hardware timer for advancing the moving average array
-    volatile uint64_t _accumulativeCount                  = 0;     // The total number of counts that were recorded since power on
-    bool              _countingEnabled                    = false; // Flag for checking if pulse counting is enabled
-    uint8_t           _integrationTimeSeconds             = 0;     // Number of seconds to use from the moving average array to average over
+    GeigerMullerTube  _mainTube;                                // Main GM tube
+    GeigerMullerTube  _followerTube;                            // Follower GM tube
+    volatile uint16_t _movingAverage[MOVING_AVERAGE_SIZE] = {}; // Array for storing counts per second for a duration of *SIZE* seconds
+    volatile uint16_t _movingAverageIndex;                      // Index of the moving average array
+    hw_timer_t        *_movingAverageTimer;                     // Hardware timer for advancing the moving average array
+    volatile uint64_t _accumulativeCount;                       // The total number of recorded counts since power on
+    bool              _enabled;                                 // Flag for checking if the Geiger counter is enabled
+    uint16_t          _integrationTimeSeconds;                  // Number of seconds to use from the moving average array to average over
 
-    void        IRAM_ATTR _countMainPulse();          // ISR for counting the main pulse
-    void        IRAM_ATTR _countFollowerPulse();      // ISR for counting the follower pulse
-    void        IRAM_ATTR _advanceMovingAverage();    // Advance the moving average, every second add +1 to the index
-    static void IRAM_ATTR _handleMainInterrupt();     // Handle the main tube interrupt event
-    static void IRAM_ATTR _handleFollowerInterrupt(); // Handle the follower tube interrupt event
-    static void IRAM_ATTR _handleTimerInterrupt();    // Handle the timer interrupt event
+    static void IRAM_ATTR _handleInterrupt();      // Interrupt service routine for handling hardware interrupts
+    void        IRAM_ATTR _advanceMovingAverage(); // Advance the moving average
 
 };
