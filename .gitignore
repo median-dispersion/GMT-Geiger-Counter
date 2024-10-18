@@ -4,3 +4,6 @@
 /**/KiCad/*.kicad_prl
 /**/KiCad/*.bak
 /**/KiCad/*.lck
+
+# Ignore Blenders .blend1 backup files
+*.blend1
