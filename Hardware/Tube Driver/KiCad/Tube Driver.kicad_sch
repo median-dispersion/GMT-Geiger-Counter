@@ -8125,7 +8125,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://www.we-online.com/components/products/datasheet/865080243007.pdf"
+		(property "Datasheet" "https://www.we-online.com/components/products/datasheet/875105344010.pdf"
 			(at 22.86 38.1 0)
 			(effects
 				(font
@@ -8143,7 +8143,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "865080243007"
+		(property "MPN" "875105344010"
 			(at 22.86 38.1 0)
 			(effects
 				(font
@@ -8152,7 +8152,7 @@
 				(hide yes)
 			)
 		)
-		(property "DigiKey" "https://www.digikey.com/en/products/detail/w%C3%BCrth-elektronik/865080243007/5728085"
+		(property "DigiKey" "https://www.digikey.com/en/products/detail/würth-elektronik/875105344010/5147589"
 			(at 22.86 38.1 0)
 			(effects
 				(font
@@ -8161,7 +8161,7 @@
 				(hide yes)
 			)
 		)
-		(property "Price (EUR)" "0,25€"
+		(property "Price (EUR)" "0,62€"
 			(at 22.86 38.1 0)
 			(effects
 				(font

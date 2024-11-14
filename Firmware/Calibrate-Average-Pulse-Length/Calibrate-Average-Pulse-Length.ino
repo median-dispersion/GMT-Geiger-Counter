@@ -1,6 +1,6 @@
 /*
 
-  Calculates the average pulse time for a Geiger-Müller tube
+  Calibrate the average pulse time for a Geiger-Müller tube
   This is not the tube's dead time, but the pulse length the tube driver generates for that specific tube!
 
   Median Dispersion 2024
