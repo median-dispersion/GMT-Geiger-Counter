@@ -1,5 +1,8 @@
 # GMT-Geiger-Counter
 
+> [!WARNING]
+> This repository is still in development and might change significantly in the future!
+
 ## ⚠️ DISCLAIMER
 
 This is a hobby project and should not be relied upon to accurately determine radiation levels, especially not if those radiation levels are potentially dangerous and or lethal!
