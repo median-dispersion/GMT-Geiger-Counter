@@ -1,7 +1,4 @@
-#include "GeigerMullerTube.h"
-
-// Initialize static instance pointer
-GeigerMullerTube *GeigerMullerTube::_instance = nullptr;  
+#include "Tube.h"
 
 // ------------------------------------------------------------------------------------------------
 // Public
@@ -9,39 +6,38 @@ GeigerMullerTube *GeigerMullerTube::_instance = nullptr;
 // ================================================================================================
 // Constructor
 // ================================================================================================
-GeigerMullerTube::GeigerMullerTube(uint8_t tubePin, volatile uint16_t *movingAverage, volatile uint16_t &movingAverageIndex, volatile uint64_t &accumulativeCount):
+Tube::Tube(const uint8_t pin, volatile uint16_t *movingAverage, volatile uint16_t &movingAverageIndex):
 
   // Initialize members
-  _tubePin(tubePin),
+  _pin(pin),
   _movingAverage(movingAverage),
   _movingAverageIndex(movingAverageIndex),
-  _accumulativeCount(accumulativeCount)
+  _enabled(false),
+  _pulseTimerMicroseconds(0),
+  _counts(0)
 
 {}
 
 // ================================================================================================
 // Initialize everything
 // ================================================================================================
-void GeigerMullerTube::begin() {
+void Tube::begin() {
 
-  // Set the static instance pointer to this object instance
-  _instance = this;
-
-  // Set the tube pin mode to INPUT
-  pinMode(_tubePin, INPUT);
+  // Set the pin mode to INPUT
+  pinMode(_pin, INPUT);
 
 }
 
 // ================================================================================================
 // Enable the tube
 // ================================================================================================
-void GeigerMullerTube::enable() {
+void Tube::enable() {
 
   // If not already enabled
   if (!_enabled) {
 
-    // Attach a hardware interrupt to the tube pin calling the _handleInterrupt ISR
-    attachInterrupt(digitalPinToInterrupt(_tubePin), this->_handleInterrupt, CHANGE);
+    // Attach a hardware interrupt to the tube pin calling the _countPulse ISR on state change and passing the class instance pointer to it
+    attachInterruptArg(digitalPinToInterrupt(_pin), _countPulse, this, CHANGE);
 
     // Set the enabled flag to true
     _enabled = true;
@@ -53,13 +49,13 @@ void GeigerMullerTube::enable() {
 // ================================================================================================
 // Disable the tube
 // ================================================================================================
-void GeigerMullerTube::disable() {
+void Tube::disable() {
 
   // If not already disabled
   if (_enabled) {
 
     // Detach the hardware interrupt
-    detachInterrupt(digitalPinToInterrupt(_tubePin));
+    detachInterrupt(digitalPinToInterrupt(_pin));
 
     // Set the enabled flag to false
     _enabled = false;
@@ -68,44 +64,47 @@ void GeigerMullerTube::disable() {
 
 }
 
+// ================================================================================================
+// Get the total number of counts
+// ================================================================================================
+uint64_t Tube::getCounts() {
+  
+  // Get and return the total number of counts
+  return _counts;
+
+}
+
 // ------------------------------------------------------------------------------------------------
 // Private
 
 // ================================================================================================
-// Interrupt service routine for handling hardware interrupts
-// ================================================================================================
-void IRAM_ATTR GeigerMullerTube::_handleInterrupt() {
-
-  // Count a pulse
-  _instance->_countPulse();
-
-}
-
-// ================================================================================================
 // Count a pulse
 // ================================================================================================
-void IRAM_ATTR GeigerMullerTube::_countPulse() {
+void IRAM_ATTR Tube::_countPulse(void *instancePointer) {
+
+  // Cast the generic instance pointer back to a instance pointe of type Tube 
+  Tube *instance = (Tube*)instancePointer;
 
   // On the rising edge of the pulse
-  if (digitalRead(MAIN_TRG_PIN) == HIGH) {
+  if (digitalRead(instance->_pin) == HIGH) {
 
     // Capture the current time in microseconds
-    _pulseTimerMicroseconds = micros();
+    instance->_pulseTimerMicroseconds = micros();
 
   // On the falling edge
   }else {
 
     // Calculate the pulse length by subtracting the time from the rising edge to now in microseconds
-    uint64_t pulseLengthMicroseconds = micros() - _pulseTimerMicroseconds;
+    uint64_t pulseLengthMicroseconds = micros() - instance->_pulseTimerMicroseconds;
 
     // Check if the pulse length is longer than the noise threshold
-    if (pulseLengthMicroseconds > NOISE_THRESHOLD_MICROSECONDS) {
-
+    if (pulseLengthMicroseconds > TUBE_CONVERSION_FACTOR_CPM_TO_USVH) {
+      
       // Add one count to the moving average
-      _movingAverage[_movingAverageIndex]++;
+      instance->_movingAverage[instance->_movingAverageIndex]++;
 
-      // Add one to the accumulative count stack
-      _accumulativeCount++;
+      // Add one count to the total number of counts
+      instance->_counts++;
 
       // TODO
       // Adding just plus one to is not ideal. For just one tube, this is fine, but for multiple it is not. 

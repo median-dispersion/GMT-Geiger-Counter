@@ -1,0 +1,31 @@
+#ifndef _STRINGS_ENGLISH_H
+#define _STRINGS_ENGLISH_H
+
+#define STRING_GEIGER_COUNTER_SCREEN_TITLE      "Beta & Gamma - GMT Geiger Counter"
+#define STRING_RADIATION_RATING_NORMAL          "Normal"
+#define STRING_RADIATION_RATING_ELEVATED        "Elevated"
+#define STRING_RADIATION_RATING_HIGH            "High"
+#define STRING_RADIATION_RATING_EXTREME         "EXTREME"
+#define STRING_EQUIVALENT_DOSE_UNIT_USVH        "uSv/h"
+#define STRING_COUNTS_PER_MINUTE_ABBREVIATION   "CPM"
+#define STRING_SECONDS_ABBREVIATION             "s"
+#define STRING_AUDIO_SETTINGS_TITLE             "Audio settings"
+#define STRING_AUDIO_SETTINGS_DETECTIONS        "Detections"
+#define STRING_AUDIO_SETTINGS_NOTIFICATIONS     "Notifications"
+#define STRING_AUDIO_SETTINGS_ALERTS            "Alerts"
+#define STRING_AUDIO_SETTINGS_INTERFACE         "Interface"
+#define STRING_AUDIO_SETTINGS_MUTE_EVERYTHING   "Mute everything"
+#define STRING_DISPLAY_SETTINGS_TITLE           "Display settings"
+#define STRING_DISPLAY_SETTINGS_DISPLAY         "Display"
+#define STRING_RADIATION_HISTORY_TITLE          "Radiation history"
+#define STRING_COSMIC_RAY_DETECTOR_TITLE        "Cosmic ray detector"
+#define STRING_TRUE_RNG_TITLE                   "True RNG"
+#define STRING_HOTSPOT_SETTINGS_TITLE           "Hotspot settings"
+#define STRING_ENABLE_HOTSPOT                   "Enable hotspot"
+#define STRING_HOTSPOT_NAME                     "Hotspot name"
+#define STRING_HOTSPOT_PASSWORD                 "Hotspot password"
+#define STRING_WIFI_SETTINGS_TITLE              "WiFi settings"
+#define STRING_SYSTEM_SETTINGS_TITLE            "System settings"
+#define STRING_SYSTEM_SETTINGS_FIRMWARE_VERSION "Firmware version"
+
+#endif
