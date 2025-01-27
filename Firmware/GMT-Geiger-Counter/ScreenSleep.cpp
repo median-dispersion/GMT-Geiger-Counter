@@ -1,5 +1,12 @@
 #include "ScreenSleep.h"
 
+// Get the max screen size
+#if DISPLAY_WIDTH > DISPLAY_HEIGHT
+  #define MAX_DISPLAY_SIZE DISPLAY_WIDTH
+#else
+  #define MAX_DISPLAY_SIZE DISPLAY_HEIGHT
+#endif
+
 // ------------------------------------------------------------------------------------------------
 // Public
 
@@ -8,7 +15,7 @@
 // ================================================================================================
 ScreenSleep::ScreenSleep():
 
-  wakeup(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT)
+  wakeup(0, 0, MAX_DISPLAY_SIZE, MAX_DISPLAY_SIZE)
 
 {}
 

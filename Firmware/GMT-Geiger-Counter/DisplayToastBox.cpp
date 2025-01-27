@@ -30,7 +30,7 @@ void DisplayToastBox::draw(GFXcanvas16 &canvas) {
   canvas.setTextColor(COLOR_LIGHT_GRAY);
 
   // Draw title
-  canvas.setCursor(5, _y + 20);
+  canvas.setCursor(_x + 5, _y + 20);
   canvas.print(_title);
 
   // Set the font family, size and color
@@ -38,7 +38,7 @@ void DisplayToastBox::draw(GFXcanvas16 &canvas) {
   canvas.setTextColor(COLOR_WHITE);
 
   // Draw title
-  canvas.setCursor(5, _y + 42);
+  canvas.setCursor(_x + 5, _y + 42);
   canvas.print(_value);
 
 }

@@ -25,8 +25,8 @@ class ScreenGeigerCounter: public Screen {
     TouchIcon decreaseIntegrationTime;
     TouchIcon resetIntegrationTime;
     TouchIcon increaseIntegrationTime;
-    TouchIcon radiationHistory;
     TouchIcon cosmicRayDetector;
+    TouchIcon radiationHistory;
     TouchIcon trueRNG;
     TouchIcon hotspotSettings;
     TouchIcon wifiSettings;

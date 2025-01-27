@@ -45,13 +45,16 @@ extern Image IMAGE_MAXIMUM;
 extern Image IMAGE_MINIMUM;
 extern Image IMAGE_MUON;
 extern Image IMAGE_MUON_SMALL;
+extern Image IMAGE_MUTE;
 extern Image IMAGE_NEXT;
 extern Image IMAGE_PARTICLE;
 extern Image IMAGE_RADIATION;
 extern Image IMAGE_RESET;
+extern Image IMAGE_ROTATE;
 extern Image IMAGE_SETTINGS;
 extern Image IMAGE_SLEEP;
 extern Image IMAGE_SLEEP_SMALL;
+extern Image IMAGE_SUM;
 extern Image IMAGE_VOLUME;
 extern Image IMAGE_WIFI;
 

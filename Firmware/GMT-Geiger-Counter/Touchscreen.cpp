@@ -13,7 +13,8 @@ Touchscreen::Touchscreen():
   _display(DISPLAY_CS_PIN, DISPLAY_DC_PIN, DISPLAY_RST_PIN),
   _canvas(DISPLAY_WIDTH, DISPLAY_HEIGHT),
   _screen(&geigerCounter),
-  _touch(TOUCH_CS_PIN, TOUCH_IRQ_PIN)
+  _touch(TOUCH_CS_PIN, TOUCH_IRQ_PIN),
+  _rotation(DISPLAY_SCREEN_ROTATION_LANDSCAPE)
 
 {}
 
@@ -24,12 +25,14 @@ void Touchscreen::begin() {
 
   // Setup display
   _display.begin();
-  _display.setRotation(DISPLAY_SCREEN_ROTATION_LANDSCAPE);
   _display.fillScreen(ILI9341_BLACK);
+
+  // Set the frame buffer rotation
+  _canvas.setRotation(_rotation);
 
   // Setup touch controller
   _touch.begin();
-  _touch.setRotation(DISPLAY_SCREEN_ROTATION_LANDSCAPE);
+  _touch.setRotation(_rotation);
   _touch.setCalibration(TOUCH_CALIBRATION);
   _touch.setSampleCount(TOUCH_SAMPLE_COUNT);
   _touch.setDebounceTimeout(TOUCH_DEBOUNCE_TIMEOUT_MILLISECONDS);
@@ -51,6 +54,9 @@ void Touchscreen::update() {
   // Check if touch event is occurring and if the last event has been released
   if (_touch.touched() && _touch.released()) {
 
+    // Apply touch rotation before checking
+    _touch.setRotation(_rotation);
+
     // Get the touch position
     XPT2046::Point position = _touch.getTouchPosition();
 
@@ -70,8 +76,14 @@ void Touchscreen::update() {
   // If refresh interval has been reached or refresh flag has been set
   if (millis() - _lastRefreshMilliseconds > DISPLAY_REFRESH_INTERVAL_MILLISECONDS || refreshImmediately) {
 
+    // Apply rotation before drawing
+    _canvas.setRotation(_rotation);
+
     // Draw the selected screen to the frame buffer
     _screen->draw(_canvas);
+
+    // Unrotate frame buffer before drawing to the screen
+    _canvas.setRotation(0);
 
     // Draw the frame buffer to the display
     _display.drawRGBBitmap(0, 0, _canvas.getBuffer(), _canvas.width(), _canvas.height());
@@ -120,6 +132,24 @@ void Touchscreen::off() {
 
   // Turn off display LED
   digitalWrite(DISPLAY_LED_PIN, LOW);
+
+}
+
+// ================================================================================================
+// Rotate the display to the landscape orientation
+// ================================================================================================
+void Touchscreen::rotateLandscape() {
+
+  _rotation = DISPLAY_SCREEN_ROTATION_LANDSCAPE;
+
+}
+
+// ================================================================================================
+// Rotate the display to the portrait orientation
+// ================================================================================================
+void Touchscreen::rotatePortrait() {
+
+  _rotation = DISPLAY_SCREEN_ROTATION_PORTRAIT;
 
 }
 

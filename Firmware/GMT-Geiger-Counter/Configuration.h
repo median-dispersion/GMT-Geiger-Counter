@@ -88,15 +88,21 @@
 
 // The display width and height in pixels
 // These values should not be changed!
-// Default: 320 x 240
-#define DISPLAY_WIDTH  320
-#define DISPLAY_HEIGHT 240
+// Default: 240 x 320
+#define DISPLAY_WIDTH  240
+#define DISPLAY_HEIGHT 320
 
 // Landscape screen rotation value
 // This is the rotation value for the landscape screen orientation
 // This value should not be changed!
 // Default: 3
 #define DISPLAY_SCREEN_ROTATION_LANDSCAPE 3
+
+// Portrait screen rotation value
+// This is the rotation value for the portrait screen orientation
+// This value should not be changed!
+// Default: 2
+#define DISPLAY_SCREEN_ROTATION_PORTRAIT 2
 
 // The displays refresh interval
 // This is the time in milliseconds the display waits before drawing a new frame
@@ -131,7 +137,7 @@
 // Firmware version
 // This can be set to any arbitrary string
 // This value should not be changed!
-#define FIRMWARE_VERSION "GTMGC-2025-01-25"
+#define FIRMWARE_VERSION "GTMGC-2025-01-27"
 
 // ================================================================================================
 // Pin assignments

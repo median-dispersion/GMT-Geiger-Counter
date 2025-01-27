@@ -12,6 +12,7 @@
 #include "ScreenDisplaySettings.h"
 #include "ScreenSleep.h"
 #include "ScreenRadiationHistory.h"
+#include "ScreenRotationConfirmation.h"
 #include "ScreenCosmicRayDetector.h"
 #include "ScreenTrueRNG.h"
 #include "ScreenHotspotSettings.h"
@@ -26,16 +27,17 @@ class Touchscreen {
   public:
 
     // Screens
-    ScreenGeigerCounter     geigerCounter;     // Geiger counter screen
-    ScreenAudioSettings     audioSettings;     // Audio settings screen
-    ScreenDisplaySettings   displaySettings;   // Display settings screen
-    ScreenSleep             sleep;             // Sleep / timeout screen for waking the display
-    ScreenRadiationHistory  radiationHistory;  // Radiation history screen
-    ScreenCosmicRayDetector cosmicRayDetector; // Cosmic ray detector screen
-    ScreenTrueRNG           trueRNG;           // True random number generator screen
-    ScreenHotspotSettings   hotspotSettings;   // Hotspot settings screen
-    ScreenWiFiSettings      wifiSettings;      // WiFi settings screen
-    ScreenSystemSettings    systemSettings;    // System settings screen
+    ScreenGeigerCounter        geigerCounter;        // Geiger counter screen
+    ScreenAudioSettings        audioSettings;        // Audio settings screen
+    ScreenDisplaySettings      displaySettings;      // Display settings screen
+    ScreenSleep                sleep;                // Sleep / timeout screen for waking the display
+    ScreenRadiationHistory     radiationHistory;     // Radiation history screen
+    ScreenRotationConfirmation rotationConfirmation; // Rotation confirmation screen
+    ScreenCosmicRayDetector    cosmicRayDetector;    // Cosmic ray detector screen
+    ScreenTrueRNG              trueRNG;              // True random number generator screen
+    ScreenHotspotSettings      hotspotSettings;      // Hotspot settings screen
+    ScreenWiFiSettings         wifiSettings;         // WiFi settings screen
+    ScreenSystemSettings       systemSettings;       // System settings screen
 
     // Constructor
     Touchscreen();
@@ -46,6 +48,8 @@ class Touchscreen {
     void    draw(Screen *screen); // Draw a screen by pointer
     void    on();                 // Turn display on
     void    off();                // Turn display off
+    void    rotateLandscape();    // Rotate the display to the landscape orientation
+    void    rotatePortrait();     // Rotate the display to the portrait orientation
     Screen* getScreen();          // Retruns the current screen
 
   // ----------------------------------------------------------------------------------------------
@@ -58,6 +62,7 @@ class Touchscreen {
     XPT2046          _touch;                   // Touch object
     Screen           *_screen;                 // Pointer to a screen
     uint64_t         _lastRefreshMilliseconds; // Timer for refreshing the display
+    uint8_t          _rotation;
 
 };
 

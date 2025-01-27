@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "Configuration.h"
+#include "Strings.h"
 #include "GeigerCounter.h"
 #include "CosmicRayDetector.h"
 #include "Buzzer.h"
@@ -55,7 +56,7 @@ void setup() {
   touchscreen.geigerCounter.resetIntegrationTime.action    = resetIntegrationTime;
   touchscreen.geigerCounter.increaseIntegrationTime.action = increaseIntegrationTime;
   touchscreen.geigerCounter.radiationHistory.action        = displayRadiationHistory;
-  touchscreen.geigerCounter.cosmicRayDetector.action       = displayCosmicRayDetector;
+  touchscreen.geigerCounter.cosmicRayDetector.action       = displayRotationConfirmation;
   touchscreen.geigerCounter.trueRNG.action                 = displayTrueRNG;
   touchscreen.geigerCounter.hotspotSettings.action         = displayHotspotSettings;
   touchscreen.geigerCounter.wifiSettings.action            = displayWiFiSettings;
@@ -79,8 +80,14 @@ void setup() {
   // Radiation history screen
   touchscreen.radiationHistory.back.action                 = displayGeigerCounter;
 
+  // Rotation confirmation screen
+  touchscreen.rotationConfirmation.back.action             = cosmicRayDetectorBack;
+  touchscreen.rotationConfirmation.confirm.action          = displayCosmicRayDetector;
+
   // Cosmic ray detector screen
-  touchscreen.cosmicRayDetector.back.action                = displayGeigerCounter;
+  touchscreen.cosmicRayDetector.back.action                = cosmicRayDetectorBack;
+  touchscreen.cosmicRayDetector.mute.action                = cosmicRayDetectorMute;
+  touchscreen.cosmicRayDetector.sleep.action               = goToSleep;
 
   // True random number generator screen
   touchscreen.trueRNG.back.action                          = displayGeigerCounter;
@@ -188,17 +195,26 @@ void loop() {
   // Visual feedback
 
   // Get values for usage in visual feedback
-  String equivalentDose     = String(geigerCounter.getMicrosievertsPerHour());
-  String equivalentDoseUnit = STRING_EQUIVALENT_DOSE_UNIT_USVH;
-  String countsPerMinute    = String((uint64_t)(round(geigerCounter.getCountsPerMinute()))) + " " + STRING_COUNTS_PER_MINUTE_ABBREVIATION;
-  String integrationTime    = String(geigerCounter.getIntegrationTime()) + " " + STRING_SECONDS_ABBREVIATION;
+  String equivalentDoseString           = String(geigerCounter.getMicrosievertsPerHour());
+  String equivalentDoseUnitString       = STRING_EQUIVALENT_DOSE_UNIT_USVH;
+  String countsPerMinuteString          = String((uint64_t)(round(geigerCounter.getCountsPerMinute()))) + " " + STRING_COUNTS_PER_MINUTE_ABBREVIATION;
+  String integrationTimeString          = String(geigerCounter.getIntegrationTime()) + " " + STRING_SECONDS_ABBREVIATION;
+  String coincidenceEventsPerHourString = String(cosmicRayDetector.getCoincidenceEventsPerHour()) + " " + STRING_COSMIC_RAY_DETECTOR_COUNTS_PER_HOUR_ABBREVIATION;
+  String coincidenceEventsTotalString   = String(cosmicRayDetector.getCoincidenceEvents());
 
   // Set Geiger counter screen values
-  touchscreen.geigerCounter.setEquivalentDose(equivalentDose);
-  touchscreen.geigerCounter.setEquivalentDoseUnit(equivalentDoseUnit);
+  touchscreen.geigerCounter.setEquivalentDose(equivalentDoseString);
+  touchscreen.geigerCounter.setEquivalentDoseUnit(equivalentDoseUnitString);
   touchscreen.geigerCounter.setRadiationRating(geigerCounter.getRadiationRating());
-  touchscreen.geigerCounter.setCountsPerMinute(countsPerMinute);
-  touchscreen.geigerCounter.setIntegrationTime(integrationTime);
+  touchscreen.geigerCounter.setCountsPerMinute(countsPerMinuteString);
+  touchscreen.geigerCounter.setIntegrationTime(integrationTimeString);
+
+  // Set cosmic ray detector screen values
+  touchscreen.cosmicRayDetector.setCoincidenceEvents(cosmicRayDetector.getCoincidenceEvents());
+  touchscreen.cosmicRayDetector.setCoincidenceEventsPerHour(coincidenceEventsPerHourString);
+  touchscreen.cosmicRayDetector.setCoincidenceEventsTotal(coincidenceEventsTotalString);
+  touchscreen.cosmicRayDetector.setMainTubeCounts(geigerCounter.getMainTubeCounts());
+  touchscreen.cosmicRayDetector.setFollowerTubeCounts(geigerCounter.getFollowerTubeCounts());
 
   // --------------------------------------------
   // Temporary logging function
@@ -320,15 +336,48 @@ void displayRadiationHistory() {
 }
 
 // ================================================================================================
+// Display the rotation confirmation screen
+// ================================================================================================
+void displayRotationConfirmation() {
+
+  // Set the screen into portrait orientation
+  touchscreen.rotatePortrait();
+
+  // Draw the screen
+  touchscreen.draw(touchscreen.rotationConfirmation);
+
+  // Play the enter sound
+  buzzer.play(buzzer.next);
+
+}
+
+// ================================================================================================
 // Display the cosmic ray detector screen
 // ================================================================================================
 void displayCosmicRayDetector() {
+
+  // Reset the screen values
+  touchscreen.cosmicRayDetector.setCoincidenceEventsOffset(0);
+  touchscreen.cosmicRayDetector.setMainTubeCountsOffset(0);
+  touchscreen.cosmicRayDetector.setFollowerTubeCountsOffset(0);
+  touchscreen.cosmicRayDetector.setCoincidenceEvents(0);
+  touchscreen.cosmicRayDetector.setCoincidenceEventsPerHour("0.00 " + String(STRING_COSMIC_RAY_DETECTOR_COUNTS_PER_HOUR_ABBREVIATION));
+  touchscreen.cosmicRayDetector.setMainTubeCounts(0);
+  touchscreen.cosmicRayDetector.setFollowerTubeCounts(0);
+
+  // Set offset counts
+  touchscreen.cosmicRayDetector.setCoincidenceEventsOffset(cosmicRayDetector.getCoincidenceEvents());
+  touchscreen.cosmicRayDetector.setMainTubeCountsOffset(geigerCounter.getMainTubeCounts());
+  touchscreen.cosmicRayDetector.setFollowerTubeCountsOffset(geigerCounter.getFollowerTubeCounts());
 
   // Draw the screen
   touchscreen.draw(touchscreen.cosmicRayDetector);
 
   // Play the enter sound
   buzzer.play(buzzer.next);
+
+  // Enable the cosmic ray detector
+  cosmicRayDetector.enable();
 
 }
 
@@ -658,7 +707,7 @@ void wakeFromSleep() {
   // If buzzer was previously unmuted
   if (lastMuteValue == false) {
 
-    // Toggle of the mute everything toggle
+    // Toggle off the mute everything toggle
     touchscreen.audioSettings.muteEverything.toggleOff();
 
     // Unmute the buzzer
@@ -668,5 +717,46 @@ void wakeFromSleep() {
 
   // Turn on the touchscreen
   touchscreen.on();
+
+}
+
+// ================================================================================================
+// Retrun from the cosmic ray detector screen
+// ================================================================================================
+void cosmicRayDetectorBack() {
+
+  // Disable the cosmic ray detector
+  cosmicRayDetector.disable();
+
+  // Set the default screen rotation
+  touchscreen.rotateLandscape();
+
+  // Display the geiger counter screen
+  displayGeigerCounter();
+
+}
+
+// ================================================================================================
+// Mute function one the cosmic ray detector screen 
+// ================================================================================================
+void cosmicRayDetectorMute() {
+
+  if (buzzer.muted()) {
+
+    // Toggle off the mute everything toggle
+    touchscreen.audioSettings.muteEverything.toggleOff();
+
+    // Unmute the buzzer
+    buzzer.unmute();
+
+  } else {
+
+    // Toggle on the mute everything toggle
+    touchscreen.audioSettings.muteEverything.toggleOn();
+
+    // Mute the buzzer
+    buzzer.mute();
+
+  }
 
 }

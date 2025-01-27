@@ -15,8 +15,8 @@ ScreenGeigerCounter::ScreenGeigerCounter():
   decreaseIntegrationTime(163, 83,  51, 51, IMAGE_DECREASE),
   resetIntegrationTime(   215, 83,  51, 51, IMAGE_RESET   ),
   increaseIntegrationTime(267, 83,  51, 51, IMAGE_INCREASE),
-  radiationHistory(       163, 135, 51, 51, IMAGE_HISTORY ),
-  cosmicRayDetector(      215, 135, 51, 51, IMAGE_MUON    ),
+  cosmicRayDetector(      163, 135, 51, 51, IMAGE_MUON    ),
+  radiationHistory(       215, 135, 51, 51, IMAGE_HISTORY ),
   trueRNG(                267, 135, 51, 51, IMAGE_DICE    ),
   hotspotSettings(        163, 187, 51, 51, IMAGE_HOTSPOT ),
   wifiSettings(           215, 187, 51, 51, IMAGE_WIFI    ),
@@ -45,8 +45,8 @@ void ScreenGeigerCounter::update(XPT2046::Point position) {
   decreaseIntegrationTime.update(position);
   resetIntegrationTime.update(position);
   increaseIntegrationTime.update(position);
-  radiationHistory.update(position);
   cosmicRayDetector.update(position);
+  radiationHistory.update(position);
   trueRNG.update(position);
   hotspotSettings.update(position);
   wifiSettings.update(position);
@@ -92,7 +92,7 @@ void ScreenGeigerCounter::draw(GFXcanvas16 &canvas) {
 
   // Calculate the X and Y cursor position so that the equivalent dose text is centered
   cursorX = ((160 - textWidth)  / 2) + 2;
-  cursorY = ((129 + textHeight) / 2) + 20;
+  cursorY = 105;
 
   // Set the cursor and draw equivalent dose text to the frame buffer
   canvas.setCursor(cursorX, cursorY);
@@ -122,8 +122,8 @@ void ScreenGeigerCounter::draw(GFXcanvas16 &canvas) {
   decreaseIntegrationTime.draw(canvas);
   resetIntegrationTime.draw(canvas);
   increaseIntegrationTime.draw(canvas);
-  radiationHistory.draw(canvas);
   cosmicRayDetector.draw(canvas);
+  radiationHistory.draw(canvas);
   trueRNG.draw(canvas);
   hotspotSettings.draw(canvas);
   wifiSettings.draw(canvas);
