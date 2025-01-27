@@ -27,9 +27,9 @@ ScreenGeigerCounter::ScreenGeigerCounter():
   _doseBorderColor(COLOR_MEDIUM_GREEN),
   _doseBackgroundColor(COLOR_DARK_GREEN),
 
-  _radiationRating(2, 161, 160, IMAGE_RADIATION, STRING_RADIATION_RATING_NORMAL                                                      ),
-  _countsPerMinute(2, 187, 160, IMAGE_PARTICLE,  "0 " + String(STRING_COUNTS_PER_MINUTE_ABBREVIATION)                                ),
-  _integrationTime(2, 213, 160, IMAGE_CLOCK,     String(INTEGRATION_TIME_DEFAULT_SECONDS) + " " + String(STRING_SECONDS_ABBREVIATION))
+  _radiationRating(2, 161, 160, IMAGE_RADIATION, STRING_RADIATION_RATING_NORMAL                                              ),
+  _countsPerMinute(2, 187, 160, IMAGE_PARTICLE,  String("0 ") + STRING_COUNTS_PER_MINUTE_ABBREVIATION                        ),
+  _integrationTime(2, 213, 160, IMAGE_CLOCK,     INTEGRATION_TIME_DEFAULT_SECONDS + String(" ") + STRING_SECONDS_ABBREVIATION)
 
 {}
 
@@ -137,9 +137,13 @@ void ScreenGeigerCounter::draw(GFXcanvas16 &canvas) {
 // ================================================================================================
 // Set the equivalent dose
 // ================================================================================================
-void ScreenGeigerCounter::setEquivalentDose(String equivalentDose) {
+void ScreenGeigerCounter::setEquivalentDose(double equivalentDose) {
 
-  _equivalentDose = equivalentDose;
+  // Convert equivalent dose to a string with 2 decimal places
+  String equivalentDoseValue = String(equivalentDose, 2);
+
+  // Set value
+  _equivalentDose = equivalentDoseValue;
 
 }
 
@@ -195,17 +199,25 @@ void ScreenGeigerCounter::setRadiationRating(GeigerCounter::RadiationRating radi
 // ================================================================================================
 // Set the counts per minute
 // ================================================================================================
-void ScreenGeigerCounter::setCountsPerMinute(String countsPerMinute) {
+void ScreenGeigerCounter::setCountsPerMinute(double countsPerMinute) {
 
-  _countsPerMinute.setValue(countsPerMinute);
+  // Convert counts per minute to a string with unit appended to it
+  String countsPerMinuteValue = String((uint16_t)(round(countsPerMinute))) + " " + STRING_COUNTS_PER_MINUTE_ABBREVIATION;
+
+  // Set value
+  _countsPerMinute.setValue(countsPerMinuteValue);
 
 }
 
 // ================================================================================================
 // Set the integration time
 // ================================================================================================
-void ScreenGeigerCounter::setIntegrationTime(String integrationTime) {
+void ScreenGeigerCounter::setIntegrationTime(uint16_t integrationTime) {
 
-  _integrationTime.setValue(integrationTime);
+  // Convert integration time to a string with unit appended to it
+  String integrationTimeValue = String(integrationTime) + " " + STRING_SECONDS_ABBREVIATION;
+
+  // Set value
+  _integrationTime.setValue(integrationTimeValue);
 
 }

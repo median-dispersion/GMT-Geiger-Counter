@@ -40,11 +40,11 @@ class ScreenGeigerCounter: public Screen {
     void draw(GFXcanvas16 &canvas) override;
 
     // Set screen variables
-    void setEquivalentDose(String equivalentDose);                           // Set the equivalent dose
+    void setEquivalentDose(double equivalentDose);                           // Set the equivalent dose
     void setEquivalentDoseUnit(String equivalentDoseUnit);                   // Set the equivalent dose unit
     void setRadiationRating(GeigerCounter::RadiationRating radiationRating); // Set the radiation rating
-    void setCountsPerMinute(String countsPerMinute);                         // Set the counts per minute
-    void setIntegrationTime(String integrationTime);                         // Set the integration time
+    void setCountsPerMinute(double countsPerMinute);                         // Set the counts per minute
+    void setIntegrationTime(uint16_t integrationTime);                       // Set the integration time
 
   // ----------------------------------------------------------------------------------------------
   // Private

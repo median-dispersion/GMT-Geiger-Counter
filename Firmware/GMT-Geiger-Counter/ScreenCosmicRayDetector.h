@@ -30,8 +30,8 @@ class ScreenCosmicRayDetector: public ScreenBasicPortrait {
     // Set screen variables
     void setCoincidenceEventsOffset(uint64_t coincidenceEventsOffset);   // Set the coincidence events offset
     void setCoincidenceEvents(uint64_t coincidenceEvents);               // Calculate and set coincidence events
-    void setCoincidenceEventsPerHour(String coincidenceEventsPerHour);   // Set the coincidence events per hour value
-    void setCoincidenceEventsTotal(String coincidenceEventsTotal);       // Set the total number of coincidence events
+    void setCoincidenceEventsPerHour(double coincidenceEventsPerHour);   // Set the coincidence events per hour value
+    void setCoincidenceEventsTotal(uint64_t coincidenceEventsTotal);     // Set the total number of coincidence events
     void setMainTubeCountsOffset(uint64_t mainTubeCountsOffset);         // Set the main tube offset
     void setFollowerTubeCountsOffset(uint64_t followerTubeCountsOffset); // Set the follower tube offset 
     void setMainTubeCounts(uint64_t mainTubeCounts);                     // Calculate and set main tube counts

@@ -194,25 +194,17 @@ void loop() {
   // --------------------------------------------
   // Visual feedback
 
-  // Get values for usage in visual feedback
-  String equivalentDoseString           = String(geigerCounter.getMicrosievertsPerHour());
-  String equivalentDoseUnitString       = STRING_EQUIVALENT_DOSE_UNIT_USVH;
-  String countsPerMinuteString          = String((uint64_t)(round(geigerCounter.getCountsPerMinute()))) + " " + STRING_COUNTS_PER_MINUTE_ABBREVIATION;
-  String integrationTimeString          = String(geigerCounter.getIntegrationTime()) + " " + STRING_SECONDS_ABBREVIATION;
-  String coincidenceEventsPerHourString = String(cosmicRayDetector.getCoincidenceEventsPerHour()) + " " + STRING_COSMIC_RAY_DETECTOR_COUNTS_PER_HOUR_ABBREVIATION;
-  String coincidenceEventsTotalString   = String(cosmicRayDetector.getCoincidenceEvents());
-
   // Set Geiger counter screen values
-  touchscreen.geigerCounter.setEquivalentDose(equivalentDoseString);
-  touchscreen.geigerCounter.setEquivalentDoseUnit(equivalentDoseUnitString);
+  touchscreen.geigerCounter.setEquivalentDose(geigerCounter.getMicrosievertsPerHour());
+  touchscreen.geigerCounter.setEquivalentDoseUnit(STRING_EQUIVALENT_DOSE_UNIT_USVH);
   touchscreen.geigerCounter.setRadiationRating(geigerCounter.getRadiationRating());
-  touchscreen.geigerCounter.setCountsPerMinute(countsPerMinuteString);
-  touchscreen.geigerCounter.setIntegrationTime(integrationTimeString);
+  touchscreen.geigerCounter.setCountsPerMinute(geigerCounter.getCountsPerMinute());
+  touchscreen.geigerCounter.setIntegrationTime(geigerCounter.getIntegrationTime());
 
   // Set cosmic ray detector screen values
   touchscreen.cosmicRayDetector.setCoincidenceEvents(cosmicRayDetector.getCoincidenceEvents());
-  touchscreen.cosmicRayDetector.setCoincidenceEventsPerHour(coincidenceEventsPerHourString);
-  touchscreen.cosmicRayDetector.setCoincidenceEventsTotal(coincidenceEventsTotalString);
+  touchscreen.cosmicRayDetector.setCoincidenceEventsPerHour(cosmicRayDetector.getCoincidenceEventsPerHour());
+  touchscreen.cosmicRayDetector.setCoincidenceEventsTotal(cosmicRayDetector.getCoincidenceEvents());
   touchscreen.cosmicRayDetector.setMainTubeCounts(geigerCounter.getMainTubeCounts());
   touchscreen.cosmicRayDetector.setFollowerTubeCounts(geigerCounter.getFollowerTubeCounts());
 
@@ -361,7 +353,7 @@ void displayCosmicRayDetector() {
   touchscreen.cosmicRayDetector.setMainTubeCountsOffset(0);
   touchscreen.cosmicRayDetector.setFollowerTubeCountsOffset(0);
   touchscreen.cosmicRayDetector.setCoincidenceEvents(0);
-  touchscreen.cosmicRayDetector.setCoincidenceEventsPerHour("0.00 " + String(STRING_COSMIC_RAY_DETECTOR_COUNTS_PER_HOUR_ABBREVIATION));
+  touchscreen.cosmicRayDetector.setCoincidenceEventsPerHour(0.0);
   touchscreen.cosmicRayDetector.setMainTubeCounts(0);
   touchscreen.cosmicRayDetector.setFollowerTubeCounts(0);
 
@@ -459,7 +451,7 @@ void decreaseIntegrationTime() {
   geigerCounter.setIntegrationTime(integrationTimeSeconds);
 
   // Update Geiger counter screen with the new integration time value
-  touchscreen.geigerCounter.setIntegrationTime(String(integrationTimeSeconds) + " " + STRING_SECONDS_ABBREVIATION);
+  touchscreen.geigerCounter.setIntegrationTime(integrationTimeSeconds);
 
   // Play a sound
   buzzer.play(buzzer.back);
@@ -475,7 +467,7 @@ void resetIntegrationTime() {
   geigerCounter.setIntegrationTime(INTEGRATION_TIME_DEFAULT_SECONDS);
 
   // Update Geiger counter screen with the new integration time value
-  touchscreen.geigerCounter.setIntegrationTime(String(INTEGRATION_TIME_DEFAULT_SECONDS) + " " + STRING_SECONDS_ABBREVIATION);
+  touchscreen.geigerCounter.setIntegrationTime(INTEGRATION_TIME_DEFAULT_SECONDS);
 
   // Play a sound
   buzzer.play(buzzer.click);
@@ -508,7 +500,7 @@ void increaseIntegrationTime() {
   geigerCounter.setIntegrationTime(integrationTimeSeconds);
 
   // Update Geiger counter screen with the new integration time value
-  touchscreen.geigerCounter.setIntegrationTime(String(integrationTimeSeconds) + " " + STRING_SECONDS_ABBREVIATION);
+  touchscreen.geigerCounter.setIntegrationTime(integrationTimeSeconds);
 
   // Play a sound
   buzzer.play(buzzer.next);
