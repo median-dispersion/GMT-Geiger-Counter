@@ -61,6 +61,7 @@ class Touchscreen {
     GFXcanvas16      _canvas;                  // Frame buffer object
     XPT2046          _touch;                   // Touch object
     Screen           *_screen;                 // Pointer to a screen
+    bool             _on;
     uint64_t         _lastRefreshMilliseconds; // Timer for refreshing the display
     uint8_t          _rotation;
 

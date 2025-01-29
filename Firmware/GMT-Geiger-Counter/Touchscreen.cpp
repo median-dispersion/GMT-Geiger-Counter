@@ -9,11 +9,13 @@
 Touchscreen::Touchscreen():
 
   // Initialize members
-  _lastRefreshMilliseconds(0),
+  
   _display(DISPLAY_CS_PIN, DISPLAY_DC_PIN, DISPLAY_RST_PIN),
   _canvas(DISPLAY_WIDTH, DISPLAY_HEIGHT),
-  _screen(&geigerCounter),
   _touch(TOUCH_CS_PIN, TOUCH_IRQ_PIN),
+  _screen(&geigerCounter),
+  _on(true),
+  _lastRefreshMilliseconds(0),
   _rotation(DISPLAY_SCREEN_ROTATION_LANDSCAPE)
 
 {}
@@ -73,23 +75,28 @@ void Touchscreen::update() {
 
   }
 
-  // If refresh interval has been reached or refresh flag has been set
-  if (millis() - _lastRefreshMilliseconds > DISPLAY_REFRESH_INTERVAL_MILLISECONDS || refreshImmediately) {
+  // Only draw the screen if the display is set to on
+  if (_on) {
 
-    // Apply rotation before drawing
-    _canvas.setRotation(_rotation);
+    // If refresh interval has been reached or refresh flag has been set
+    if (millis() - _lastRefreshMilliseconds > DISPLAY_REFRESH_INTERVAL_MILLISECONDS || refreshImmediately) {
 
-    // Draw the selected screen to the frame buffer
-    _screen->draw(_canvas);
+      // Apply display rotation before drawing
+      _canvas.setRotation(_rotation);
 
-    // Unrotate frame buffer before drawing to the screen
-    _canvas.setRotation(0);
+      // Draw the selected screen to the frame buffer
+      _screen->draw(_canvas);
 
-    // Draw the frame buffer to the display
-    _display.drawRGBBitmap(0, 0, _canvas.getBuffer(), _canvas.width(), _canvas.height());
+      // Unrotate frame buffer before drawing to the screen
+      _canvas.setRotation(0);
 
-    // Update the refresh interval
-    _lastRefreshMilliseconds = millis();
+      // Draw the frame buffer to the display
+      _display.drawRGBBitmap(0, 0, _canvas.getBuffer(), _canvas.width(), _canvas.height());
+
+      // Update the refresh interval
+      _lastRefreshMilliseconds = millis();
+
+    }
 
   }
 
@@ -123,6 +130,9 @@ void Touchscreen::on() {
   // Turn on display LED
   digitalWrite(DISPLAY_LED_PIN, HIGH);
 
+  // Set on flag to true
+  _on = true;
+
 }
 
 // ================================================================================================
@@ -132,6 +142,9 @@ void Touchscreen::off() {
 
   // Turn off display LED
   digitalWrite(DISPLAY_LED_PIN, LOW);
+
+  // Set on flag to false
+  _on = false;
 
 }
 
