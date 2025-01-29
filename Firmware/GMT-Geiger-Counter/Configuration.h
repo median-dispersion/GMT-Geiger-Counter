@@ -137,7 +137,7 @@
 // Firmware version
 // This can be set to any arbitrary string
 // This value should not be changed!
-#define FIRMWARE_VERSION "GTMGC-2025-01-27"
+#define FIRMWARE_VERSION "GMTGC-2025-01-29"
 
 // ================================================================================================
 // Pin assignments

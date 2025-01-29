@@ -44,7 +44,7 @@ class ScreenGeigerCounter: public Screen {
     void setEquivalentDoseUnit(String equivalentDoseUnit);                   // Set the equivalent dose unit
     void setRadiationRating(GeigerCounter::RadiationRating radiationRating); // Set the radiation rating
     void setCountsPerMinute(double countsPerMinute);                         // Set the counts per minute
-    void setIntegrationTime(uint16_t integrationTime);                       // Set the integration time
+    void setIntegrationTime(uint8_t integrationTime);                        // Set the integration time
 
   // ----------------------------------------------------------------------------------------------
   // Private

@@ -6,7 +6,7 @@
 // ================================================================================================
 // Constructor
 // ================================================================================================
-Tube::Tube(const uint8_t pin, volatile uint16_t *movingAverage, volatile uint16_t &movingAverageIndex):
+Tube::Tube(const uint8_t pin, volatile uint16_t *movingAverage, volatile uint8_t &movingAverageIndex):
 
   // Initialize members
   _pin(pin),

@@ -38,7 +38,7 @@ void GeigerCounter::enable() {
   if (!_enabled) {
 
     // Clear the moving average array
-    for (uint16_t i = 0; i < 60; i++) { _movingAverage[i] = 0; }
+    for (uint8_t i = 0; i < 60; i++) { _movingAverage[i] = 0; }
 
     // Reset the position of the moving average index
     _movingAverageIndex = 0;
@@ -169,10 +169,10 @@ double GeigerCounter::getCountsPerMinute() {
 
   // For the number of seconds in the integration time
   // This will select the number of elements from the moving average array to sum up an average over
-  for (uint16_t i = 0; i < _integrationTimeSeconds - 1; i++) {
+  for (uint8_t i = 0; i < _integrationTimeSeconds; i++) {
 
-    // Calculate a wrapped index by using i + 1, if it overflows wrapped to the start of the array
-    uint16_t wrappedIndex = (_movingAverageIndex - i + 60) % 60;
+    // Calculate a wrapped index by using i + 60 - 1, if it underflows wrapped to the end of the array
+    uint8_t wrappedIndex = (_movingAverageIndex + 60 - i) % 60;
 
     // Add the count value of that element to the CPM variable
     cpm += _movingAverage[wrappedIndex];
@@ -200,7 +200,7 @@ double GeigerCounter::getMicrosievertsPerHour() {
 // ================================================================================================
 // Get the integration time
 // ================================================================================================
-uint16_t GeigerCounter::getIntegrationTime() {
+uint8_t GeigerCounter::getIntegrationTime() {
 
   // Get and return the integration time
   return _integrationTimeSeconds;
@@ -250,7 +250,7 @@ void IRAM_ATTR GeigerCounter::_advanceMovingAverage(void *instancePointer) {
   GeigerCounter *instance = (GeigerCounter*)instancePointer;
 
   // Calculate a wrapped index by using the current index + 1, if it overflows wrapped to the start of the array
-  uint16_t wrappedIndex = (instance->_movingAverageIndex + 1) % 60;
+  uint8_t wrappedIndex = (instance->_movingAverageIndex + 1) % 60;
 
   // Clear the next element in the array
   instance->_movingAverage[wrappedIndex] = 0;

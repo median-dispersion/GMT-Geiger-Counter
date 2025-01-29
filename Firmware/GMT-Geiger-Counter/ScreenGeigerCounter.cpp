@@ -202,7 +202,7 @@ void ScreenGeigerCounter::setRadiationRating(GeigerCounter::RadiationRating radi
 void ScreenGeigerCounter::setCountsPerMinute(double countsPerMinute) {
 
   // Convert counts per minute to a string with unit appended to it
-  String countsPerMinuteValue = String((uint16_t)(round(countsPerMinute))) + " " + STRING_COUNTS_PER_MINUTE_ABBREVIATION;
+  String countsPerMinuteValue = String((uint32_t)(round(countsPerMinute))) + " " + STRING_COUNTS_PER_MINUTE_ABBREVIATION;
 
   // Set value
   _countsPerMinute.setValue(countsPerMinuteValue);
@@ -212,7 +212,7 @@ void ScreenGeigerCounter::setCountsPerMinute(double countsPerMinute) {
 // ================================================================================================
 // Set the integration time
 // ================================================================================================
-void ScreenGeigerCounter::setIntegrationTime(uint16_t integrationTime) {
+void ScreenGeigerCounter::setIntegrationTime(uint8_t integrationTime) {
 
   // Convert integration time to a string with unit appended to it
   String integrationTimeValue = String(integrationTime) + " " + STRING_SECONDS_ABBREVIATION;

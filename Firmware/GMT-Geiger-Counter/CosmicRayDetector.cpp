@@ -35,7 +35,7 @@ void CosmicRayDetector::enable() {
   if (!_enabled) {
 
     // Clear the moving average array
-    for (uint16_t i = 0; i < 60; i++) { _movingAverage[i] = 0; }
+    for (uint8_t i = 0; i < 60; i++) { _movingAverage[i] = 0; }
 
     // Reset the position of the moving average index
     _movingAverageIndex = 0;
@@ -105,7 +105,7 @@ double CosmicRayDetector::getCoincidenceEventsPerHour() {
   double cph = 0.0;
 
   // For all element in the moving average array
-  for (uint16_t i = 0; i < 60; i++) {
+  for (uint8_t i = 0; i < 60; i++) {
 
     // Add to the sum of all elements
     cph += _movingAverage[i];

@@ -34,7 +34,7 @@ class GeigerCounter {
     uint64_t        getFollowerTubeCounts();                  // Get the total number of counts for the follower tube
     double          getCountsPerMinute();                     // Get the counts per minute
     double          getMicrosievertsPerHour();                // Convert counts per minute to micro Sieverts per hour
-    uint16_t        getIntegrationTime();                     // Get the integration time
+    uint8_t         getIntegrationTime();                     // Get the integration time
     RadiationRating getRadiationRating();                     // Get the radiation rating
 
   // ----------------------------------------------------------------------------------------------
@@ -43,9 +43,9 @@ class GeigerCounter {
   private:
 
     bool              _enabled;                // Flag for checking if the Geiger counter is enabled
-    uint16_t          _integrationTimeSeconds; // Number of seconds to use from the moving average array to average over
+    uint8_t           _integrationTimeSeconds; // Number of seconds to use from the moving average array to average over
     volatile uint16_t _movingAverage[60];      // Array for storing counts per second for a duration of 60 seconds
-    volatile uint16_t _movingAverageIndex;     // Index of the moving average array
+    volatile uint8_t  _movingAverageIndex;     // Index of the moving average array
     hw_timer_t        *_movingAverageTimer;    // Hardware timer for advancing the moving average array
     Tube              _mainTube;               // Main Tube
     Tube              _followerTube;           // Follower tube
