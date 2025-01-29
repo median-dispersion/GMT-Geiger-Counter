@@ -40,6 +40,11 @@
 // A shorter integration time gives more accurate values for high levels of radiation, a lower in integration time for lower levels
 #define INTEGRATION_TIME_DEFAULT_SECONDS 30
 
+// The number of minutes the radiation history screen displays
+// For a longer history graph increase the number of minutes
+// Range: 5 - 250 minutes
+#define RADIATION_HISTORY_LENGTH_MINUTES 20
+
 // Radiation rating values in microsieverts per hour
 // These values are used to classify the recorded radiation level
 #define RADIATION_RATING_NORMAL_USVH   0.0

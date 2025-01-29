@@ -208,6 +208,9 @@ void loop() {
   touchscreen.cosmicRayDetector.setMainTubeCounts(geigerCounter.getMainTubeCounts());
   touchscreen.cosmicRayDetector.setFollowerTubeCounts(geigerCounter.getFollowerTubeCounts());
 
+  // Set radiation history screen values
+  touchscreen.radiationHistory.setRadiationHistory(geigerCounter.getCountsPerMinute());
+
   // --------------------------------------------
   // Temporary logging function
 
