@@ -32,7 +32,7 @@
 #define TUBE_CONVERSION_FACTOR_CPM_TO_USVH 0.008095385
 
 // Name of the tube type
-// This can be set to an arbitrary value and is only used for logging
+// This can be set to an arbitrary string and is only used for logging
 #define TUBE_TYPE_NAME "SBM-20"
 
 // The default integration time the Geiger counter starts at
@@ -44,6 +44,11 @@
 // For a longer history graph increase the number of minutes
 // Range: 5 - 250 minutes
 #define RADIATION_HISTORY_LENGTH_MINUTES 20
+
+// The minimum scale of the counts per minutes axis on the radiation history screen
+// If a value larger than this is recorded, the axis will scale automatically to that new value
+// This is just for setting the minimum scale it can go down to
+#define RADIATION_HISTORY_MINIMUM_SCALE_CPM 32
 
 // Radiation rating values in microsieverts per hour
 // These values are used to classify the recorded radiation level
@@ -142,7 +147,7 @@
 // Firmware version
 // This can be set to any arbitrary string
 // This value should not be changed!
-#define FIRMWARE_VERSION "GMTGC-2025-01-29"
+#define FIRMWARE_VERSION "GMTGC-2025-01-31"
 
 // ================================================================================================
 // Pin assignments

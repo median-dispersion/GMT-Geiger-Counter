@@ -11,13 +11,23 @@ ScreenRadiationHistory::ScreenRadiationHistory():
   // Initialize members
   ScreenBasic(STRING_RADIATION_HISTORY_TITLE),
   _historyIndex(0),
-  _maximumCountsPerMinute(32),
   _historyTimerMilliseconds(0),
+  _timeSteps(round(RADIATION_HISTORY_LENGTH_MINUTES / 4.0)),
+  _countSteps(round(RADIATION_HISTORY_MINIMUM_SCALE_CPM / 4.0)),
   _average(  2, 213, 105, IMAGE_AVERAGE, "0"),
   _maximum(108, 213, 105, IMAGE_MAXIMUM, "0"),
   _minimum(214, 213, 104, IMAGE_MINIMUM, "0")
 
-{}
+{
+
+  // Set all elements in the history array to an impossibly high value marking them as invalid
+  for (uint8_t sample = 0; sample < RADIATION_HISTORY_LENGTH_MINUTES; sample++) {
+
+    _history[sample] = UINT16_MAX;
+
+  }
+
+}
 
 // ================================================================================================
 // Update
@@ -54,33 +64,29 @@ void ScreenRadiationHistory::draw(GFXcanvas16 &canvas) {
   canvas.setFont(&FreeSans9pt7b);
   canvas.setTextColor(COLOR_LIGHT_GRAY);
 
-  // Calculate time and counts steps
-  uint8_t  timeSteps   = round(RADIATION_HISTORY_LENGTH_MINUTES / 4.0);
-  uint32_t countsSteps = (_maximumCountsPerMinute > 0) ? round(_maximumCountsPerMinute / 4.0) : round(32.0 / 4.0); // Prevent div by 0
-
   // Draw time steps
   canvas.setCursor(236, 199);
-  canvas.print("-" + String(timeSteps * 1) + STRING_RADIATION_HISTORY_MINUTES_ABBREVIATION);
+  canvas.print("-" + String(_timeSteps * 1) + STRING_RADIATION_HISTORY_MINUTES_ABBREVIATION);
   canvas.setCursor(162, 199);
-  canvas.print("-" + String(timeSteps * 2) + STRING_RADIATION_HISTORY_MINUTES_ABBREVIATION);
+  canvas.print("-" + String(_timeSteps * 2) + STRING_RADIATION_HISTORY_MINUTES_ABBREVIATION);
   canvas.setCursor(88, 199);
-  canvas.print("-" + String(timeSteps * 3) + STRING_RADIATION_HISTORY_MINUTES_ABBREVIATION);
+  canvas.print("-" + String(_timeSteps * 3) + STRING_RADIATION_HISTORY_MINUTES_ABBREVIATION);
   canvas.setCursor(14, 199);
   canvas.print(String("-") + RADIATION_HISTORY_LENGTH_MINUTES + STRING_RADIATION_HISTORY_MINUTES_ABBREVIATION);
 
   // Draw counts steps
   canvas.setCursor(14, 177);
-  canvas.print(String(countsSteps * 1));
+  canvas.print(String(_countSteps * 1));
   canvas.setCursor(14, 137);
-  canvas.print(String(countsSteps * 2));
+  canvas.print(String(_countSteps * 2));
   canvas.setCursor(14, 97);
-  canvas.print(String(countsSteps * 3));
+  canvas.print(String(_countSteps * 3));
   canvas.setCursor(14, 57);
-  canvas.print(String(_maximumCountsPerMinute));
+  canvas.print(String(_countSteps * 4));
 
   // Calculate with and height of line elements
-  float width  = 294.0 / (RADIATION_HISTORY_LENGTH_MINUTES - 1);
-  float height = (_maximumCountsPerMinute > 0) ? 159.0 / _maximumCountsPerMinute : 159.0 / 30.0; // Prevent div by 0
+  double width  = 294.0 / (RADIATION_HISTORY_LENGTH_MINUTES - 1);
+  double height = 159.0 / (_countSteps * 4); 
 
   // Get starting position of the first line element
   uint16_t x = 306;
@@ -92,16 +98,21 @@ void ScreenRadiationHistory::draw(GFXcanvas16 &canvas) {
     // Calculate wrapped index from the current history index offset by the sample
     uint8_t wrappedIndex = (_historyIndex + RADIATION_HISTORY_LENGTH_MINUTES - sample) % RADIATION_HISTORY_LENGTH_MINUTES;
 
-    // Calculate end position of line element
-    uint16_t dx = 306 - round(width  * sample);
-    uint16_t dy = 200 - round(height * _history[wrappedIndex]);
+    // If the sample is not invalid
+    if (_history[wrappedIndex] != UINT16_MAX) {
 
-    // Draw line between the two positions
-    canvas.drawLine(x, y, dx, dy, COLOR_MEDIUM_GREEN);
+      // Calculate end position of line element
+      uint16_t dx = 306 - round(width  * sample);
+      uint16_t dy = 200 - round(height * _history[wrappedIndex]);
 
-    // Set the next starting position to the current end position
-    x = dx;
-    y = dy;
+      // Draw line between the two positions
+      canvas.drawLine(x, y, dx, dy, COLOR_MEDIUM_GREEN);
+
+      // Set the next starting position to the current end position
+      x = dx;
+      y = dy;
+
+    }
 
   }
 
@@ -137,36 +148,58 @@ void ScreenRadiationHistory::setRadiationHistory(double countsPerMinute) {
     // Set the element to the current counts per minute value
     _history[_historyIndex] = countsPerMinute;
 
-    // Counts per minute average
-    double countsPerMinuteAverage = 0.0;
-
-    // Reset maximum counts per minute value
-    _maximumCountsPerMinute = 0;
-
-    // Minimum counts per minute value
-    uint32_t _minimumCountsPerMinute = UINT16_MAX;
+    // Reset count variables
+    double   averageCountsPerMinute = 0.0;
+    uint32_t maximumCountsPerMinute = 0;
+    uint32_t minimumCountsPerMinute = UINT16_MAX;
+    uint8_t  validSamples           = 0;
 
     // For all samples in the history array
     for (uint8_t sample = 0; sample < RADIATION_HISTORY_LENGTH_MINUTES; sample++) {
 
-      // Add sample to the sum of a counts per minute values
-      countsPerMinuteAverage += _history[sample];
+      // Only update count variables if not an invalid count value
+      if (_history[sample] != UINT16_MAX) {
 
-      // If this sample is larger than the previous maximum set the maximum to it
-      if (_history[sample] > _maximumCountsPerMinute) { _maximumCountsPerMinute = _history[sample]; }
-      
-      // If this sample is smaller than the previous minimum set the minimum to it
-      if (_history[sample] < _minimumCountsPerMinute) { _minimumCountsPerMinute = _history[sample]; }
+        // Add sample to the sum of a counts per minute values
+        averageCountsPerMinute += _history[sample];
+
+        // If this sample is larger than the previous maximum set the maximum to it
+        if (_history[sample] > maximumCountsPerMinute) { maximumCountsPerMinute = _history[sample]; }
+        
+        // If this sample is smaller than the previous minimum set the minimum to it
+        if (_history[sample] < minimumCountsPerMinute) { minimumCountsPerMinute = _history[sample]; }
+
+        // Increase the number of valid samples
+        validSamples++;
+
+      }
 
     }
 
-    // Calculate average, prevent division by 0
-    countsPerMinuteAverage = (countsPerMinuteAverage > 0) ? round(countsPerMinuteAverage / RADIATION_HISTORY_LENGTH_MINUTES) : 0.0;
+    // Calculate average and prevent division by 0
+    averageCountsPerMinute = (validSamples > 0) ? round(averageCountsPerMinute / validSamples) : 0.0;
+
+    // Calculate time steps
+    _timeSteps = round(RADIATION_HISTORY_LENGTH_MINUTES / 4.0);
+
+    // If the maximum counts per minute value is less than 90% of the minimum history scale
+    if (maximumCountsPerMinute * 1.1 < RADIATION_HISTORY_MINIMUM_SCALE_CPM) {
+      
+      // Set the count step size to the minimum history scale
+      _countSteps = round(RADIATION_HISTORY_MINIMUM_SCALE_CPM / 4.0);
+
+    // If If the maximum counts per minute value is more then the minimum history scale
+    } else {
+
+      // Scale the history scale accordingly
+      _countSteps = round((maximumCountsPerMinute * 1.1) / 4.0);
+
+    }
 
     // Set the screen elements
-    _average.setValue(String((uint32_t)(countsPerMinuteAverage)));
-    _maximum.setValue(String(_maximumCountsPerMinute));
-    _minimum.setValue(String(_minimumCountsPerMinute));
+    _average.setValue(String((uint32_t)(averageCountsPerMinute)));
+    _maximum.setValue(String(maximumCountsPerMinute));
+    _minimum.setValue(String(minimumCountsPerMinute));
 
   }
 

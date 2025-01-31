@@ -33,8 +33,9 @@ class ScreenRadiationHistory: public ScreenBasic {
 
     uint32_t _history[RADIATION_HISTORY_LENGTH_MINUTES]; // History array
     uint8_t  _historyIndex;                              // Index of the history array
-    uint32_t _maximumCountsPerMinute;                    // Maximum counts per minute value in the array
     uint64_t _historyTimerMilliseconds;                  // History update timer
+    uint8_t  _timeSteps;                                 // History graph time steps
+    uint32_t _countSteps;                                // History graph count steps
     DisplayInfoBox _average;                             // Average counts per minute screen element
     DisplayInfoBox _maximum;                             // Maximum counts per minute screen element
     DisplayInfoBox _minimum;                             // Minimum counts per minute screen element
