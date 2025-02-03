@@ -5,6 +5,7 @@
 #include "CosmicRayDetector.h"
 #include "Buzzer.h"
 #include "Touchscreen.h"
+#include "Watchdog.h"
 
 // ------------------------------------------------------------------------------------------------
 // Global
@@ -14,6 +15,7 @@ GeigerCounter     geigerCounter;
 CosmicRayDetector cosmicRayDetector;
 Buzzer            buzzer;
 Touchscreen       touchscreen;
+Watchdog          watchdog;
 
 // Global variables
 bool     playedDoseWarning     = false;
@@ -141,6 +143,9 @@ void loop() {
 
   // Update the touchscreen
   visualFeedback();
+
+  // Update the memory watchdog
+  watchdog.update();
 
 }
 
