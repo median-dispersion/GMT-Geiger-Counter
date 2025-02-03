@@ -10,14 +10,14 @@ ScreenDisplaySettings::ScreenDisplaySettings():
 
   // Initialize members
   ScreenBasic(STRING_DISPLAY_SETTINGS_TITLE),
-  display(0, STRING_DISPLAY_SETTINGS_DISPLAY, true)
+  display(0, STRING_TOGGLE_DISPLAY, true)
 
 {}
 
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenDisplaySettings::update(XPT2046::Point position) {
+void ScreenDisplaySettings::update(const XPT2046::Point position) {
 
   // Update the basic screen
   ScreenBasic::update(position);

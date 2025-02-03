@@ -16,13 +16,13 @@ Buzzer::Buzzer():
   alarm({alerts, MELODY_ALARM}),
   back({interface, MELODY_BACK}),
   coincidenceEvent({detections, MELODY_COINCIDENCE_EVENT}),
-  click({interface, MELODY_CLICK}),
   detection({detections, MELODY_DETECTION}),
   jingle({interface, MELODY_JINGLE}),
   next({interface, MELODY_NEXT}),
+  tap({interface, MELODY_TAP}),
   warning({notifications, MELODY_WARNING}),
   _muted(false),
-  _melody(BUZZER_PIN)
+  _audio(BUZZER_PIN)
 
 {}
 
@@ -32,7 +32,7 @@ Buzzer::Buzzer():
 void Buzzer::begin() {
 
   // Initialize melody
-  _melody.begin();
+  _audio.begin();
 
 }
 
@@ -42,7 +42,7 @@ void Buzzer::begin() {
 void Buzzer::update() {
 
   // Update the melody
-  _melody.update();
+  _audio.update();
 
 }
 
@@ -79,7 +79,7 @@ bool Buzzer::muted() {
 // ================================================================================================
 // Play a sound effect
 // ================================================================================================
-void Buzzer::play(Sound &sound, uint16_t repeats) {
+void Buzzer::play(const Sound &sound, const uint16_t repeats) {
 
   // If the buzzer is not muted
   if (!_muted) {
@@ -88,13 +88,13 @@ void Buzzer::play(Sound &sound, uint16_t repeats) {
     if (!sound.channel.muted()) {
 
       // If not already playing this sound
-      if (!_melody.playing(sound.melody.notes)) {
+      if (!_audio.playing(sound.melody.notes)) {
 
         // If the sound repeats at least once
         if (repeats) {
 
           // Play sound for the number of specified repeats
-          _melody.play(sound.melody.notes, sound.melody.length, sound.melody.repeats * repeats);
+          _audio.play(sound.melody.notes, sound.melody.length, sound.melody.repeats * repeats);
 
         }
 
@@ -112,16 +112,16 @@ void Buzzer::play(Sound &sound, uint16_t repeats) {
 bool Buzzer::playing() {
 
   // Check and return if anything is playing
-  return _melody.playing();
+  return _audio.playing();
 
 }
 
 // ================================================================================================
 // Check if a specific sound is playing
 // ================================================================================================
-bool Buzzer::playing(Sound &sound) {
+bool Buzzer::playing(const Sound &sound) {
 
   // Check and return if a specific sound is playing
-  return _melody.playing(sound.melody.notes);
+  return _audio.playing(sound.melody.notes);
 
 }

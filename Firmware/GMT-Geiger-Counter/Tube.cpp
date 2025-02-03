@@ -13,7 +13,7 @@ Tube::Tube(const uint8_t pin, volatile uint16_t *movingAverage, volatile uint8_t
   _movingAverage(movingAverage),
   _movingAverageIndex(movingAverageIndex),
   _enabled(false),
-  _pulseTimerMicroseconds(0),
+  _pulseStartTimeMicroseconds(0),
   _counts(0)
 
 {}
@@ -65,6 +65,15 @@ void Tube::disable() {
 }
 
 // ================================================================================================
+// Returns if the tube is enabled
+// ================================================================================================
+bool Tube::enabled() {
+
+  return _enabled;
+
+}
+
+// ================================================================================================
 // Get the total number of counts
 // ================================================================================================
 uint64_t Tube::getCounts() {
@@ -89,13 +98,13 @@ void IRAM_ATTR Tube::_countPulse(void *instancePointer) {
   if (digitalRead(instance->_pin) == HIGH) {
 
     // Capture the current time in microseconds
-    instance->_pulseTimerMicroseconds = micros();
+    instance->_pulseStartTimeMicroseconds = micros();
 
   // On the falling edge
   }else {
 
     // Calculate the pulse length by subtracting the time from the rising edge to now in microseconds
-    uint64_t pulseLengthMicroseconds = micros() - instance->_pulseTimerMicroseconds;
+    uint64_t pulseLengthMicroseconds = micros() - instance->_pulseStartTimeMicroseconds;
 
     // Check if the pulse length is longer than the noise threshold
     if (pulseLengthMicroseconds > TUBE_CONVERSION_FACTOR_CPM_TO_USVH) {

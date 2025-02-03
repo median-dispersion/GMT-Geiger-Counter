@@ -13,21 +13,21 @@ class DisplayToastBox {
   public:
 
     // Constructor
-    DisplayToastBox(uint16_t x, uint16_t y, uint16_t width, String title, String value);
+    DisplayToastBox(const uint16_t x, const uint16_t y, const uint16_t width, const char *title, const char *value);
 
-    void draw(GFXcanvas16 &canvas); // Draw the toast box
-    void setValue(String value);    // Set the toast box value
+    void draw(GFXcanvas16 &canvas);   // Draw the toast box
+    void setValue(const char *value); // Set the toast box value
 
   // ----------------------------------------------------------------------------------------------
   // Private
 
   private:
 
-    uint16_t _x;     // X position
-    uint16_t _y;     // Y position
-    uint16_t _width; // Toast box width
-    String   _title; // Toast box title
-    String   _value; // Toast box text value
+    const uint16_t _x;      // X position
+    const uint16_t _y;      // Y position
+    const uint16_t _width;  // Toast box width
+    const char     *_title; // Toast box title
+    const char     *_value; // Toast box text value
 
 };
 

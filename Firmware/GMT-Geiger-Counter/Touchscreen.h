@@ -11,9 +11,9 @@
 #include "ScreenAudioSettings.h"
 #include "ScreenDisplaySettings.h"
 #include "ScreenSleep.h"
-#include "ScreenRadiationHistory.h"
 #include "ScreenRotationConfirmation.h"
 #include "ScreenCosmicRayDetector.h"
+#include "ScreenRadiationHistory.h"
 #include "ScreenTrueRNG.h"
 #include "ScreenHotspotSettings.h"
 #include "ScreenWiFiSettings.h"
@@ -31,9 +31,9 @@ class Touchscreen {
     ScreenAudioSettings        audioSettings;        // Audio settings screen
     ScreenDisplaySettings      displaySettings;      // Display settings screen
     ScreenSleep                sleep;                // Sleep / timeout screen for waking the display
-    ScreenRadiationHistory     radiationHistory;     // Radiation history screen
     ScreenRotationConfirmation rotationConfirmation; // Rotation confirmation screen
     ScreenCosmicRayDetector    cosmicRayDetector;    // Cosmic ray detector screen
+    ScreenRadiationHistory     radiationHistory;     // Radiation history screen
     ScreenTrueRNG              trueRNG;              // True random number generator screen
     ScreenHotspotSettings      hotspotSettings;      // Hotspot settings screen
     ScreenWiFiSettings         wifiSettings;         // WiFi settings screen
@@ -43,11 +43,12 @@ class Touchscreen {
     Touchscreen();
 
     void    begin();              // Initialize everything
+    void    enable();             // Enable the touchscreen
+    void    disable();            // Disable the touchscreen
+    bool    enabled();            // Returns if the touchscreen is enabled
     void    update();             // Update the touchscreen
     void    draw(Screen &screen); // Draw a screen by reference
     void    draw(Screen *screen); // Draw a screen by pointer
-    void    on();                 // Turn display on
-    void    off();                // Turn display off
     void    rotateLandscape();    // Rotate the display to the landscape orientation
     void    rotatePortrait();     // Rotate the display to the portrait orientation
     Screen* getScreen();          // Retruns the current screen
@@ -61,9 +62,9 @@ class Touchscreen {
     GFXcanvas16      _canvas;                  // Frame buffer object
     XPT2046          _touch;                   // Touch object
     Screen           *_screen;                 // Pointer to a screen
-    bool             _on;
+    bool             _enabled;                 // Flag for checking if the touchscreen is enabled
     uint64_t         _lastRefreshMilliseconds; // Timer for refreshing the display
-    uint8_t          _rotation;
+    uint8_t          _rotation;                // Touchscreen rotation orientation
 
 };
 

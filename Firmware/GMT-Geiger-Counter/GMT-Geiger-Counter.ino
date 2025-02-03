@@ -15,30 +15,49 @@ CosmicRayDetector cosmicRayDetector;
 Buzzer            buzzer;
 Touchscreen       touchscreen;
 
-// Variable for keeping track of the last sates
-uint64_t lastCountsValue       = 0;
+// Global variables
+bool     playedDoseWarning     = false;
+uint64_t lastCounts            = 0;
 uint64_t lastCoincidenceEvents = 0;
-bool     lastMuteValue         = false;
-Screen   *lastScreenValue      = nullptr;
+bool     lastMute              = false;
+Screen   *lastScreen           = nullptr;
 
-// Flag for checking if the warning sound has been played
-bool playedWarning = false;
-
-// Variables for keeping track of main loop performance
-uint64_t loops = 0;
-uint64_t totalLoopTimeMicroseconds   = 0;
-uint64_t averageLoopTimeMicroseconds = 0;
-uint64_t maximumLoopTimeMicroseconds = 0;
-
-// Timer for logging
-uint64_t logTimer  = 0;
+// Function prototypes
+void setup();
+void loop();
+void audioFeedback();
+void visualFeedback();
+void displayGeigerCounter();
+void displayAudioSettings();
+void displayDisplaySettings();
+void displayRadiationHistory();
+void displayRotationConfirmation();
+void displayCosmicRayDetector();
+void displayTrueRNG();
+void displayHotspotSettings();
+void displayWiFiSettings();
+void displaySystemSettings();
+void decreaseIntegrationTime();
+void resetIntegrationTime();
+void increaseIntegrationTime();
+void toggleAudioDetections(bool toggled);
+void toggleAudioNotifications(bool toggled);
+void toggleAudioAlerts(bool toggled);
+void toggleAudioInterface(bool toggled);
+void toggleAudioMuteEverything(bool toggled);
+void toggleDisplayPower(bool toggled);
+void goToSleep();
+void wakeFromSleep();
+void cosmicRayDetectorMute();
 
 // ================================================================================================
 // Setup
 // ================================================================================================
 void setup() {
 
+  // --------------------------------------------
   // Initialize everything
+
   Serial.begin(SERIAL_BAUD_RATE);
   geigerCounter.begin();
   cosmicRayDetector.begin();
@@ -81,11 +100,11 @@ void setup() {
   touchscreen.radiationHistory.back.action                 = displayGeigerCounter;
 
   // Rotation confirmation screen
-  touchscreen.rotationConfirmation.back.action             = cosmicRayDetectorBack;
+  touchscreen.rotationConfirmation.back.action             = displayGeigerCounter;
   touchscreen.rotationConfirmation.confirm.action          = displayCosmicRayDetector;
 
   // Cosmic ray detector screen
-  touchscreen.cosmicRayDetector.back.action                = cosmicRayDetectorBack;
+  touchscreen.cosmicRayDetector.back.action                = displayGeigerCounter;
   touchscreen.cosmicRayDetector.mute.action                = cosmicRayDetectorMute;
   touchscreen.cosmicRayDetector.sleep.action               = goToSleep;
 
@@ -117,20 +136,25 @@ void setup() {
 // ================================================================================================
 void loop() {
 
-  // TODO
-  // Clean up the main loop
-  // Add additional features
+  // Update the buzzer
+  audioFeedback();
 
-  // Variable for keeping track of the total loop time
-  uint64_t loopStartMicroseconds = micros();
+  // Update the touchscreen
+  visualFeedback();
 
-  // --------------------------------------------
-  // Audio feedback
+}
 
-  // Get values for usage in audio feedback
+// ------------------------------------------------------------------------------------------------
+// Loop functions
+
+// ================================================================================================
+// Audio feedback
+// ================================================================================================
+void audioFeedback() {
+
+  uint64_t counts               = geigerCounter.getCounts();
   double   microsievertsPerHour = geigerCounter.getMicrosievertsPerHour();
   uint64_t coincidenceEvents    = cosmicRayDetector.getCoincidenceEvents();
-  uint64_t counts               = geigerCounter.getCounts();
 
   // If the dose reaches the alarm level
   if (microsievertsPerHour >= BUZZER_ALARM_LEVEL_USVH) {
@@ -145,13 +169,13 @@ void loop() {
     if (microsievertsPerHour >= BUZZER_WARNING_LEVEL_USVH) {
 
       // If warning has not been played
-      if (!playedWarning) {
+      if (!playedDoseWarning) {
 
         // Play the warning sound
         buzzer.play(buzzer.warning);
 
         // Set the played warning flag to true
-        playedWarning = true;
+        playedDoseWarning = true;
 
       }
 
@@ -159,7 +183,7 @@ void loop() {
     } else {
 
       // Reset the played warning flag
-      playedWarning = false;
+      playedDoseWarning = false;
 
     }
 
@@ -169,30 +193,45 @@ void loop() {
       // Calculate the coincidence events since the last update
       uint16_t newCoincidenceEvents = coincidenceEvents - lastCoincidenceEvents;
 
-      // Play the coincidence event sound for the number of coincidence events
-      buzzer.play(buzzer.coincidenceEvent, newCoincidenceEvents);
+      // If there are any new coincidence events
+      if (newCoincidenceEvents) {
 
-      // If still not playing any other sound
-      if (!buzzer.playing()) {
+        // Play the coincidence event sound for the number of coincidence events
+        buzzer.play(buzzer.coincidenceEvent, newCoincidenceEvents);
+
+      // If the there were no new coincidence events
+      } else {
 
         // Calculate the counts since the last update
-        uint16_t newCounts = counts - lastCountsValue;
+        uint16_t newCounts = counts - lastCounts;
 
-        // Play the detection sound for the number of counts
-        buzzer.play(buzzer.detection, newCounts);
+        // If there are any new counts
+        if (newCounts) {
+
+          // Play the detection sound for the number of counts
+          buzzer.play(buzzer.detection, newCounts);
+
+        }
 
       }
 
     }
 
   }
-
+  
   // Update the last known values
+  lastCounts            = counts;
   lastCoincidenceEvents = coincidenceEvents;
-  lastCountsValue       = counts;
 
-  // --------------------------------------------
-  // Visual feedback
+  // Update the buzzer
+  buzzer.update();
+
+}
+
+// ================================================================================================
+// Visual feedback
+// ================================================================================================
+void visualFeedback() {
 
   // Set Geiger counter screen values
   touchscreen.geigerCounter.setEquivalentDose(geigerCounter.getMicrosievertsPerHour());
@@ -208,70 +247,20 @@ void loop() {
   touchscreen.cosmicRayDetector.setMainTubeCounts(geigerCounter.getMainTubeCounts());
   touchscreen.cosmicRayDetector.setFollowerTubeCounts(geigerCounter.getFollowerTubeCounts());
 
+  // Store the current integration time
+  uint8_t integrationTime = geigerCounter.getIntegrationTime();
+
+  // Increase the integration time to the max
+  geigerCounter.setIntegrationTime(60);
+
   // Set radiation history screen values
   touchscreen.radiationHistory.setRadiationHistory(geigerCounter.getCountsPerMinute());
 
-  // --------------------------------------------
-  // Temporary logging function
-
-  // TODO
-  // Create a logger class that can log this data more properly
-  // Instead of just dumping it to the serial console
-  // This also take A LONG time (+80ms) to print...
-
-  // Every 3 seconds log to Serial console
-  if (millis() - logTimer >= 3000) {
-    
-    Serial.println("Up time:"                      + String(millis())                                        + " ms");
-    Serial.println("Average loop time: "           + String(averageLoopTimeMicroseconds)                     + " us");
-    Serial.println("Maximum loop time: "           + String(maximumLoopTimeMicroseconds)                     + " us");
-    Serial.println("Total heap: "                  + String(ESP.getHeapSize())                               + " bytes");
-    Serial.println("Free heap: "                   + String(ESP.getFreeHeap())                               + " bytes");
-    Serial.println("Minimum free heap: "           + String(ESP.getMinFreeHeap())                            + " bytes");
-    Serial.println("Firmware version: "            + String(FIRMWARE_VERSION));
-    Serial.println("Counts: "                      + String(geigerCounter.getCounts()));
-    Serial.println("Main tube counts: "            + String(geigerCounter.getMainTubeCounts()));
-    Serial.println("Follower tube counts: "        + String(geigerCounter.getFollowerTubeCounts()));
-    Serial.println("Counts per minute: "           + String(geigerCounter.getCountsPerMinute())              + " CPM");
-    Serial.println("Equivalent dose: "             + String(geigerCounter.getMicrosievertsPerHour())         + " µSv/h");
-    Serial.println("Integration time: "            + String(geigerCounter.getIntegrationTime())              + " s");
-    Serial.println("Radiation rating: "            + String(geigerCounter.getRadiationRating()));
-    Serial.println("Tube type: "                   + String(TUBE_TYPE_NAME));
-    Serial.println("Coincidence events: "          + String(cosmicRayDetector.getCoincidenceEvents()));
-    Serial.println("Coincidence events per hour: " + String(cosmicRayDetector.getCoincidenceEventsPerHour()) + " CPH");
-    Serial.println(" ");
-
-    // Update log timer
-    logTimer = millis();
-
-  }
-
-  // --------------------------------------------
-  // Update everything
-
-  // Update the buzzer
-  buzzer.update();
+  // Reset the integration time to the previous value
+  geigerCounter.setIntegrationTime(integrationTime);
 
   // Update the touchscreen
   touchscreen.update();
-
-  // --------------------------------------------
-  // Update loop stats
-
-  // Calculate current loop time
-  uint64_t currentLoopTimeMicroseconds = micros() - loopStartMicroseconds;
-
-  // Increase loops counter
-  loops++;
-
-  // Add current loop time to the total loop time
-  totalLoopTimeMicroseconds += currentLoopTimeMicroseconds;
-
-  // Calculate the average loop time
-  averageLoopTimeMicroseconds = totalLoopTimeMicroseconds / loops;
-
-  // Update the maximum loop time if the current loop time is longer than the old max
-  if (maximumLoopTimeMicroseconds < currentLoopTimeMicroseconds) { maximumLoopTimeMicroseconds = currentLoopTimeMicroseconds; }
 
 }
 
@@ -283,10 +272,16 @@ void loop() {
 // ================================================================================================
 void displayGeigerCounter() {
 
+  // Disable the cosmic ray detector when returning to the Geiger counter screen
+  cosmicRayDetector.disable();
+
+  // Rotate to landscape orientation
+  touchscreen.rotateLandscape();
+
   // Draw the Geiger counter screen
   touchscreen.draw(touchscreen.geigerCounter);
 
-  // Play the back sound
+  // Play the go back sound
   buzzer.play(buzzer.back);
 
 }
@@ -296,10 +291,13 @@ void displayGeigerCounter() {
 // ================================================================================================
 void displayAudioSettings() {
 
+  // Rotate to landscape orientation
+  touchscreen.rotateLandscape();
+
   // Draw the audio settings screen
   touchscreen.draw(touchscreen.audioSettings);
 
-  // Play the enter sound
+  // Play the next screen sound
   buzzer.play(buzzer.next);
 
 }
@@ -309,10 +307,13 @@ void displayAudioSettings() {
 // ================================================================================================
 void displayDisplaySettings() {
 
+  // Rotate to landscape orientation
+  touchscreen.rotateLandscape();
+
   // Draw the audio settings screen
   touchscreen.draw(touchscreen.displaySettings);
 
-  // Play the enter sound
+  // Play the next screen sound
   buzzer.play(buzzer.next);
 
 }
@@ -322,10 +323,13 @@ void displayDisplaySettings() {
 // ================================================================================================
 void displayRadiationHistory() {
 
+  // Rotate to landscape orientation
+  touchscreen.rotateLandscape();
+
   // Draw the screen
   touchscreen.draw(touchscreen.radiationHistory);
 
-  // Play the enter sound
+  // Play the next screen sound
   buzzer.play(buzzer.next);
 
 }
@@ -341,7 +345,7 @@ void displayRotationConfirmation() {
   // Draw the screen
   touchscreen.draw(touchscreen.rotationConfirmation);
 
-  // Play the enter sound
+  // Play the next screen sound
   buzzer.play(buzzer.next);
 
 }
@@ -350,6 +354,9 @@ void displayRotationConfirmation() {
 // Display the cosmic ray detector screen
 // ================================================================================================
 void displayCosmicRayDetector() {
+
+  // Set the screen into portrait orientation
+  touchscreen.rotatePortrait();
 
   // Reset the screen values
   touchscreen.cosmicRayDetector.setCoincidenceEventsOffset(0);
@@ -368,7 +375,7 @@ void displayCosmicRayDetector() {
   // Draw the screen
   touchscreen.draw(touchscreen.cosmicRayDetector);
 
-  // Play the enter sound
+  // Play the next screen sound
   buzzer.play(buzzer.next);
 
   // Enable the cosmic ray detector
@@ -381,10 +388,13 @@ void displayCosmicRayDetector() {
 // ================================================================================================
 void displayTrueRNG() {
 
+  // Rotate to landscape orientation
+  touchscreen.rotateLandscape();
+
   // Draw the screen
   touchscreen.draw(touchscreen.trueRNG);
 
-  // Play the enter sound
+  // Play the next screen sound
   buzzer.play(buzzer.next);
 
 }
@@ -394,10 +404,13 @@ void displayTrueRNG() {
 // ================================================================================================
 void displayHotspotSettings() {
 
+  // Rotate to landscape orientation
+  touchscreen.rotateLandscape();
+
   // Draw the screen
   touchscreen.draw(touchscreen.hotspotSettings);
 
-  // Play the enter sound
+  // Play the next screen sound
   buzzer.play(buzzer.next);
 
 }
@@ -407,10 +420,13 @@ void displayHotspotSettings() {
 // ================================================================================================
 void displayWiFiSettings() {
 
+  // Rotate to landscape orientation
+  touchscreen.rotateLandscape();
+
   // Draw the screen
   touchscreen.draw(touchscreen.wifiSettings);
 
-  // Play the enter sound
+  // Play the next screen sound
   buzzer.play(buzzer.next);
 
 }
@@ -420,10 +436,13 @@ void displayWiFiSettings() {
 // ================================================================================================
 void displaySystemSettings() {
 
+  // Rotate to landscape orientation
+  touchscreen.rotateLandscape();
+
   // Draw the screen
   touchscreen.draw(touchscreen.systemSettings);
 
-  // Play the enter sound
+  // Play the next screen sound
   buzzer.play(buzzer.next);
 
 }
@@ -434,7 +453,7 @@ void displaySystemSettings() {
 void decreaseIntegrationTime() {
 
   // Get current integration time
-  uint16_t integrationTimeSeconds = geigerCounter.getIntegrationTime();
+  uint8_t integrationTimeSeconds = geigerCounter.getIntegrationTime();
 
   // If integration time is larger tha 5 seconds
   if (integrationTimeSeconds > 5) {
@@ -473,9 +492,10 @@ void resetIntegrationTime() {
   touchscreen.geigerCounter.setIntegrationTime(INTEGRATION_TIME_DEFAULT_SECONDS);
 
   // Play a sound
-  buzzer.play(buzzer.click);
+  buzzer.play(buzzer.tap);
 
 }
+
 
 // ================================================================================================
 // Increase the integration time
@@ -483,7 +503,7 @@ void resetIntegrationTime() {
 void increaseIntegrationTime() {
 
   // Get current integration time
-  uint16_t integrationTimeSeconds = geigerCounter.getIntegrationTime();
+  uint8_t integrationTimeSeconds = geigerCounter.getIntegrationTime();
 
   // If integration time is smaller than 60 seconds but larger or equal to 5 seconds
   if (integrationTimeSeconds < 60 && integrationTimeSeconds >= 5) {
@@ -530,7 +550,7 @@ void toggleAudioDetections(bool toggled) {
   }
 
   // Play a sound
-  buzzer.play(buzzer.click);
+  buzzer.play(buzzer.tap);
 
 }
 
@@ -554,7 +574,7 @@ void toggleAudioNotifications(bool toggled) {
   }
 
   // Play a sound
-  buzzer.play(buzzer.click);
+  buzzer.play(buzzer.tap);
 
 }
 
@@ -578,7 +598,7 @@ void toggleAudioAlerts(bool toggled) {
   }
 
   // Play a sound
-  buzzer.play(buzzer.click);
+  buzzer.play(buzzer.tap);
 
 }
 
@@ -602,7 +622,7 @@ void toggleAudioInterface(bool toggled) {
   }
 
   // Play a sound
-  buzzer.play(buzzer.click);
+  buzzer.play(buzzer.tap);
 
 }
 
@@ -626,7 +646,7 @@ void toggleAudioMuteEverything(bool toggled) {
   }
 
   // Play a sound
-  buzzer.play(buzzer.click);
+  buzzer.play(buzzer.tap);
 
 }
 
@@ -638,19 +658,19 @@ void toggleDisplayPower(bool toggled) {
   // If toggled on
   if (toggled) {
 
-    touchscreen.on();
+    touchscreen.enable();
 
   // If toggled off
   } else {
 
     // Store the last mute state
-    lastMuteValue = buzzer.muted();
+    lastMute = buzzer.muted();
 
     // Store the last screen
-    lastScreenValue = touchscreen.getScreen();
+    lastScreen = touchscreen.getScreen();
 
     // Turn off the display
-    touchscreen.off();
+    touchscreen.disable();
 
     // Draw the sleep screen
     touchscreen.draw(touchscreen.sleep);
@@ -658,9 +678,10 @@ void toggleDisplayPower(bool toggled) {
   }
 
   // Play a sound
-  buzzer.play(buzzer.click);
+  buzzer.play(buzzer.tap);
 
 }
+
 
 // ================================================================================================
 // Go to sleep
@@ -668,16 +689,16 @@ void toggleDisplayPower(bool toggled) {
 void goToSleep() {
 
   // Store the last mute state
-  lastMuteValue = buzzer.muted();
+  lastMute = buzzer.muted();
 
   // Store the last screen state
-  lastScreenValue = touchscreen.getScreen();
+  lastScreen = touchscreen.getScreen();
 
   // Mute the buzzer
   buzzer.mute();
 
   // Turn off the touchscreen
-  touchscreen.off();
+  touchscreen.disable();
 
   // Toggle off the appropriate toggles
   touchscreen.audioSettings.muteEverything.toggleOn();
@@ -694,13 +715,13 @@ void goToSleep() {
 void wakeFromSleep() {
 
   // Draw the last screen
-  touchscreen.draw(lastScreenValue);
+  touchscreen.draw(lastScreen);
 
   // Toggle on the display toggle
   touchscreen.displaySettings.display.toggleOn();
 
   // If buzzer was previously unmuted
-  if (lastMuteValue == false) {
+  if (lastMute == false) {
 
     // Toggle off the mute everything toggle
     touchscreen.audioSettings.muteEverything.toggleOff();
@@ -711,23 +732,7 @@ void wakeFromSleep() {
   }
 
   // Turn on the touchscreen
-  touchscreen.on();
-
-}
-
-// ================================================================================================
-// Retrun from the cosmic ray detector screen
-// ================================================================================================
-void cosmicRayDetectorBack() {
-
-  // Disable the cosmic ray detector
-  cosmicRayDetector.disable();
-
-  // Set the default screen rotation
-  touchscreen.rotateLandscape();
-
-  // Display the geiger counter screen
-  displayGeigerCounter();
+  touchscreen.enable();
 
 }
 

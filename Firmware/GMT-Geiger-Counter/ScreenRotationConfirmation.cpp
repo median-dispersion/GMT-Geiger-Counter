@@ -17,7 +17,7 @@ ScreenRotationConfirmation::ScreenRotationConfirmation():
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenRotationConfirmation::update(XPT2046::Point position) {
+void ScreenRotationConfirmation::update(const XPT2046::Point position) {
 
   // Update the basic screen
   ScreenBasicPortrait::update(position);
@@ -49,7 +49,7 @@ void ScreenRotationConfirmation::draw(GFXcanvas16 &canvas) {
   uint16_t textWidth, textHeight;
 
   // Get the bounding box
-  canvas.getTextBounds(STRING_ROTATION_CONFIRMATION_ROTATE_BY_DEGREES, 0, 0, &textX, &textY, &textWidth, &textHeight);
+  canvas.getTextBounds(STRING_ROTATE_BY_90_DEGREES, 0, 0, &textX, &textY, &textWidth, &textHeight);
 
   // Calculate the X and Y cursor position
   cursorX = ((236 - textWidth)  / 2) + 2;
@@ -57,10 +57,10 @@ void ScreenRotationConfirmation::draw(GFXcanvas16 &canvas) {
 
   // Set the cursor and draw text to the frame buffer
   canvas.setCursor(cursorX, cursorY);
-  canvas.print(STRING_ROTATION_CONFIRMATION_ROTATE_BY_DEGREES);
+  canvas.print(STRING_ROTATE_BY_90_DEGREES);
 
   // Get the bounding box
-  canvas.getTextBounds(STRING_ROTATION_CONFIRMATION_TAP_TO_CONTINUE, 0, 0, &textX, &textY, &textWidth, &textHeight);
+  canvas.getTextBounds(STRING_TAP_TO_CONTINUE, 0, 0, &textX, &textY, &textWidth, &textHeight);
 
   // Calculate the X and Y cursor position
   cursorX = ((236 - textWidth) / 2) + 2;
@@ -68,7 +68,7 @@ void ScreenRotationConfirmation::draw(GFXcanvas16 &canvas) {
 
   // Set the cursor and draw text to the frame buffer
   canvas.setCursor(cursorX, cursorY);
-  canvas.print(STRING_ROTATION_CONFIRMATION_TAP_TO_CONTINUE);
+  canvas.print(STRING_TAP_TO_CONTINUE);
 
   // Draw bottom lines
   canvas.drawFastHLine(12, 301, 215, COLOR_WHITE);

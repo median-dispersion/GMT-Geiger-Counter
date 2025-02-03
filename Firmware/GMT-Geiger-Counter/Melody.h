@@ -17,11 +17,11 @@ struct Melody {
 // Melody data
 extern Melody MELODY_ALARM;
 extern Melody MELODY_BACK;
-extern Melody MELODY_CLICK;
 extern Melody MELODY_COINCIDENCE_EVENT;
 extern Melody MELODY_DETECTION;
 extern Melody MELODY_JINGLE;
 extern Melody MELODY_NEXT;
+extern Melody MELODY_TAP;
 extern Melody MELODY_WARNING;
 
 #endif

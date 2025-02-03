@@ -104,9 +104,18 @@ void GeigerCounter::disable() {
 }
 
 // ================================================================================================
+// Returns if the Geiger counter is enabled
+// ================================================================================================
+bool GeigerCounter::enabled() {
+
+  return _enabled;
+
+}
+
+// ================================================================================================
 // Set the integration time
 // ================================================================================================
-void GeigerCounter::setIntegrationTime(uint16_t timeSeconds) {
+void GeigerCounter::setIntegrationTime(const uint8_t timeSeconds) {
 
   // If the provided integration time is larger than the moving average array size, set the integration time to the array size
   if (timeSeconds > 60) {
@@ -180,7 +189,7 @@ double GeigerCounter::getCountsPerMinute() {
   }
 
   // Divide the CPM value by the integration time and multiply by 60 to get the actual value for 60 seconds
-  cpm = (cpm / _integrationTimeSeconds) * 60;
+  cpm = (cpm / _integrationTimeSeconds) * 60.0;
 
   // Return the counts per minute
   return cpm;
@@ -188,7 +197,7 @@ double GeigerCounter::getCountsPerMinute() {
 }
 
 // ================================================================================================
-// Convert counts per minute to microsieverts per hour
+// Convert counts per minute to Microsieverts per hour
 // ================================================================================================
 double GeigerCounter::getMicrosievertsPerHour() {
 
@@ -236,6 +245,9 @@ GeigerCounter::RadiationRating GeigerCounter::getRadiationRating() {
 
   }
 
+  // If nothing matches return unknown level
+  return RADIATION_RATING_UNKNOWN;
+
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -246,7 +258,7 @@ GeigerCounter::RadiationRating GeigerCounter::getRadiationRating() {
 // ================================================================================================
 void IRAM_ATTR GeigerCounter::_advanceMovingAverage(void *instancePointer) {
 
-  // Cast the generic instance pointer back to a instance pointe of type GeigerCounter 
+  // Cast the generic instance pointer back to a instance pointer of type GeigerCounter 
   GeigerCounter *instance = (GeigerCounter*)instancePointer;
 
   // Calculate a wrapped index by using the current index + 1, if it overflows wrapped to the start of the array

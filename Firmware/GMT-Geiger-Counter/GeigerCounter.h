@@ -15,6 +15,7 @@ class GeigerCounter {
     // Radiation rating enumerator
     enum RadiationRating {
 
+      RADIATION_RATING_UNKNOWN,
       RADIATION_RATING_NORMAL,
       RADIATION_RATING_ELEVATED,
       RADIATION_RATING_HIGH,
@@ -25,17 +26,18 @@ class GeigerCounter {
     // Constructor
     GeigerCounter();
 
-    void            begin();                                  // Initialize everything
-    void            enable();                                 // Enable the Geiger counter
-    void            disable();                                // Disable the Geiger counter
-    void            setIntegrationTime(uint16_t timeSeconds); // Set the integration time
-    uint64_t        getCounts();                              // Get the total number of counts
-    uint64_t        getMainTubeCounts();                      // Get the total number of counts for the main tube
-    uint64_t        getFollowerTubeCounts();                  // Get the total number of counts for the follower tube
-    double          getCountsPerMinute();                     // Get the counts per minute
-    double          getMicrosievertsPerHour();                // Convert counts per minute to micro Sieverts per hour
-    uint8_t         getIntegrationTime();                     // Get the integration time
-    RadiationRating getRadiationRating();                     // Get the radiation rating
+    void            begin();                                       // Initialize everything
+    void            enable();                                      // Enable the Geiger counter
+    void            disable();                                     // Disable the Geiger counter
+    bool            enabled();                                     // Returns if the Geiger counter is enabled
+    void            setIntegrationTime(const uint8_t timeSeconds); // Set the integration time
+    uint64_t        getCounts();                                   // Get the total number of counts
+    uint64_t        getMainTubeCounts();                           // Get the total number of counts for the main tube
+    uint64_t        getFollowerTubeCounts();                       // Get the total number of counts for the follower tube
+    double          getCountsPerMinute();                          // Get the counts per minute
+    double          getMicrosievertsPerHour();                     // Convert counts per minute to Microsieverts per hour
+    uint8_t         getIntegrationTime();                          // Get the integration time
+    RadiationRating getRadiationRating();                          // Get the radiation rating
 
   // ----------------------------------------------------------------------------------------------
   // Private

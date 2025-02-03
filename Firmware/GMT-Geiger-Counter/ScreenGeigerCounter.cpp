@@ -22,21 +22,22 @@ ScreenGeigerCounter::ScreenGeigerCounter():
   wifiSettings(           215, 187, 51, 51, IMAGE_WIFI    ),
   systemSettings(         267, 187, 51, 51, IMAGE_SETTINGS),
 
-  _equivalentDose("0.00"),
-  _equivalentDoseUnit(STRING_EQUIVALENT_DOSE_UNIT_USVH),
-  _doseBorderColor(COLOR_MEDIUM_GREEN),
-  _doseBackgroundColor(COLOR_DARK_GREEN),
+  _equivalentDoseString("0.00"),
+  _equivalentDoseUnitString(STRING_EQUIVALENT_DOSE_UNIT_USVH),
+  _countsPerMinuteString("0 CPM"),
+  _integrationTimeString("30 s"),
 
-  _radiationRating(2, 161, 160, IMAGE_RADIATION, STRING_RADIATION_RATING_NORMAL                                              ),
-  _countsPerMinute(2, 187, 160, IMAGE_PARTICLE,  String("0 ") + STRING_COUNTS_PER_MINUTE_ABBREVIATION                        ),
-  _integrationTime(2, 213, 160, IMAGE_CLOCK,     INTEGRATION_TIME_DEFAULT_SECONDS + String(" ") + STRING_SECONDS_ABBREVIATION)
+  _equivalentDoseScreen(2, 31, 160, 129, COLOR_MEDIUM_GREEN, COLOR_DARK_GREEN, _equivalentDoseString.c_str(), _equivalentDoseUnitString.c_str()),
+  _radiationRating(2, 161, 160, IMAGE_RADIATION, STRING_RADIATION_RATING_NORMAL),
+  _countsPerMinute(2, 187, 160, IMAGE_PARTICLE,  _countsPerMinuteString.c_str()),
+  _integrationTime(2, 213, 160, IMAGE_CLOCK,     _integrationTimeString.c_str())
 
 {}
 
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenGeigerCounter::update(XPT2046::Point position) {
+void ScreenGeigerCounter::update(const XPT2046::Point position) {
 
   // Update screen elements
   audioSettings.update(position);
@@ -75,46 +76,6 @@ void ScreenGeigerCounter::draw(GFXcanvas16 &canvas) {
   canvas.setCursor(5, 20);
   canvas.print(STRING_GEIGER_COUNTER_SCREEN_TITLE);
 
-  // Draw the dose screen border and background
-  canvas.drawRect(2, 31, 160, 129, _doseBorderColor);
-  canvas.fillRect(3, 32, 158, 127, _doseBackgroundColor);
-
-  // Set the font family, size and color
-  canvas.setFont(&FreeSansBold24pt7b);
-  canvas.setTextColor(COLOR_WHITE);
-
-  // Text position variables
-  int16_t textX, textY, cursorX, cursorY;
-  uint16_t textWidth, textHeight;
-
-  // Get the bounding box of the equivalent dose text
-  canvas.getTextBounds(_equivalentDose, 0, 0, &textX, &textY, &textWidth, &textHeight);
-
-  // Calculate the X and Y cursor position so that the equivalent dose text is centered
-  cursorX = ((160 - textWidth)  / 2) + 2;
-  cursorY = 105;
-
-  // Set the cursor and draw equivalent dose text to the frame buffer
-  canvas.setCursor(cursorX, cursorY);
-  canvas.print(_equivalentDose);
-
-  // Set the font family, size and color
-  canvas.setFont(&FreeSans9pt7b);
-  canvas.setTextColor(COLOR_WHITE);
-
-  // Get the bounding box of the equivalent dose unit text
-  canvas.getTextBounds(_equivalentDoseUnit, 0, 0, &textX, &textY, &textWidth, &textHeight);
-
-  // Calculate the X cursor position so that the equivalent dose unit text is centered
-  // Use the equivalent dose text Y position and add a 25px offset
-  // A little janky but works as long as the font size of the equivalent dose text doesn't change
-  cursorX = ((160 - textWidth) / 2) + 2;
-  cursorY += 25;
-
-  // Set the cursor and print the equivalent dose unit text
-  canvas.setCursor(cursorX, cursorY);
-  canvas.print(_equivalentDoseUnit);
-
   // Draw screen elements
   audioSettings.draw(canvas);
   displaySettings.draw(canvas);
@@ -128,6 +89,7 @@ void ScreenGeigerCounter::draw(GFXcanvas16 &canvas) {
   hotspotSettings.draw(canvas);
   wifiSettings.draw(canvas);
   systemSettings.draw(canvas);
+  _equivalentDoseScreen.draw(canvas);
   _radiationRating.draw(canvas);
   _countsPerMinute.draw(canvas);
   _integrationTime.draw(canvas);
@@ -139,11 +101,11 @@ void ScreenGeigerCounter::draw(GFXcanvas16 &canvas) {
 // ================================================================================================
 void ScreenGeigerCounter::setEquivalentDose(double equivalentDose) {
 
-  // Convert equivalent dose to a string with 2 decimal places
-  String equivalentDoseValue = String(equivalentDose, 2);
+  // Clear last value
+  _equivalentDoseString = "";
 
-  // Set value
-  _equivalentDose = equivalentDoseValue;
+  // Convert equivalent dose to a string
+  _equivalentDoseString += equivalentDose;
 
 }
 
@@ -152,7 +114,7 @@ void ScreenGeigerCounter::setEquivalentDose(double equivalentDose) {
 // ================================================================================================
 void ScreenGeigerCounter::setEquivalentDoseUnit(String equivalentDoseUnit) {
 
-  _equivalentDoseUnit = equivalentDoseUnit;
+  _equivalentDoseUnitString = equivalentDoseUnit;
 
 }
 
@@ -167,27 +129,33 @@ void ScreenGeigerCounter::setRadiationRating(GeigerCounter::RadiationRating radi
   
   switch (radiationRating) {
 
+    case GeigerCounter::RADIATION_RATING_UNKNOWN:
+      _equivalentDoseScreen.setBorderColor(COLOR_MEDIUM_GREEN);
+      _equivalentDoseScreen.setBackgroundColor(COLOR_DARK_GREEN);
+      _radiationRating.setValue(STRING_RADIATION_RATING_UNKNOWN);
+    break;
+
     case GeigerCounter::RADIATION_RATING_NORMAL:
-      _doseBorderColor     = COLOR_MEDIUM_GREEN;
-      _doseBackgroundColor = COLOR_DARK_GREEN;
+      _equivalentDoseScreen.setBorderColor(COLOR_MEDIUM_GREEN);
+      _equivalentDoseScreen.setBackgroundColor(COLOR_DARK_GREEN);
       _radiationRating.setValue(STRING_RADIATION_RATING_NORMAL);
     break;
 
     case GeigerCounter::RADIATION_RATING_ELEVATED:
-      _doseBorderColor     = COLOR_MEDIUM_ORANGE;
-      _doseBackgroundColor = COLOR_DARK_ORANGE;
+      _equivalentDoseScreen.setBorderColor(COLOR_MEDIUM_ORANGE);
+      _equivalentDoseScreen.setBackgroundColor(COLOR_DARK_ORANGE);
       _radiationRating.setValue(STRING_RADIATION_RATING_ELEVATED);
     break;
 
     case GeigerCounter::RADIATION_RATING_HIGH:
-      _doseBorderColor     = COLOR_MEDIUM_RED;
-      _doseBackgroundColor = COLOR_DARK_RED;
+      _equivalentDoseScreen.setBorderColor(COLOR_MEDIUM_RED);
+      _equivalentDoseScreen.setBackgroundColor(COLOR_DARK_RED);
       _radiationRating.setValue(STRING_RADIATION_RATING_HIGH);
     break;
 
     case GeigerCounter::RADIATION_RATING_EXTREME:
-      _doseBorderColor     = COLOR_MEDIUM_RED;
-      _doseBackgroundColor = COLOR_DARK_RED;
+      _equivalentDoseScreen.setBorderColor(COLOR_MEDIUM_RED);
+      _equivalentDoseScreen.setBackgroundColor(COLOR_DARK_RED);
       _radiationRating.setValue(STRING_RADIATION_RATING_EXTREME);
     break;
 
@@ -202,10 +170,10 @@ void ScreenGeigerCounter::setRadiationRating(GeigerCounter::RadiationRating radi
 void ScreenGeigerCounter::setCountsPerMinute(double countsPerMinute) {
 
   // Convert counts per minute to a string with unit appended to it
-  String countsPerMinuteValue = String((uint32_t)(round(countsPerMinute))) + " " + STRING_COUNTS_PER_MINUTE_ABBREVIATION;
-
-  // Set value
-  _countsPerMinute.setValue(countsPerMinuteValue);
+  _countsPerMinuteString = "";
+  _countsPerMinuteString += (uint32_t)(round(countsPerMinute));
+  _countsPerMinuteString += " ";
+  _countsPerMinuteString += STRING_COUNTS_PER_MINUTE_ABBREVIATION;
 
 }
 
@@ -213,11 +181,11 @@ void ScreenGeigerCounter::setCountsPerMinute(double countsPerMinute) {
 // Set the integration time
 // ================================================================================================
 void ScreenGeigerCounter::setIntegrationTime(uint8_t integrationTime) {
-
+  
   // Convert integration time to a string with unit appended to it
-  String integrationTimeValue = String(integrationTime) + " " + STRING_SECONDS_ABBREVIATION;
-
-  // Set value
-  _integrationTime.setValue(integrationTimeValue);
+  _integrationTimeString = "";
+  _integrationTimeString += integrationTime;
+  _integrationTimeString += " ";
+  _integrationTimeString += STRING_SECONDS_ABBREVIATION;
 
 }

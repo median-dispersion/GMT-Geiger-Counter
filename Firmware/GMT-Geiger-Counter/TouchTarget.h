@@ -13,20 +13,20 @@ class TouchTarget {
   public:
 
     // Constructor
-    TouchTarget(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
+    TouchTarget(const uint16_t x, const uint16_t y, const uint16_t width, const uint16_t height);
 
-    void update(XPT2046::Point position); // Update the touch target with the touch position
-    void (*action)();                     // Function pointer to execute a function on touchdown
+    void update(const XPT2046::Point position); // Update the touch target with the touch position
+    void (*action)();                           // Function pointer to execute a function on touchdown
 
   //-----------------------------------------------------------------------------------------------
   // Private
 
   private:
 
-    uint16_t _x;      // X position
-    uint16_t _y;      // Y position
-    uint16_t _width;  // Touch target width
-    uint16_t _height; // Touch target height
+    const uint16_t _x;      // X position
+    const uint16_t _y;      // Y position
+    const uint16_t _width;  // Touch target width
+    const uint16_t _height; // Touch target height
 
 };
 

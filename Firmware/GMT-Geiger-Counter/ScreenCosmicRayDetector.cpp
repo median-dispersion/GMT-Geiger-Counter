@@ -13,20 +13,25 @@ ScreenCosmicRayDetector::ScreenCosmicRayDetector():
   mute( 213, 163, 25, 25, IMAGE_MUTE       ),
   sleep(213, 189, 25, 25, IMAGE_SLEEP_SMALL),
   _coincidenceEventsOffset(0),
-  _coincidenceEvents("0"),
-  _coincidenceEventsPerHour(2, 163, 210, IMAGE_MUON_SMALL, String("0.00 ") + STRING_COSMIC_RAY_DETECTOR_COUNTS_PER_HOUR_ABBREVIATION),
-  _coincidenceEventsTotal(  2, 189, 210, IMAGE_SUM,        "0"                                                                      ),
   _mainTubeCountsOffset(0),
   _followerTubeCountsOffset(0),
-  _mainTubeCounts(    120, 215, 118, STRING_COSMIC_RAY_DETECTOR_COUNTS, "0"),
-  _followerTubeCounts(120, 267, 118, STRING_COSMIC_RAY_DETECTOR_COUNTS, "0")
+  _coincidenceEventsString("0"),
+  _coincidenceEventsPerHourString("0.00 CPH"),
+  _coincidenceEventsTotalString("0"),
+  _mainTubeCountsString("0"),
+  _followerTubeCountsString("0"),
+  _coincidenceEventsScreen(2, 31, 236, 131, COLOR_MEDIUM_GREEN, COLOR_DARK_GREEN, _coincidenceEventsString.c_str(), STRING_COINCIDENCE_EVENTS),
+  _coincidenceEventsPerHour(2, 163, 210, IMAGE_MUON_SMALL, _coincidenceEventsPerHourString.c_str()),
+  _coincidenceEventsTotal(  2, 189, 210, IMAGE_SUM, _coincidenceEventsTotalString.c_str()),
+  _mainTubeCounts( 120, 215, 118, STRING_COUNTS, _mainTubeCountsString.c_str()),
+  _followerTubeCounts(120, 267, 118, STRING_COUNTS, _followerTubeCountsString.c_str())
 
 {}
 
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenCosmicRayDetector::update(XPT2046::Point position) {
+void ScreenCosmicRayDetector::update(const XPT2046::Point position) {
 
   // Update the basic screen
   ScreenBasicPortrait::update(position);
@@ -45,44 +50,6 @@ void ScreenCosmicRayDetector::draw(GFXcanvas16 &canvas) {
   // Draw the basic screen
   ScreenBasicPortrait::draw(canvas);
 
-  // Draw the coincidence events screen border and background
-  canvas.drawRect(2, 31, 236, 131, COLOR_MEDIUM_GREEN);
-  canvas.fillRect(3, 32, 234, 129, COLOR_DARK_GREEN);
-
-  // Set the font family, size and color
-  canvas.setFont(&FreeSansBold24pt7b);
-  canvas.setTextColor(COLOR_WHITE);
-
-  // Text position variables
-  int16_t textX, textY, cursorX, cursorY;
-  uint16_t textWidth, textHeight;
-
-  // Get the bounding box of the coincidence events text
-  canvas.getTextBounds(_coincidenceEvents, 0, 0, &textX, &textY, &textWidth, &textHeight);
-
-  // Calculate the X and Y cursor position so that the coincidence events text is centered
-  cursorX = ((236 - textWidth)  / 2) + 2;
-  cursorY = 100;
-
-  // Set the cursor and draw coincidence events text to the frame buffer
-  canvas.setCursor(cursorX, cursorY);
-  canvas.print(_coincidenceEvents);
-
-  // Set the font family, size and color
-  canvas.setFont(&FreeSans9pt7b);
-  canvas.setTextColor(COLOR_WHITE);
-
-  // Get the bounding box of the the unit text
-  canvas.getTextBounds(STRING_COSMIC_RAY_DETECTOR_COINCIDENCE_EVENTS, 0, 0, &textX, &textY, &textWidth, &textHeight);
-
-  // Calculate cursor position for the unit text
-  cursorX = ((236 - textWidth)  / 2) + 2;
-  cursorY = 130;
-
-  // Set the cursor and print the unit text
-  canvas.setCursor(cursorX, cursorY);
-  canvas.print(STRING_COSMIC_RAY_DETECTOR_COINCIDENCE_EVENTS);
-
   // Draw the diagram background and diagram
   canvas.fillRect(2, 215, 117, 51, COLOR_DARK_GRAY);
   canvas.fillRect(2, 267, 117, 51, COLOR_DARK_GRAY);
@@ -91,6 +58,7 @@ void ScreenCosmicRayDetector::draw(GFXcanvas16 &canvas) {
   // Draw screen elements
   mute.draw(canvas);
   sleep.draw(canvas);
+  _coincidenceEventsScreen.draw(canvas);
   _coincidenceEventsPerHour.draw(canvas);
   _coincidenceEventsTotal.draw(canvas);
   _mainTubeCounts.draw(canvas);
@@ -101,55 +69,16 @@ void ScreenCosmicRayDetector::draw(GFXcanvas16 &canvas) {
 // ================================================================================================
 // Set the coincidence events offset
 // ================================================================================================
-void ScreenCosmicRayDetector::setCoincidenceEventsOffset(uint64_t coincidenceEventsOffset) {
+void ScreenCosmicRayDetector::setCoincidenceEventsOffset(const uint64_t coincidenceEventsOffset) {
 
   _coincidenceEventsOffset = coincidenceEventsOffset;
 
 }
 
 // ================================================================================================
-// Calculate and set coincidence events
-// ================================================================================================
-void ScreenCosmicRayDetector::setCoincidenceEvents(uint64_t coincidenceEvents) {
-
-  // Calculate new coincidence events by subtracting the coincidence events offset
-  String coincidenceEventsValue = String(coincidenceEvents - _coincidenceEventsOffset);
-
-  // Set the main tube counts value
-  _coincidenceEvents = coincidenceEventsValue;
-
-}
-
-// ================================================================================================
-// Set the coincidence events per hour value
-// ================================================================================================
-void ScreenCosmicRayDetector::setCoincidenceEventsPerHour(double coincidenceEventsPerHour) {
-
-  // Convert coincidence events per hour to a string with unit appended to it
-  String coincidenceEventsPerHourValue = String(coincidenceEventsPerHour, 2) + " " + STRING_COSMIC_RAY_DETECTOR_COUNTS_PER_HOUR_ABBREVIATION;
-
-  // Set value
-  _coincidenceEventsPerHour.setValue(coincidenceEventsPerHourValue);
-
-}
-
-// ================================================================================================
-// Set the total number of coincidence events
-// ================================================================================================
-void ScreenCosmicRayDetector::setCoincidenceEventsTotal(uint64_t coincidenceEventsTotal) {
-
-  // Convert coincidence events total to a string
-  String coincidenceEventsTotalValue = String(coincidenceEventsTotal);
-
-  // Set value
-  _coincidenceEventsTotal.setValue(coincidenceEventsTotalValue);
-
-}
-
-// ================================================================================================
 // Set the main tube offset
 // ================================================================================================
-void ScreenCosmicRayDetector::setMainTubeCountsOffset(uint64_t mainTubeCountsOffset) {
+void ScreenCosmicRayDetector::setMainTubeCountsOffset(const uint64_t mainTubeCountsOffset) {
 
   _mainTubeCountsOffset = mainTubeCountsOffset;
 
@@ -158,34 +87,57 @@ void ScreenCosmicRayDetector::setMainTubeCountsOffset(uint64_t mainTubeCountsOff
 // ================================================================================================
 // Set the follower tube offset
 // ================================================================================================
-void ScreenCosmicRayDetector::setFollowerTubeCountsOffset(uint64_t followerTubeCountsOffset) {
+void ScreenCosmicRayDetector::setFollowerTubeCountsOffset(const uint64_t followerTubeCountsOffset) {
 
   _followerTubeCountsOffset = followerTubeCountsOffset;
 
 }
 
 // ================================================================================================
+// Calculate and set coincidence events
+// ================================================================================================
+void ScreenCosmicRayDetector::setCoincidenceEvents(const uint64_t coincidenceEvents) {
+
+  _coincidenceEventsString = coincidenceEvents - _coincidenceEventsOffset;
+
+}
+
+// ================================================================================================
+// Set the coincidence events per hour value
+// ================================================================================================
+void ScreenCosmicRayDetector::setCoincidenceEventsPerHour(const double coincidenceEventsPerHour) {
+
+  _coincidenceEventsPerHourString = "";
+
+  _coincidenceEventsPerHourString += coincidenceEventsPerHour;
+  _coincidenceEventsPerHourString += " ";
+  _coincidenceEventsPerHourString += STRING_COUNTS_PER_HOUR_ABBREVIATION;
+
+}
+
+// ================================================================================================
+// Set the total number of coincidence events
+// ================================================================================================
+void ScreenCosmicRayDetector::setCoincidenceEventsTotal(const uint64_t coincidenceEventsTotal) {
+
+  _coincidenceEventsTotalString = coincidenceEventsTotal;
+
+}
+
+// ================================================================================================
 // Calculate and set main tube counts
 // ================================================================================================
-void ScreenCosmicRayDetector::setMainTubeCounts(uint64_t mainTubeCounts) {
+void ScreenCosmicRayDetector::setMainTubeCounts(const uint64_t mainTubeCounts) {
 
-  // Calculate new main tube counts by subtracting the main tube offset
-  String mainTubeCountsValue = String(mainTubeCounts - _mainTubeCountsOffset);
-
-  // Set the main tube counts value
-  _mainTubeCounts.setValue(mainTubeCountsValue);
+  _mainTubeCountsString = mainTubeCounts - _mainTubeCountsOffset;
 
 }
 
 // ================================================================================================
 // Calculate and set follower tube counts
 // ================================================================================================
-void ScreenCosmicRayDetector::setFollowerTubeCounts(uint64_t followerTubeCounts) {
+void ScreenCosmicRayDetector::setFollowerTubeCounts(const uint64_t followerTubeCounts) {
 
-  // Calculate new follower tube counts by subtracting the main follower offset
-  String followerTubeCountsValue = String(followerTubeCounts - _followerTubeCountsOffset);
-
-  // Set the follower tube counts value
-  _followerTubeCounts.setValue(followerTubeCountsValue);
+  _followerTubeCountsString = followerTubeCounts - _followerTubeCountsOffset;
 
 }

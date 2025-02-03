@@ -21,7 +21,7 @@ class ScreenRadiationHistory: public ScreenBasic {
     ScreenRadiationHistory();
 
     // Update and draw calls
-    void update(XPT2046::Point position) override;
+    void update(const XPT2046::Point position) override;
     void draw(GFXcanvas16 &canvas) override;
 
     void setRadiationHistory(double countsPerMinute); // Update the radiation history
@@ -31,14 +31,17 @@ class ScreenRadiationHistory: public ScreenBasic {
   
   public:
 
-    uint32_t _history[RADIATION_HISTORY_LENGTH_MINUTES]; // History array
-    uint8_t  _historyIndex;                              // Index of the history array
-    uint64_t _historyTimerMilliseconds;                  // History update timer
-    uint8_t  _timeSteps;                                 // History graph time steps
-    uint32_t _countSteps;                                // History graph count steps
-    DisplayInfoBox _average;                             // Average counts per minute screen element
-    DisplayInfoBox _maximum;                             // Maximum counts per minute screen element
-    DisplayInfoBox _minimum;                             // Minimum counts per minute screen element
+    uint32_t       _history[RADIATION_HISTORY_LENGTH_MINUTES]; // History array
+    uint8_t        _historyIndex;                              // Index of the history array
+    uint64_t       _historyTimerMilliseconds;                  // History update timer
+    uint8_t        _timeSteps;                                 // History graph time steps
+    uint32_t       _countSteps;                                // History graph count steps
+    String         _averageCountsPerMinuteString;              // Average counts per minute string
+    String         _maximumCountsPerMinuteString;              // Maximum counts per minute string
+    String         _minimumCountsPerMinuteString;              // Minimum counts per minute string
+    DisplayInfoBox _averageCountsPerMinute;                    // Average counts per minute screen element
+    DisplayInfoBox _maximumCountsPerMinute;                    // Maximum counts per minute screen element
+    DisplayInfoBox _minimumCountsPerMinute;                    // Minimum counts per minute screen element
 
 };
 

@@ -6,7 +6,7 @@
 // ================================================================================================
 // Constructor
 // ================================================================================================
-TouchToggle::TouchToggle(uint8_t row, String text, bool toggled):
+TouchToggle::TouchToggle(const uint8_t row, const char *text, const bool toggled):
 
   // Initialize members
   _y((26 * row) + 31),
@@ -18,7 +18,7 @@ TouchToggle::TouchToggle(uint8_t row, String text, bool toggled):
 // ================================================================================================
 // Update the touch toggle with the touch position
 // ================================================================================================
-void TouchToggle::update(XPT2046::Point position) {
+void TouchToggle::update(const XPT2046::Point position) {
 
   // Check if touch position is inside the bounding box
   if (position.x >= 2 && position.x < 318 && position.y >= _y && position.y < (_y + 25)) {

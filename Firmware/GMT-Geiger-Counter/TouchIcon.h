@@ -14,22 +14,22 @@ class TouchIcon {
   public:
 
     // Constructor
-    TouchIcon(uint16_t x, uint16_t y, uint16_t width, uint16_t height, Image icon);
+    TouchIcon(const uint16_t x, const uint16_t y, const uint16_t width, const uint16_t height, const Image icon);
 
-    void update(XPT2046::Point position); // Update the touch icon with the touch position
-    void draw(GFXcanvas16 &canvas);       // Draw the touch icon to the frame buffer
-    void (*action)();                     // Function pointer to execute a function on touchdown
+    void update(const XPT2046::Point position); // Update the touch icon with the touch position
+    void draw(GFXcanvas16 &canvas);             // Draw the touch icon to the frame buffer
+    void (*action)();                           // Function pointer to execute a function on touchdown
 
   //-----------------------------------------------------------------------------------------------
   // Private
 
   private:
 
-    uint16_t _x;      // X position
-    uint16_t _y;      // Y position
-    uint16_t _width;  // Touch icon width
-    uint16_t _height; // Touch icon height
-    Image    _icon;   // Touch icon graphic
+    const uint16_t _x;      // X position
+    const uint16_t _y;      // Y position
+    const uint16_t _width;  // Touch icon width
+    const uint16_t _height; // Touch icon height
+    const Image    _icon;   // Touch icon graphic
 
 };
 

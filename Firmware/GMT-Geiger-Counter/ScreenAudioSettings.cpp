@@ -10,18 +10,18 @@ ScreenAudioSettings::ScreenAudioSettings():
 
   // Initialize members
   ScreenBasic(STRING_AUDIO_SETTINGS_TITLE),
-  detections(    0, STRING_AUDIO_SETTINGS_DETECTIONS,      true ),
-  notifications( 1, STRING_AUDIO_SETTINGS_NOTIFICATIONS,   true ),
-  alerts(        2, STRING_AUDIO_SETTINGS_ALERTS,          true ),
-  interface(     3, STRING_AUDIO_SETTINGS_INTERFACE,       true ),
-  muteEverything(4, STRING_AUDIO_SETTINGS_MUTE_EVERYTHING, false)
+  detections(    0, STRING_TOGGLE_DETECTIONS,      true ),
+  notifications( 1, STRING_TOGGLE_NOTIFICATIONS,   true ),
+  alerts(        2, STRING_TOGGLE_ALERTS,          true ),
+  interface(     3, STRING_TOGGLE_INTERFACE,       true ),
+  muteEverything(4, STRING_TOGGLE_MUTE_EVERYTHING, false)
 
 {}
 
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenAudioSettings::update(XPT2046::Point position) {
+void ScreenAudioSettings::update(const XPT2046::Point position) {
 
   // Update the basic screen
   ScreenBasic::update(position);

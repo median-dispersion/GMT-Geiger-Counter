@@ -31,32 +31,33 @@ class Buzzer {
     // Sound effects
     Sound alarm;            // Radiation alarm sound effect
     Sound back;             // UI back sound effect
-    Sound click;            // UI button press sound effect
-    Sound coincidenceEvent; // UI button press sound effect
+    Sound coincidenceEvent; // UI coincidence event sound effect
     Sound detection;        // Detection sound effect
     Sound jingle;           // Power on jingle sound effect
     Sound next;             // UI next sound effect
+    Sound tap;              // UI touch press sound effect
     Sound warning;          // Radiation warning sound effect
 
     // Constructor
     Buzzer();
 
-    void begin();                                  // Initialize everything
-    void update();                                 // Update the Buzzer
-    void mute();                                   // Mute the buzzer
-    void unmute();                                 // Unmute the buzzer
-    bool muted();                                  // Check if the buzzer is muted
-    void play(Sound &sound, uint16_t repeats = 1); // Play a sound effect
-    bool playing();                                // Check if anything is playing
-    bool playing(Sound &sound);                    // Check if a specific sound is playing
+    void begin();                                              // Initialize everything
+    void update();                                             // Update the Buzzer
+    void mute();                                               // Mute the buzzer
+    void unmute();                                             // Unmute the buzzer
+    bool muted();                                              // Check if the buzzer is muted
+    void play(const Sound &sound, const uint16_t repeats = 1); // Play a sound effect
+    bool playing();                                            // Check if anything is playing
+    bool playing(const Sound &sound);                          // Check if a specific sound is playing
 
   // ----------------------------------------------------------------------------------------------
   // Private
 
   private:
 
-    bool _muted;               // Mute flag
-    NonBlockingMelody _melody; // Melody object
+    bool              _muted; // Flag for checking if the buzzer is muted
+    NonBlockingMelody _audio; // Audio player object
 
 };
+
 #endif

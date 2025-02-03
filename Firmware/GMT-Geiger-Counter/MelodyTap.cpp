@@ -7,4 +7,4 @@ const NonBlockingMelody::Note notes[2] = {
   
 };
 
-Melody MELODY_CLICK = {notes, 2, 1};
+Melody MELODY_TAP = {notes, 2, 1};

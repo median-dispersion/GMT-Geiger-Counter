@@ -13,13 +13,14 @@ class ScreenSystemSettings: public ScreenBasic {
 
   //-----------------------------------------------------------------------------------------------
   // Public
+
   public:
 
     // Constructor
     ScreenSystemSettings();
 
     // Update and draw calls
-    void update(XPT2046::Point position) override;
+    void update(const XPT2046::Point position) override;
     void draw(GFXcanvas16 &canvas) override;
 
   //-----------------------------------------------------------------------------------------------

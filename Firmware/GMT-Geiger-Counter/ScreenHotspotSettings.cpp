@@ -17,7 +17,7 @@ ScreenHotspotSettings::ScreenHotspotSettings():
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenHotspotSettings::update(XPT2046::Point position) {
+void ScreenHotspotSettings::update(const XPT2046::Point position) {
 
   // Update the basic screen
   ScreenBasic::update(position);

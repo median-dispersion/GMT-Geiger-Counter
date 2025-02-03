@@ -13,21 +13,21 @@ class DisplayInfoBox {
   public:
 
     // Constructor
-    DisplayInfoBox(uint16_t x, uint16_t y, uint16_t width, Image icon, String value);
+    DisplayInfoBox(const uint16_t x, const uint16_t y, const uint16_t width, const Image icon, const char *value);
 
-    void draw(GFXcanvas16 &canvas); // Draw the info box
-    void setValue(String value);    // Set the info box value
+    void draw(GFXcanvas16 &canvas);   // Draw the info box
+    void setValue(const char *value); // Set the info box value
 
   // ----------------------------------------------------------------------------------------------
   // Private
 
   private:
 
-    uint16_t _x;     // X position
-    uint16_t _y;     // Y position
-    uint16_t _width; // Info box width
-    Image    _icon;  // Info box icon
-    String   _value; // Info box text value
+    const uint16_t _x;      // X position
+    const uint16_t _y;      // Y position
+    const uint16_t _width;  // Info box width
+    const Image    _icon;   // Info box icon
+    const char     *_value; // Info box text value
 
 };
 

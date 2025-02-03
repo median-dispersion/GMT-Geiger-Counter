@@ -14,9 +14,12 @@ ScreenRadiationHistory::ScreenRadiationHistory():
   _historyTimerMilliseconds(0),
   _timeSteps(round(RADIATION_HISTORY_LENGTH_MINUTES / 4.0)),
   _countSteps(round(RADIATION_HISTORY_MINIMUM_SCALE_CPM / 4.0)),
-  _average(  2, 213, 105, IMAGE_AVERAGE, "0"),
-  _maximum(108, 213, 105, IMAGE_MAXIMUM, "0"),
-  _minimum(214, 213, 104, IMAGE_MINIMUM, "0")
+  _averageCountsPerMinuteString("0"),
+  _maximumCountsPerMinuteString("0"),
+  _minimumCountsPerMinuteString("0"),
+  _averageCountsPerMinute(  2, 213, 105, IMAGE_AVERAGE, _averageCountsPerMinuteString.c_str()),
+  _maximumCountsPerMinute(108, 213, 105, IMAGE_MAXIMUM, _maximumCountsPerMinuteString.c_str()),
+  _minimumCountsPerMinute(214, 213, 104, IMAGE_MINIMUM, _minimumCountsPerMinuteString.c_str())
 
 {
 
@@ -32,7 +35,7 @@ ScreenRadiationHistory::ScreenRadiationHistory():
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenRadiationHistory::update(XPT2046::Point position) {
+void ScreenRadiationHistory::update(const XPT2046::Point position) {
 
   // Update the basic screen
   ScreenBasic::update(position);
@@ -66,23 +69,23 @@ void ScreenRadiationHistory::draw(GFXcanvas16 &canvas) {
 
   // Draw time steps
   canvas.setCursor(236, 199);
-  canvas.print("-" + String(_timeSteps * 1) + STRING_RADIATION_HISTORY_MINUTES_ABBREVIATION);
+  canvas.print(_timeSteps * 1);
   canvas.setCursor(162, 199);
-  canvas.print("-" + String(_timeSteps * 2) + STRING_RADIATION_HISTORY_MINUTES_ABBREVIATION);
+  canvas.print(_timeSteps * 2);
   canvas.setCursor(88, 199);
-  canvas.print("-" + String(_timeSteps * 3) + STRING_RADIATION_HISTORY_MINUTES_ABBREVIATION);
+  canvas.print(_timeSteps * 3);
   canvas.setCursor(14, 199);
-  canvas.print(String("-") + RADIATION_HISTORY_LENGTH_MINUTES + STRING_RADIATION_HISTORY_MINUTES_ABBREVIATION);
+  canvas.print(RADIATION_HISTORY_LENGTH_MINUTES);
 
   // Draw counts steps
   canvas.setCursor(14, 177);
-  canvas.print(String(_countSteps * 1));
+  canvas.print(_countSteps * 1);
   canvas.setCursor(14, 137);
-  canvas.print(String(_countSteps * 2));
+  canvas.print(_countSteps * 2);
   canvas.setCursor(14, 97);
-  canvas.print(String(_countSteps * 3));
+  canvas.print(_countSteps * 3);
   canvas.setCursor(14, 57);
-  canvas.print(String(_countSteps * 4));
+  canvas.print(_countSteps * 4);
 
   // Calculate with and height of line elements
   double width  = 294.0 / (RADIATION_HISTORY_LENGTH_MINUTES - 1);
@@ -123,9 +126,9 @@ void ScreenRadiationHistory::draw(GFXcanvas16 &canvas) {
   canvas.fillTriangle(299, 196, 307, 201, 299, 206, COLOR_WHITE);
 
   // Draw screen elements
-  _average.draw(canvas);
-  _maximum.draw(canvas);
-  _minimum.draw(canvas);
+  _averageCountsPerMinute.draw(canvas);
+  _maximumCountsPerMinute.draw(canvas);
+  _minimumCountsPerMinute.draw(canvas);
 
 }
 
@@ -196,10 +199,9 @@ void ScreenRadiationHistory::setRadiationHistory(double countsPerMinute) {
 
     }
 
-    // Set the screen elements
-    _average.setValue(String((uint32_t)(averageCountsPerMinute)));
-    _maximum.setValue(String(maximumCountsPerMinute));
-    _minimum.setValue(String(minimumCountsPerMinute));
+    _averageCountsPerMinuteString = (uint32_t)(averageCountsPerMinute);
+    _maximumCountsPerMinuteString = maximumCountsPerMinute;
+    _minimumCountsPerMinuteString = minimumCountsPerMinute;
 
   }
 

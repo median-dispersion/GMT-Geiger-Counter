@@ -6,7 +6,7 @@
 // ================================================================================================
 // Constructor
 // ================================================================================================
-DisplayToastBox::DisplayToastBox(uint16_t x, uint16_t y, uint16_t width, String title, String value):
+DisplayToastBox::DisplayToastBox(const uint16_t x, const uint16_t y, const uint16_t width, const char *title, const char *value):
 
   // Initialize members
   _x(x),
@@ -46,7 +46,7 @@ void DisplayToastBox::draw(GFXcanvas16 &canvas) {
 // ================================================================================================
 // Set the toast box value
 // ================================================================================================
-void DisplayToastBox::setValue(String value) {
+void DisplayToastBox::setValue(const char *value) {
 
   _value = value;
 

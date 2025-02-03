@@ -8,6 +8,7 @@
 #include "Screen.h"
 #include "Strings.h"
 #include "Graphics.h"
+#include "DisplayDoseScreen.h"
 #include "DisplayInfoBox.h"
 #include "TouchIcon.h"
 
@@ -36,7 +37,7 @@ class ScreenGeigerCounter: public Screen {
     ScreenGeigerCounter();
 
     // Update and draw calls
-    void update(XPT2046::Point position) override;
+    void update(const XPT2046::Point position) override;
     void draw(GFXcanvas16 &canvas) override;
 
     // Set screen variables
@@ -51,13 +52,14 @@ class ScreenGeigerCounter: public Screen {
 
   private:
 
-    String         _equivalentDose;      // Equivalent dose string
-    String         _equivalentDoseUnit;  // Equivalent dose unit string
-    uint16_t       _doseBorderColor;     // Dose screen border color
-    uint16_t       _doseBackgroundColor; // Dose screen background color
-    DisplayInfoBox _radiationRating;     // Radiation rating info box
-    DisplayInfoBox _countsPerMinute;     // Counts per minute info box
-    DisplayInfoBox _integrationTime;     // Integration time info box
+    String            _equivalentDoseString;     // Equivalent dose string
+    String            _equivalentDoseUnitString; // Equivalent dose unit string
+    String            _countsPerMinuteString;    // Counts per minute string
+    String            _integrationTimeString;    // Integration time string
+    DisplayDoseScreen _equivalentDoseScreen;     // Equivalent dose screen
+    DisplayInfoBox    _radiationRating;          // Radiation rating info box
+    DisplayInfoBox    _countsPerMinute;          // Counts per minute info box
+    DisplayInfoBox    _integrationTime;          // Integration time info box
 
 };
 

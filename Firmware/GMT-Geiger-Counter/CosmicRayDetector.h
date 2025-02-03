@@ -18,6 +18,7 @@ class CosmicRayDetector {
     void     begin();                       // Initialize everything
     void     enable();                      // Enable the cosmic ray detector
     void     disable();                     // Disable the cosmic ray detector
+    bool     enabled();                     // Returns if the cosmic ray detector is enabled
     uint64_t getCoincidenceEvents();        // Get the total number of coincidence events
     double   getCoincidenceEventsPerHour(); // Get the number of coincidence events per hour
 

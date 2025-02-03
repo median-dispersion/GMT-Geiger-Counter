@@ -7,10 +7,11 @@ class Channel {
 
   // ----------------------------------------------------------------------------------------------
   // Public
+
   public:
 
     // Constructor
-    Channel(bool muted = false);
+    Channel(const bool muted = false);
 
     void mute();   // Mute the audio channel
     void unmute(); // Unmute the audio channel
@@ -18,10 +19,11 @@ class Channel {
 
   // ----------------------------------------------------------------------------------------------
   // Private
+
   private:
 
-    bool _muted;   // Muted flag
+    bool _muted; // Flag for checking if the audio channel is muted
 
 };
 
-#endif;
+#endif

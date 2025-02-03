@@ -6,7 +6,7 @@
 // ================================================================================================
 // Constructor
 // ================================================================================================
-DisplayInfoBox::DisplayInfoBox(uint16_t x, uint16_t y, uint16_t width, Image icon, String value):
+DisplayInfoBox::DisplayInfoBox(const uint16_t x, const uint16_t y, const uint16_t width, const Image icon, const char *value):
 
   // Initialize members
   _x(x),
@@ -40,7 +40,7 @@ void DisplayInfoBox::draw(GFXcanvas16 &canvas) {
 // ================================================================================================
 // Set the info box value
 // ================================================================================================
-void DisplayInfoBox::setValue(String value) {
+void DisplayInfoBox::setValue(const char *value) {
 
   _value = value;
 

@@ -14,7 +14,7 @@ class Screen {
   public:
 
     // Virtual update function
-    virtual void update(XPT2046::Point position) = 0;
+    virtual void update(const XPT2046::Point position) = 0;
 
     // Virtual draw function
     virtual void draw(GFXcanvas16 &canvas) = 0;

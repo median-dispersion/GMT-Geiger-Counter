@@ -9,12 +9,11 @@
 Touchscreen::Touchscreen():
 
   // Initialize members
-  
   _display(DISPLAY_CS_PIN, DISPLAY_DC_PIN, DISPLAY_RST_PIN),
   _canvas(DISPLAY_WIDTH, DISPLAY_HEIGHT),
   _touch(TOUCH_CS_PIN, TOUCH_IRQ_PIN),
   _screen(&geigerCounter),
-  _on(true),
+  _enabled(true),
   _lastRefreshMilliseconds(0),
   _rotation(DISPLAY_SCREEN_ROTATION_LANDSCAPE)
 
@@ -47,6 +46,41 @@ void Touchscreen::begin() {
 }
 
 // ================================================================================================
+// Turn display on
+// ================================================================================================
+void Touchscreen::enable() {
+
+  // Turn on display LED
+  digitalWrite(DISPLAY_LED_PIN, HIGH);
+
+  // Set on flag to true
+  _enabled = true;
+
+}
+
+// ================================================================================================
+// Turn display off
+// ================================================================================================
+void Touchscreen::disable() {
+
+  // Turn off display LED
+  digitalWrite(DISPLAY_LED_PIN, LOW);
+
+  // Set on flag to false
+  _enabled = false;
+
+}
+
+// ================================================================================================
+// Returns if the touchscreen is enabled
+// ================================================================================================
+bool Touchscreen::enabled() {
+
+  return _enabled;
+
+}
+
+// ================================================================================================
 // Update touchscreen
 // ================================================================================================
 void Touchscreen::update() {
@@ -56,7 +90,7 @@ void Touchscreen::update() {
   // Check if touch event is occurring and if the last event has been released
   if (_touch.touched() && _touch.released()) {
 
-    // Apply touch rotation before checking
+    // Apply touch rotation before getting the position
     _touch.setRotation(_rotation);
 
     // Get the touch position
@@ -75,8 +109,8 @@ void Touchscreen::update() {
 
   }
 
-  // Only draw the screen if the display is set to on
-  if (_on) {
+  // Only draw the screen if the display in enabled
+  if (_enabled) {
 
     // If refresh interval has been reached or refresh flag has been set
     if (millis() - _lastRefreshMilliseconds > DISPLAY_REFRESH_INTERVAL_MILLISECONDS || refreshImmediately) {
@@ -119,32 +153,6 @@ void Touchscreen::draw(Screen &screen) {
 void Touchscreen::draw(Screen *screen) {
 
   _screen = screen;
-
-}
-
-// ================================================================================================
-// Turn display on
-// ================================================================================================
-void Touchscreen::on() {
-
-  // Turn on display LED
-  digitalWrite(DISPLAY_LED_PIN, HIGH);
-
-  // Set on flag to true
-  _on = true;
-
-}
-
-// ================================================================================================
-// Turn display off
-// ================================================================================================
-void Touchscreen::off() {
-
-  // Turn off display LED
-  digitalWrite(DISPLAY_LED_PIN, LOW);
-
-  // Set on flag to false
-  _on = false;
 
 }
 

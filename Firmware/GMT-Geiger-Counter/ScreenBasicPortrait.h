@@ -19,10 +19,10 @@ class ScreenBasicPortrait: public Screen {
     TouchIcon back;
 
     // Constructor
-    ScreenBasicPortrait(String title);
+    ScreenBasicPortrait(const char *title);
 
     // Update and draw calls
-    void update(XPT2046::Point position) override;
+    void update(const XPT2046::Point position) override;
     void draw(GFXcanvas16 &canvas) override;
 
   //-----------------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ class ScreenBasicPortrait: public Screen {
   private:
 
     // Screen title
-    String _title;
+    const char *_title;
 
 };
 

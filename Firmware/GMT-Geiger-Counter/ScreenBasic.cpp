@@ -6,7 +6,7 @@
 // ================================================================================================
 // Constructor
 // ================================================================================================
-ScreenBasic::ScreenBasic(String title):
+ScreenBasic::ScreenBasic(const char *title):
 
   // Initialize members
   back(2, 2, 51, 26, IMAGE_BACK),
@@ -17,7 +17,7 @@ ScreenBasic::ScreenBasic(String title):
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenBasic::update(XPT2046::Point position) {
+void ScreenBasic::update(const XPT2046::Point position) {
 
   // Update back button
   back.update(position);
