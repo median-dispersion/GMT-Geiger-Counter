@@ -5,6 +5,7 @@
 #include "CosmicRayDetector.h"
 #include "Buzzer.h"
 #include "Touchscreen.h"
+#include "Wireless.h"
 #include "Watchdog.h"
 
 // ------------------------------------------------------------------------------------------------
@@ -15,6 +16,7 @@ GeigerCounter     geigerCounter;
 CosmicRayDetector cosmicRayDetector;
 Buzzer            buzzer;
 Touchscreen       touchscreen;
+Wireless          wireless;
 Watchdog          watchdog;
 
 // Global variables
@@ -51,6 +53,8 @@ void toggleDisplayPower(bool toggled);
 void goToSleep();
 void wakeFromSleep();
 void cosmicRayDetectorMute();
+void toggleEnableHotspot(bool toggled);
+void toggleEnableWiFi(bool toggled);
 
 // ================================================================================================
 // Setup
@@ -65,6 +69,7 @@ void setup() {
   cosmicRayDetector.begin();
   buzzer.begin();
   touchscreen.begin();
+  wireless.begin();
 
   // --------------------------------------------
   // Assign touch actions
@@ -115,12 +120,20 @@ void setup() {
 
   // Hotspot settings screen
   touchscreen.hotspotSettings.back.action                  = displayGeigerCounter;
+  touchscreen.hotspotSettings.enable.action                = toggleEnableHotspot;
 
   // WiFi settings screen
   touchscreen.wifiSettings.back.action                     = displayGeigerCounter;
+  touchscreen.wifiSettings.enable.action                   = toggleEnableWiFi;
 
   // System settings screen
   touchscreen.systemSettings.back.action                   = displayGeigerCounter;
+
+  // --------------------------------------------
+  // Assign web server endpoints
+
+  wireless.server.on("/data/geiger_counter", sendGeigerCounterData);
+  wireless.server.on("/data/cosmic_ray_detector", sendCosmicRayDetectorData);
 
   // --------------------------------------------
   // Start
@@ -143,6 +156,9 @@ void loop() {
 
   // Update the touchscreen
   visualFeedback();
+
+  // Update the wireless interfaces
+  wireless.update();
 
   // Update the memory watchdog
   watchdog.update();
@@ -763,5 +779,127 @@ void cosmicRayDetectorMute() {
     buzzer.mute();
 
   }
+
+}
+
+// ================================================================================================
+// Enable the wireless hotspot
+// ================================================================================================
+void toggleEnableHotspot(bool toggled) {
+
+  // If toggled on
+  if (toggled) {
+
+    // Update screen elements
+    touchscreen.wifiSettings.enable.toggleOff();
+    touchscreen.wifiSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
+    touchscreen.hotspotSettings.setIPAddress(STRING_CONNECTING);
+
+    // Refresh the display
+    touchscreen.refresh();
+
+    // Enable hotspot
+    wireless.enableHotspot();
+
+    // If hotspot was enabled
+    if (wireless.hotspotEnabled()) {
+
+      // Update screen elements
+      touchscreen.hotspotSettings.enable.toggleOn();
+      touchscreen.hotspotSettings.setIPAddress(wireless.getIPAddress());
+
+    // If hotspot was not enabled
+    } else {
+
+      // Update screen elements
+      touchscreen.hotspotSettings.enable.toggleOff();
+      touchscreen.hotspotSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
+
+    }
+
+  // If toggled off
+  } else {
+
+    // Disable hotspot
+    wireless.disableHotspot();
+
+    // Update the hotspot IP address on screen
+    touchscreen.hotspotSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
+
+  }
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
+
+}
+
+// ================================================================================================
+// Enable the WiFi
+// ================================================================================================
+void toggleEnableWiFi(bool toggled) {
+
+  // If toggled on
+  if (toggled) {
+
+    // Update screen elements
+    touchscreen.hotspotSettings.enable.toggleOff();
+    touchscreen.hotspotSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
+    touchscreen.wifiSettings.setIPAddress(STRING_CONNECTING);
+
+    // Refresh the display
+    touchscreen.refresh();
+
+    // Enable WiFi
+    wireless.enableWiFi();
+
+    // If WiFi was enabled
+    if (wireless.wifiEnabled()) {
+
+      // Update screen elements
+      touchscreen.wifiSettings.setIPAddress(wireless.getIPAddress());
+      touchscreen.wifiSettings.enable.toggleOn();
+
+    // If WiFi did not connect
+    } else {
+
+      // Update screen elements
+      touchscreen.wifiSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
+      touchscreen.wifiSettings.enable.toggleOff();
+
+    }
+
+  // If toggled off
+  } else {
+
+    // Disable WiFi
+    wireless.disableWiFi();
+
+    // Update the WiFi IP address on screen
+    touchscreen.wifiSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
+
+  }
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
+
+}
+
+// ================================================================================================
+// Send Geiger counter data via the web server
+// ================================================================================================
+void sendGeigerCounterData() {
+
+  // Send dummy response
+  wireless.server.send(200, "text/plain", "Not yet implemented!");
+
+}
+
+// ================================================================================================
+// Send cosmic ray detector data via the web server
+// ================================================================================================
+void sendCosmicRayDetectorData() {
+
+  // Send dummy response
+  wireless.server.send(200, "text/plain", "Not yet implemented!");
 
 }

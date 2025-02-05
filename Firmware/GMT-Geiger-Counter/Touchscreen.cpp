@@ -108,29 +108,39 @@ void Touchscreen::update() {
     }
 
   }
+  
+  // If refresh interval has been reached or refresh flag has been set
+  if (millis() - _lastRefreshMilliseconds > DISPLAY_REFRESH_INTERVAL_MILLISECONDS || refreshImmediately) {
 
-  // Only draw the screen if the display in enabled
+    // Refresh the display
+    refresh();
+
+  }
+
+}
+
+// ================================================================================================
+// Refresh the display by writing the pixel data to it
+// ================================================================================================
+void Touchscreen::refresh() {
+
+  // Only write to the display if it is enabled
   if (_enabled) {
 
-    // If refresh interval has been reached or refresh flag has been set
-    if (millis() - _lastRefreshMilliseconds > DISPLAY_REFRESH_INTERVAL_MILLISECONDS || refreshImmediately) {
+    // Apply display rotation before drawing
+    _canvas.setRotation(_rotation);
 
-      // Apply display rotation before drawing
-      _canvas.setRotation(_rotation);
+    // Draw the selected screen to the frame buffer
+    _screen->draw(_canvas);
 
-      // Draw the selected screen to the frame buffer
-      _screen->draw(_canvas);
+    // Unrotate frame buffer before drawing to the screen
+    _canvas.setRotation(0);
 
-      // Unrotate frame buffer before drawing to the screen
-      _canvas.setRotation(0);
+    // Draw the frame buffer to the display
+    _display.drawRGBBitmap(0, 0, _canvas.getBuffer(), _canvas.width(), _canvas.height());
 
-      // Draw the frame buffer to the display
-      _display.drawRGBBitmap(0, 0, _canvas.getBuffer(), _canvas.width(), _canvas.height());
-
-      // Update the refresh interval
-      _lastRefreshMilliseconds = millis();
-
-    }
+    // Update the refresh interval
+    _lastRefreshMilliseconds = millis();
 
   }
 

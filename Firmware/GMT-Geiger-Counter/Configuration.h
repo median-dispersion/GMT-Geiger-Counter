@@ -124,11 +124,30 @@
 // Wireless setting
 // ================================================================================================
 
-// Hotspot Name / SSID
+// Hotspot name / SSID
+// The name of the wireless hotspot the Geiger counter will create for wireless communication
 #define HOTSPOT_NAME "GMT-Geiger-Counter"
 
 // Hotspot password
-#define HOTSPOT_PASSWORD "Changed-This-Immediately!1!1!"
+// The password of the wireless hotspot the Geiger counter will create for wireless communication
+// This must be at least 8 characters long!
+#define HOTSPOT_PASSWORD "Change-This-Immediately!1!1!"
+
+// WiFi name / SSID
+// The name of the default WiFi that the Geiger counter will try to connect to
+// This value can be changed during runtime
+#define WIFI_NAME "Your-WiFi-Name"
+
+// WiFi password
+// The password of the default WiFi that the Geiger counter will try to connect to
+// This value can be changed during runtime
+#define WIFI_PASSWORD "Your-WiFi-Password"
+
+// The time for a WiFi connection to be established
+// If the timeout is reached, i.e. the WiFi can't be found, the WiFi antenna will automatically be disabled
+// This value should not be changed!
+// Default: 10
+#define WIFI_CONNECTION_TIMEOUT_SECONDS 10
 
 // ================================================================================================
 // System setting
@@ -147,7 +166,7 @@
 // Firmware version
 // This can be set to any arbitrary string
 // This value should not be changed!
-#define FIRMWARE_VERSION "GMTGC-2025-02-03"
+#define FIRMWARE_VERSION "GMTGC-2025-02-05"
 
 // The minimum threshold of free heap the system is allowed to have
 // If the free heap falls below this value, the system will reboot to prevent software instability or lock-ups

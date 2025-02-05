@@ -10,7 +10,7 @@ ScreenTrueRNG::ScreenTrueRNG():
 
   // Initialize members
   ScreenBasic(STRING_TRUE_RNG_TITLE),
-  placeholder(2, 31, 316, "Info", "Not yet available!")
+  placeholder(2, 31, 316, STRING_INFO, STRING_NOT_YET_AVAILABLE)
 
 {}
 

@@ -47,6 +47,7 @@ class Touchscreen {
     void    disable();            // Disable the touchscreen
     bool    enabled();            // Returns if the touchscreen is enabled
     void    update();             // Update the touchscreen
+    void    refresh();            // Refresh the display by writing the pixel data to it
     void    draw(Screen &screen); // Draw a screen by reference
     void    draw(Screen *screen); // Draw a screen by pointer
     void    rotateLandscape();    // Rotate the display to the landscape orientation
