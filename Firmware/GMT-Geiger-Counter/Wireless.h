@@ -4,6 +4,7 @@
 #include "Arduino.h"
 #include "Configuration.h"
 #include "WiFi.h"
+#include "SD.h"
 #include "WebServer.h"
 #include "Strings.h"
 
@@ -44,14 +45,16 @@ class Wireless {
     bool       _serverRunning;                // Flag for checking if the webserver is running
     bool       _hotspotEnabled;               // Flag for checking if the hotspot is enabled
     bool       _wifiEnabled;                  // Flag for checking if the WiFi is enabled
-    const char *_wifiName;                    // WiFi Name
-    const char *_wifiPassword;                // WiFi password
+    String     _wifiName;                     // WiFi Name
+    String     _wifiPassword;                 // WiFi password
     uint8_t    _wifiConnectionTimeoutSeconds; // WiFi connection timeout in seconds
     String     _ipAddressString;              // IP address string
 
     void        _startServer();               // Start the webserver
     void        _stopServer();                // Stop the webserver
-    static void _handleNotFound();            // Handle 404 not found events
+    bool        _sdCardMounted();             // Check if the SD card is mounted
+    static void _handleWiFiCredentials();     // Handle updates of the WiFi credentials via the web interface
+    static void _handleRequest();             // Handle all HTTP request not previously defined
 
 };
 

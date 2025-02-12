@@ -166,7 +166,13 @@
 // Firmware version
 // This can be set to any arbitrary string
 // This value should not be changed!
-#define FIRMWARE_VERSION "GMTGC-2025-02-05"
+#define FIRMWARE_VERSION "GMTGC-2025-02-12"
+
+// The root directory on the SD card the Geiger counter will look for
+// This is used for all applications that require storage, like logging or the web interface
+// This Directory will be used to detect if an SD card is present, and all subdirectories will be based on it
+// This value should not be changed!
+#define SD_CARD_ROOT_DIRECTORY "/GMT-Geiger-Counter"
 
 // The minimum threshold of free heap the system is allowed to have
 // If the free heap falls below this value, the system will reboot to prevent software instability or lock-ups

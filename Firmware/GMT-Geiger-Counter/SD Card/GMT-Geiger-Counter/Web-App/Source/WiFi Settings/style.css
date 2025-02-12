@@ -1,0 +1,303 @@
+/* ============================================================================================= */
+/* Global */
+
+:root {
+
+    --color-white-100: rgba(255, 255, 255, 1.0);
+    --color-white-090: rgba(255, 255, 255, 0.9);
+    --color-white-080: rgba(255, 255, 255, 0.8);
+    --color-white-070: rgba(255, 255, 255, 0.7);
+    --color-white-060: rgba(255, 255, 255, 0.6);
+    --color-white-050: rgba(255, 255, 255, 0.5);
+    --color-white-040: rgba(255, 255, 255, 0.4);
+    --color-white-030: rgba(255, 255, 255, 0.3);
+    --color-white-020: rgba(255, 255, 255, 0.2);
+    --color-white-010: rgba(255, 255, 255, 0.1);
+    --color-white-000: rgba(255, 255, 255, 0.0);
+    --color-black-100: rgba(0, 0, 0, 1.0);
+    --color-black-090: rgba(0, 0, 0, 0.9);
+    --color-black-080: rgba(0, 0, 0, 0.8);
+    --color-black-070: rgba(0, 0, 0, 0.7);
+    --color-black-060: rgba(0, 0, 0, 0.6);
+    --color-black-050: rgba(0, 0, 0, 0.5);
+    --color-black-040: rgba(0, 0, 0, 0.4);
+    --color-black-030: rgba(0, 0, 0, 0.3);
+    --color-black-020: rgba(0, 0, 0, 0.2);
+    --color-black-010: rgba(0, 0, 0, 0.1);
+    --color-black-000: rgba(0, 0, 0, 0.0);
+
+    --color-main-background: rgba(16, 16, 24, 1.0);
+    --color-main-foreground: rgba(40, 40, 48, 1.0);
+
+    --color-info-background:    rgba(0,   24,  56,  1.0);
+    --color-info-foreground:    rgba(0,   128, 255, 1.0);
+    --color-success-background: rgba(0,   32,  16,  1.0);
+    --color-success-foreground: rgba(0,   160, 96,  1.0);
+    --color-error-background:   rgba(48,  0,   0,   1.0);
+    --color-error-foreground:   rgba(160, 0,   0,   1.0);
+
+    --color-hover: var(--color-white-020);
+    --color-active: var(--color-black-020);
+
+    --spacing-default: 8px;
+    --border-radius-default: 4px;
+    --transition-time-default: 100ms;
+
+}
+
+.icon-back-arrow { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m257.39 112.06a16 16 0 0 0-5.5352 0.48437 16 16 0 0 0-7.1718 4.1406l-128 128a16.002 16.002 0 0 0 0 22.629l128 128a16 16 0 0 0 22.627 0 16 16 0 0 0 0-22.629l-100.69-100.69h217.37a16 16 0 0 0 16-16 16 16 0 0 0-16-16h-217.37l100.69-100.69a16 16 0 0 0 0-22.629 16 16 0 0 0-9.9199-4.625z'/%3E%3C/svg%3E"); }
+.icon-info       { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m256 32c-123.52 0-224 100.48-224 224s100.48 224 224 224 224-100.48 224-224-100.48-224-224-224zm0 32c106.23 0 192 85.772 192 192s-85.772 192-192 192-192-85.772-192-192 85.772-192 192-192zm0 80a16 16 0 0 0-16 16 16 16 0 0 0 16 16 16 16 0 0 0 16-16 16 16 0 0 0-16-16zm0 64a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16 16 16 0 0 0 16-16v-128a16 16 0 0 0-16-16z'/%3E%3C/svg%3E"); }
+.icon-success    { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m256 32c-123.52 0-224 100.48-224 224s100.48 224 224 224 224-100.48 224-224-100.48-224-224-224zm0 32c106.23 0 192 85.772 192 192s-85.772 192-192 192-192-85.772-192-192 85.772-192 192-192zm97.395 104.06a16 16 0 0 0-5.5352 0.48437 16 16 0 0 0-7.1738 4.1426l-132.69 132.69-36.686-36.686a16 16 0 0 0-22.629 0 16 16 0 0 0 0 22.627l48 48a16.002 16.002 0 0 0 22.629 0l144-144a16 16 0 0 0 0-22.627 16 16 0 0 0-9.9199-4.627z'/%3E%3C/svg%3E"); }
+.icon-error      { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m256 32c-123.52 0-224 100.48-224 224s100.48 224 224 224 224-100.48 224-224-100.48-224-224-224zm0 32c106.23 0 192 85.772 192 192s-85.772 192-192 192-192-85.772-192-192 85.772-192 192-192zm-94.605 80.061a16 16 0 0 0-5.5352 0.48437 16 16 0 0 0-7.1738 4.1406 16 16 0 0 0 0 22.629l84.686 84.686-84.686 84.686a16 16 0 0 0 0 22.629 16 16 0 0 0 22.629 0l84.686-84.686 84.686 84.686a16 16 0 0 0 22.629 0 16 16 0 0 0 0-22.629l-84.686-84.686 84.686-84.686a16 16 0 0 0 0-22.629 16 16 0 0 0-15.455-4.1406 16 16 0 0 0-7.1738 4.1406l-84.686 84.686-84.686-84.686a16 16 0 0 0-9.9199-4.625z'/%3E%3C/svg%3E"); }
+
+body {
+
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0;
+    color: var(--color-white-100);
+    background-color: var(--color-main-background);
+
+}
+
+body * {
+
+    all: unset;
+    display: block;
+    box-sizing: border-box;
+
+}
+
+/* ============================================================================================= */
+/* Header */
+
+#header {
+
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-default);
+    position: fixed;
+    width: 100%;
+    height: 64px;
+    padding: var(--spacing-default);
+    background-color: var(--color-main-foreground);
+    box-shadow: 0px 0px 5px 0px var(--color-black-070);
+    z-index: 100;
+
+}
+
+#header-button {
+
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--border-radius-default);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 65%;
+    cursor: pointer;
+    transition: var(--transition-time-default);
+
+}
+
+#header-button:hover { 
+    
+    background-color: var(--color-hover); 
+
+}
+
+#header-button:active { 
+    
+    background-color: var(--color-active); 
+
+}
+
+#header-title {
+
+    flex-grow: 1;
+    font-size: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+/* ============================================================================================= */
+/* Main */
+
+#main {
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-default);
+    position: absolute;
+    width: 100%;
+    max-width: 800px;
+    left: 50%;
+    top: 64px;
+    transform: translateX(-50%);
+    padding: calc(var(--spacing-default) * 2);
+
+}
+
+.main-section-title{
+
+    width: 100%;
+    padding-top: calc(var(--spacing-default) * 2);
+    padding-bottom: var(--spacing-default);
+    font-size: 17px;
+    color: var(--color-white-050);
+
+}
+
+/* ============================================================================================= */
+/* Toast message */
+
+.toast-message {
+
+    display: flex;
+    align-items: center;
+    gap: calc(var(--spacing-default) * 2);
+    width: 100%;
+    padding: calc(var(--spacing-default) * 2);
+    border-radius: var(--border-radius-default);
+    border: 1px solid var(--color-hover);
+    background-color: var(--color-main-foreground);
+    box-shadow: 0px 0px 5px 0px var(--color-black-070);
+
+}
+
+.toast-message-info {
+
+    border-color: var(--color-info-foreground);
+    background-color: var(--color-info-background);
+
+}
+
+.toast-message-success {
+
+    border-color: var(--color-success-foreground);
+    background-color: var(--color-success-background);
+
+}
+
+.toast-message-error {
+
+    border-color: var(--color-error-foreground);
+    background-color: var(--color-error-background);
+
+}
+
+.toast-message-icon {
+
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+
+}
+
+.toast-message-text {
+
+    flex-grow: 1;
+    font-size: 15px;
+
+}
+
+/* ============================================================================================= */
+/* WiFi credentials */
+
+#wifi-credentials {
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-default);
+    width: 100%;
+
+}
+
+.wifi-credentials-input {
+
+    width: 100%;
+    height: 48px;
+    padding: var(--spacing-default);
+    border-radius: var(--border-radius-default);
+    border-bottom: 3px solid transparent;
+    font-size: 15px;
+    background-color: var(--color-main-foreground);
+    transition: var(--transition-time-default);
+
+}
+
+.wifi-credentials-input::placeholder {
+
+    color: var(--color-white-050);
+
+}
+
+.wifi-credentials-input:hover {
+
+    background-color: var(--color-hover);
+
+}
+
+.wifi-credentials-input:focus {
+
+    border-color: var(--color-hover);
+    background-color: var(--color-hover);
+
+}
+
+#wifi-credentials-button {
+
+    width: fit-content;
+    min-width: 150px;
+    height: 48px;
+    font-size: 15px;
+    text-align: center;
+    border-radius: var(--border-radius-default);
+    background-color: var(--color-main-foreground);
+    cursor: pointer;
+    transition: var(--transition-time-default);
+
+}
+
+#wifi-credentials-button:hover {
+
+    background-color: var(--color-hover);
+
+}
+
+#wifi-credentials-button:active {
+
+    background-color: var(--color-active);
+
+}
+
+/* ============================================================================================= */
+/* Update Info */
+
+#update-info-title {
+
+    opacity: 0.0;
+
+}
+
+#update-info {
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-default);
+    width: 100%;
+
+}
+
+.fade-in { animation: animation-fade-in 250ms ease forwards; }
+@keyframes animation-fade-in {
+    
+    0%   { opacity: 0.0; }
+    100% { opacity: 1.0; }
+
+}

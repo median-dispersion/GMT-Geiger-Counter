@@ -1,6 +1,7 @@
 #include "Arduino.h"
 #include "Configuration.h"
 #include "Strings.h"
+#include "SD.h"
 #include "GeigerCounter.h"
 #include "CosmicRayDetector.h"
 #include "Buzzer.h"
@@ -55,6 +56,9 @@ void wakeFromSleep();
 void cosmicRayDetectorMute();
 void toggleEnableHotspot(bool toggled);
 void toggleEnableWiFi(bool toggled);
+void sendGeigerCounterData();
+void sendCosmicRayDetectorData();
+void sendSystemData();
 
 // ================================================================================================
 // Setup
@@ -65,6 +69,7 @@ void setup() {
   // Initialize everything
 
   Serial.begin(SERIAL_BAUD_RATE);
+  SD.begin(SD_CS_PIN);
   geigerCounter.begin();
   cosmicRayDetector.begin();
   buzzer.begin();
@@ -132,8 +137,9 @@ void setup() {
   // --------------------------------------------
   // Assign web server endpoints
 
-  wireless.server.on("/data/geiger_counter", sendGeigerCounterData);
-  wireless.server.on("/data/cosmic_ray_detector", sendCosmicRayDetectorData);
+  wireless.server.on("/data/geiger-counter",      sendGeigerCounterData    );
+  wireless.server.on("/data/cosmic-ray-detector", sendCosmicRayDetectorData);
+  wireless.server.on("/data/system",              sendSystemData           );
 
   // --------------------------------------------
   // Start
@@ -267,6 +273,9 @@ void visualFeedback() {
   touchscreen.cosmicRayDetector.setCoincidenceEventsTotal(cosmicRayDetector.getCoincidenceEvents());
   touchscreen.cosmicRayDetector.setMainTubeCounts(geigerCounter.getMainTubeCounts());
   touchscreen.cosmicRayDetector.setFollowerTubeCounts(geigerCounter.getFollowerTubeCounts());
+
+  // Update the name of the current WiFi
+  touchscreen.wifiSettings.setWiFiName(wireless.getWiFiName());
 
   // Store the current integration time
   uint8_t integrationTime = geigerCounter.getIntegrationTime();
@@ -808,12 +817,18 @@ void toggleEnableHotspot(bool toggled) {
       touchscreen.hotspotSettings.enable.toggleOn();
       touchscreen.hotspotSettings.setIPAddress(wireless.getIPAddress());
 
+      // Play a success sound
+      buzzer.play(buzzer.next);
+
     // If hotspot was not enabled
     } else {
 
       // Update screen elements
       touchscreen.hotspotSettings.enable.toggleOff();
       touchscreen.hotspotSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
+
+      // Play an error sound
+      buzzer.play(buzzer.error);
 
     }
 
@@ -826,10 +841,10 @@ void toggleEnableHotspot(bool toggled) {
     // Update the hotspot IP address on screen
     touchscreen.hotspotSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
 
-  }
+    // Play a sound
+    buzzer.play(buzzer.tap);
 
-  // Play a sound
-  buzzer.play(buzzer.tap);
+  }
 
 }
 
@@ -859,12 +874,18 @@ void toggleEnableWiFi(bool toggled) {
       touchscreen.wifiSettings.setIPAddress(wireless.getIPAddress());
       touchscreen.wifiSettings.enable.toggleOn();
 
+      // Play a success sound
+      buzzer.play(buzzer.next);
+
     // If WiFi did not connect
     } else {
 
       // Update screen elements
       touchscreen.wifiSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
       touchscreen.wifiSettings.enable.toggleOff();
+
+      // Play an error sound
+      buzzer.play(buzzer.error);
 
     }
 
@@ -877,12 +898,15 @@ void toggleEnableWiFi(bool toggled) {
     // Update the WiFi IP address on screen
     touchscreen.wifiSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
 
+    // Play a sound
+    buzzer.play(buzzer.tap);
+
   }
 
-  // Play a sound
-  buzzer.play(buzzer.tap);
-
 }
+
+// ------------------------------------------------------------------------------------------------
+// Web server actions
 
 // ================================================================================================
 // Send Geiger counter data via the web server
@@ -898,6 +922,16 @@ void sendGeigerCounterData() {
 // Send cosmic ray detector data via the web server
 // ================================================================================================
 void sendCosmicRayDetectorData() {
+
+  // Send dummy response
+  wireless.server.send(200, "text/plain", "Not yet implemented!");
+
+}
+
+// ================================================================================================
+// Send system data via the web server
+// ================================================================================================
+void sendSystemData() {
 
   // Send dummy response
   wireless.server.send(200, "text/plain", "Not yet implemented!");

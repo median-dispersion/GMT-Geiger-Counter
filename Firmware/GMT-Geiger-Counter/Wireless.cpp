@@ -4,7 +4,7 @@
 // Public
 
 // Initialize static instance pointer
-Wireless *Wireless::_instance = nullptr; 
+Wireless *Wireless::_instance = nullptr;
 
 // ================================================================================================
 // Constructor
@@ -31,8 +31,11 @@ void Wireless::begin() {
   // Set the instance pointer to this instance of the class
   _instance = this;
 
-  // Set the 404 not found handler
-  server.onNotFound(_handleNotFound);
+  // Handle updates of the WiFi credentials via the web interface
+  server.on("/wifi-credentials", HTTP_PUT, _handleWiFiCredentials);
+
+  // Handle all HTTP request not previously defined
+  server.onNotFound(_handleRequest);
 
 }
 
@@ -201,7 +204,7 @@ void Wireless::setWiFiPassword(const char *password) {
 // ================================================================================================
 const char* Wireless::getWiFiName() {
 
-  return _wifiName;
+  return _wifiName.c_str();
 
 }
 
@@ -276,11 +279,158 @@ void Wireless::_stopServer() {
 }
 
 // ================================================================================================
-// Handle 404 not found events
+// Check if the SD card is mounted
 // ================================================================================================
-void Wireless::_handleNotFound() {
+bool Wireless::_sdCardMounted() {
 
-  // Send 404 response
-  _instance->server.send(404, "text/plain", "404 - Not found!");
+  // Check if the root directory exists
+  if (!SD.exists(SD_CARD_ROOT_DIRECTORY)) {
+
+    // If it doesn't exists, try creating it
+    if (!SD.mkdir(SD_CARD_ROOT_DIRECTORY)) {
+
+      // If creating the root directory failed, unmount the SD card
+      SD.end();
+
+      // Try remounting the SD card
+      if (!SD.begin(SD_CS_PIN)) {
+        
+        // If remounting fails return false
+        return false;
+
+      // If remounting was successful
+      } else {
+
+        // Again check if the root directory exists
+        if (!SD.exists(SD_CARD_ROOT_DIRECTORY)) {
+
+          // If it doesn't exists, try creating it
+          if (!SD.mkdir(SD_CARD_ROOT_DIRECTORY)) {
+
+            // If something went wrong while trying to create the root directory for a second time return false
+            return false;
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+
+  // If mounting was successful and the main directory exists return true
+  return true;
+
+}
+
+// ================================================================================================
+// Handle updates of the WiFi credentials via the web interface
+// ================================================================================================
+void Wireless::_handleWiFiCredentials() {
+
+  // Flag for checking if the valid credentials data was transmitted 
+  bool validCredentials = false;
+
+  // If the request has a body
+  if (_instance->server.args()){
+    
+    // Get the request body
+    String json = _instance->server.arg(0);
+
+    // Get start and end index of the WiFi name value
+    int16_t wifiNameStart = json.indexOf("{\"wifiName\":\"") + 13;
+    int16_t wifiNameEnd   = json.indexOf("\",");
+
+    // If the request body contains the WiFi name value
+    if (wifiNameStart != -1 && wifiNameEnd != -1) {
+
+      // Get start and end index of the WiFi password value
+      int16_t wifiPasswordStart = json.indexOf("\",\"wifiPassword\":\"") + 18;
+      int16_t wifiPasswordEnd   = json.indexOf("\"}");
+
+      // If the request body contains the WiFi password value
+      if (wifiPasswordStart != -1 && wifiPasswordEnd != -1) {
+
+        // Extract and set the WiFi name and password
+        _instance->setWiFiName(json.substring(wifiNameStart, wifiNameEnd).c_str());
+        _instance->setWiFiPassword(json.substring(wifiPasswordStart, wifiPasswordEnd).c_str());
+
+        // Set the valid credentials flag to true
+        validCredentials = true;
+
+      }
+
+    }
+
+  }
+
+  // If valid credentials were received
+  if (validCredentials) {
+
+    // Reply with a success message
+    _instance->server.send(200, "application/json", "{\"success\":true}");
+
+  // If no valid credentials were received
+  } else {
+
+    // Reply with an error message
+    _instance->server.send(400, "application/json", "{\"success\":false}");
+
+  }
+
+}
+
+// ================================================================================================
+// Handle all HTTP request not previously defined
+// ================================================================================================
+void Wireless::_handleRequest() {
+
+  // Flag for checking if the request was handled
+  bool handled = false;
+
+  // Check if the SD card is mounted
+  if (_instance->_sdCardMounted()) {
+
+    // Construct the path of the requested file
+    String path  = SD_CARD_ROOT_DIRECTORY;
+           path += "/Web-App";
+           path += _instance->server.uri();
+    
+    // Check if the path is a directory if so add index.html to it
+    if (path.endsWith("/")) { path += "index.html"; }
+
+    // Check if the HTML file exists on the SD card
+    if (SD.exists(path)) {
+
+      // Open the file
+      File file = SD.open(path);
+
+      // Check if file is not a directory
+      if (!file.isDirectory()) {
+
+        // Send data
+        _instance->server.streamFile(file, "text/html");
+
+        // Set the handled flag to true
+        handled = true;
+
+      }
+
+      // Close the file
+      file.close();
+
+    }
+
+  }
+
+  // If request was not handled
+  if (!handled) {
+
+    // Send 404 response
+    _instance->server.send(404, "text/plain", "404 - Not found!");
+
+  }
 
 }
