@@ -20,6 +20,7 @@ class TouchToggle {
     void draw(GFXcanvas16 &canvas);             // Draw the touch toggle to the frame buffer
     void (*action)(bool toggled);               // Function pointer to execute a function on touchdown
     void toggle();                              // Toggle state
+    void toggle(bool toggled);                  // Toggle a specific state
     void toggleOn();                            // Toggle on
     void toggleOff();                           // Toggle off
     bool toggled();                             // Return the toggle state

@@ -315,6 +315,16 @@ void visualFeedback() {
   touchscreen.geigerCounter.setCountsPerMinute(geigerCounter.getCountsPerMinute());
   touchscreen.geigerCounter.setIntegrationTime(geigerCounter.getIntegrationTime());
 
+  // Set audio settings screen values
+  touchscreen.audioSettings.detections.toggle(!buzzer.detections.muted());
+  touchscreen.audioSettings.notifications.toggle(!buzzer.notifications.muted());
+  touchscreen.audioSettings.alerts.toggle(!buzzer.alerts.muted());
+  touchscreen.audioSettings.interface.toggle(!buzzer.interface.muted());
+  touchscreen.audioSettings.muteEverything.toggle(buzzer.muted());
+
+  // Set display settings screen values
+  touchscreen.displaySettings.display.toggle(touchscreen.enabled());
+
   // Set cosmic ray detector screen values
   touchscreen.cosmicRayDetector.setCoincidenceEvents(cosmicRayDetector.getCoincidenceEvents());
   touchscreen.cosmicRayDetector.setCoincidenceEventsPerHour(cosmicRayDetector.getCoincidenceEventsPerHour());
@@ -322,8 +332,19 @@ void visualFeedback() {
   touchscreen.cosmicRayDetector.setMainTubeCounts(geigerCounter.getMainTubeCounts());
   touchscreen.cosmicRayDetector.setFollowerTubeCounts(geigerCounter.getFollowerTubeCounts());
 
-  // Update the name of the current WiFi
+  // Set hotspot settings screen values
+  touchscreen.hotspotSettings.enable.toggle(wireless.hotspotEnabled());
+  touchscreen.hotspotSettings.setIPAddress(wireless.getIPAddress());
+
+  // Set WiFi settings screen values
+  touchscreen.wifiSettings.enable.toggle(wireless.wifiEnabled());
   touchscreen.wifiSettings.setWiFiName(wireless.getWiFiName());
+  touchscreen.wifiSettings.setIPAddress(wireless.getIPAddress());
+
+  // Set system settings screen values
+  touchscreen.systemSettings.serialLogging.toggle(logger.serialLogging());
+  touchscreen.systemSettings.sdCardLogging.toggle(logger.sdCardLogging());
+  touchscreen.systemSettings.systemLogging.toggle(logger.systemLogging());
 
   // Store the current integration time
   uint8_t integrationTime = geigerCounter.getIntegrationTime();
@@ -876,10 +897,6 @@ void goToSleep() {
   // Turn off the touchscreen
   touchscreen.disable();
 
-  // Toggle off the appropriate toggles
-  touchscreen.audioSettings.muteEverything.toggleOn();
-  touchscreen.displaySettings.display.toggleOff();
-
   // Draw the sleep screen
   touchscreen.draw(touchscreen.sleep);
 
@@ -899,9 +916,6 @@ void wakeFromSleep() {
   // If buzzer was previously unmuted
   if (lastMute == false) {
 
-    // Toggle off the mute everything toggle
-    touchscreen.audioSettings.muteEverything.toggleOff();
-
     // Unmute the buzzer
     buzzer.unmute();
 
@@ -919,16 +933,10 @@ void cosmicRayDetectorMute() {
 
   if (buzzer.muted()) {
 
-    // Toggle off the mute everything toggle
-    touchscreen.audioSettings.muteEverything.toggleOff();
-
     // Unmute the buzzer
     buzzer.unmute();
 
   } else {
-
-    // Toggle on the mute everything toggle
-    touchscreen.audioSettings.muteEverything.toggleOn();
 
     // Mute the buzzer
     buzzer.mute();
