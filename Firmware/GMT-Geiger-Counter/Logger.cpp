@@ -161,6 +161,9 @@ void Logger::log(const String &message) {
         file.print(message);
 
       }
+
+      // Close log file
+      file.close();
     
     // If the SD card is not or no longer mounted
     } else {
@@ -344,10 +347,16 @@ const char* Logger::_getLogFilePath() {
 
         }
         
+        // Close each element after use
+        file.close();
+
         // Open next element
         file = root.openNextFile();
 
       }
+
+      // Close element
+      file.close();
 
       // Construct log file path
       _logFilePath += "/Log";
@@ -358,6 +367,9 @@ const char* Logger::_getLogFilePath() {
       _logFileSelected = true;
 
     }
+
+    // Close log directory
+    root.close();
   
   // If a log file has been selected
   } else {
@@ -379,6 +391,9 @@ const char* Logger::_getLogFilePath() {
       _logFilePath += _logFilePart;
 
     }
+
+    // Close log file
+    file.close();
 
   }
 
