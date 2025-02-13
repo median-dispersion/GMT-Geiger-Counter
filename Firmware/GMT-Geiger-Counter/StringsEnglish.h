@@ -41,6 +41,9 @@
 #define STRING_PASSWORD_HIDDEN                "********"
 #define STRING_CONNECTING                     "Connecting..."
 #define STRING_SYSTEM_SETTINGS_TITLE          "System settings"
+#define STRING_LOG_TO_SERIAL_CONSOLE          "Log to serial console"
+#define STRING_LOG_TO_SD_CARD                 "Log to SD card"
+#define STRING_LOG_SYSTEM_MESSAGES            "Log system messages"
 #define STRING_FIRMWARE_VERSION               "Firmware version"
 
 #endif

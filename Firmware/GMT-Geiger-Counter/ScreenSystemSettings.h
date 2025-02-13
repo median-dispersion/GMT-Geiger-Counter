@@ -7,6 +7,7 @@
 #include "XPT2046.h"
 #include "Strings.h"
 #include "ScreenBasic.h"
+#include "TouchToggle.h"
 #include "DisplayToastBox.h"
 
 class ScreenSystemSettings: public ScreenBasic {
@@ -15,6 +16,11 @@ class ScreenSystemSettings: public ScreenBasic {
   // Public
 
   public:
+
+    // Screen elements
+    TouchToggle serialLogging;
+    TouchToggle sdCardLogging;
+    TouchToggle systemLogging;
 
     // Constructor
     ScreenSystemSettings();

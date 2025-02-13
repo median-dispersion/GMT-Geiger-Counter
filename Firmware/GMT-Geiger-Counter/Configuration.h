@@ -158,6 +158,27 @@
 // LANGUAGE_ENGLISH
 #define INTERFACE_LANGUAGE LANGUAGE_ENGLISH
 
+// Log interval in seconds
+// How often the data should be logged to the serial console and SD card (if available)
+// This should be treated as long-term data acquisition and therefore should have a relatively high value < 1 min
+// Default: 60
+#define LOG_INTERVAL_SECONDS 60
+
+// The maximum log file size in bytes
+// If the log file reaches a size larger than this, it will be split up into parts
+// This value should not be changed!
+// Default: 8388608 (8 MiB)
+#define LOG_FILE_MAXIMUM_SIZE_BYTES 8388608
+
+// The root directories on the SD card the Geiger counter will look for
+// This is used for all applications that require storage, like logging or the web interface
+// The root directory will be used to detect if an SD card is present
+// The specific subdirectories are based on the root directory
+// These values should not be changed!
+#define SD_CARD_ROOT_DIRECTORY     "/GMT-Geiger-Counter"
+#define SD_CARD_LOG_DIRECTORY      SD_CARD_ROOT_DIRECTORY"/Logs"
+#define SD_CARD_WEB_APP_DIRECTORY  SD_CARD_ROOT_DIRECTORY"/Web-App"
+
 // Baud rate for serial communication
 // This value should not be changed!
 // Default: 115200
@@ -166,24 +187,18 @@
 // Firmware version
 // This can be set to any arbitrary string
 // This value should not be changed!
-#define FIRMWARE_VERSION "GMTGC-2025-02-12"
-
-// The root directory on the SD card the Geiger counter will look for
-// This is used for all applications that require storage, like logging or the web interface
-// This Directory will be used to detect if an SD card is present, and all subdirectories will be based on it
-// This value should not be changed!
-#define SD_CARD_ROOT_DIRECTORY "/GMT-Geiger-Counter"
+#define FIRMWARE_VERSION "GMTGC-2025-02-13"
 
 // The minimum threshold of free heap the system is allowed to have
 // If the free heap falls below this value, the system will reboot to prevent software instability or lock-ups
 // This value should not be changed!
-// Default: 16384 (16KB)
+// Default: 16384 (16 KiB)
 #define WATCHDOG_MINIMUM_HEAP_BYTES 16384
 
 // The minimum threshold of the largest allocatable block of heap the system is allowed to have
 // If the block size falls below this value, the system will reboot to prevent software instability or lock-ups
 // This value should not be changed!
-// Default: 4096 (4KB)
+// Default: 4096 (4 KiB)
 #define WATCHDOG_MINIMUM_HEAP_BLOCK_BYTES 4096
 
 // ================================================================================================

@@ -8,6 +8,7 @@
 #include "Touchscreen.h"
 #include "Wireless.h"
 #include "Watchdog.h"
+#include "Logger.h"
 
 // ------------------------------------------------------------------------------------------------
 // Global
@@ -21,17 +22,23 @@ Wireless          wireless;
 Watchdog          watchdog;
 
 // Global variables
-bool     playedDoseWarning     = false;
-uint64_t lastCounts            = 0;
-uint64_t lastCoincidenceEvents = 0;
-bool     lastMute              = false;
-Screen   *lastScreen           = nullptr;
+bool     playedDoseWarning           = false;
+uint64_t lastCounts                  = 0;
+uint64_t lastCoincidenceEvents       = 0;
+bool     lastMute                    = false;
+Screen   *lastScreen                 = nullptr;
+uint64_t logTimer                    = 0;
+uint64_t loops                       = 1;
+uint64_t totalLoopTimeMicroseconds   = 0;
+uint64_t averageLoopTimeMicroseconds = 0;
+uint64_t maximumLoopTimeMicroseconds = 0;
 
 // Function prototypes
 void setup();
 void loop();
 void audioFeedback();
 void visualFeedback();
+void dataFeedback();
 void displayGeigerCounter();
 void displayAudioSettings();
 void displayDisplaySettings();
@@ -56,6 +63,9 @@ void wakeFromSleep();
 void cosmicRayDetectorMute();
 void toggleEnableHotspot(bool toggled);
 void toggleEnableWiFi(bool toggled);
+void toggleSerialLogging(bool toggled);
+void toggleSDCardLogging(bool toggled);
+void toggleSystemLogging(bool toggled);
 void sendGeigerCounterData();
 void sendCosmicRayDetectorData();
 void sendSystemData();
@@ -133,6 +143,9 @@ void setup() {
 
   // System settings screen
   touchscreen.systemSettings.back.action                   = displayGeigerCounter;
+  touchscreen.systemSettings.serialLogging.action          = toggleSerialLogging;
+  touchscreen.systemSettings.sdCardLogging.action          = toggleSDCardLogging;
+  touchscreen.systemSettings.systemLogging.action          = toggleSystemLogging;
 
   // --------------------------------------------
   // Assign web server endpoints
@@ -157,17 +170,52 @@ void setup() {
 // ================================================================================================
 void loop() {
 
+  // Variable for keeping track of the total loop time
+  uint64_t loopStartMicroseconds = micros();
+
   // Update the buzzer
   audioFeedback();
 
   // Update the touchscreen
   visualFeedback();
 
+  // Update the data output
+  dataFeedback();
+
   // Update the wireless interfaces
   wireless.update();
 
   // Update the memory watchdog
   watchdog.update();
+
+  // Calculate current loop time
+  uint64_t currentLoopTimeMicroseconds = micros() - loopStartMicroseconds;
+
+  // Update the maximum loop time if the current loop time is longer than the old max
+  if (maximumLoopTimeMicroseconds < currentLoopTimeMicroseconds) { maximumLoopTimeMicroseconds = currentLoopTimeMicroseconds; }
+
+  // Add current loop time to the total loop time
+  totalLoopTimeMicroseconds += currentLoopTimeMicroseconds;
+
+  // Calculate the average loop time
+  averageLoopTimeMicroseconds = totalLoopTimeMicroseconds / loops;
+
+  // Increase loop counter
+  loops++;
+
+  // After 1000 loops
+  if (loops > 1000) {
+
+    // Reset total loop time
+    totalLoopTimeMicroseconds = 0;
+
+    // Reset maximum loop time
+    maximumLoopTimeMicroseconds = 0;
+
+    // Reset loop counter
+    loops = 1;
+
+  }
 
 }
 
@@ -291,6 +339,104 @@ void visualFeedback() {
 
   // Update the touchscreen
   touchscreen.update();
+
+}
+
+// ================================================================================================
+// Data feedback
+// ================================================================================================
+void dataFeedback() {
+
+  if (millis() - logTimer > LOG_INTERVAL_SECONDS * 1000) {
+
+    // Creat a log message string
+    String logMessage;
+
+    // --------------------------------------------
+    // System data
+
+    // If system message logging is enabled
+    if (logger.systemLogging()) {
+
+      // Get system data
+      Logger::KeyValuePair systemData[10] = {
+
+        {"upTimeMilliseconds",          Logger::UINT64_T, {.uint64_t_value = millis()}                   },
+        {"averageLoopTimeMicroseconds", Logger::UINT64_T, {.uint64_t_value = averageLoopTimeMicroseconds}},
+        {"maximumLoopTimeMicroseconds", Logger::UINT64_T, {.uint64_t_value = maximumLoopTimeMicroseconds}},
+        {"totalHeapBytes",              Logger::UINT32_T, {.uint32_t_value = ESP.getHeapSize()}          },
+        {"freeHeapBytes",               Logger::UINT32_T, {.uint32_t_value = ESP.getFreeHeap()}          },
+        {"minimumHeapBytes",            Logger::UINT32_T, {.uint32_t_value = ESP.getMinFreeHeap()}       },
+        {"maximumHeapBlockBytes",       Logger::UINT32_T, {.uint32_t_value = ESP.getMaxAllocHeap()}      },
+        {"geigerCounterEnabled",        Logger::BOOL,     {.bool_value     = geigerCounter.enabled()}    },
+        {"cosmicRayDetectorEnabled",    Logger::BOOL,     {.bool_value     = cosmicRayDetector.enabled()}},
+        {"firmware",                    Logger::STRING,   {.string_value   = FIRMWARE_VERSION}           }
+
+      };
+
+      // Append the system data
+      logger.appendLogMessage("system", systemData, 8, logMessage);
+
+    }
+
+    // --------------------------------------------
+    // Geiger counter data
+
+    // If the Geiger counter is enabled
+    if (geigerCounter.enabled()) {
+
+      // Get the current integration time
+      uint8_t integrationTime = geigerCounter.getIntegrationTime();
+
+      // Set integration time to the max value
+      geigerCounter.setIntegrationTime(60);
+
+      // Get Geiger counter data
+      Logger::KeyValuePair geigerCounterData[6] = {
+
+        {"totalCounts",          Logger::UINT64_T, {.uint64_t_value = geigerCounter.getCounts()}              },
+        {"mainTubeCounts",       Logger::UINT64_T, {.uint64_t_value = geigerCounter.getMainTubeCounts()}      },
+        {"mainFollowerCounts",   Logger::UINT64_T, {.uint64_t_value = geigerCounter.getFollowerTubeCounts()}  },
+        {"countsPerMinute",      Logger::DOUBLE,   {.double_value   = geigerCounter.getCountsPerMinute()}     },
+        {"microsievertsPerHour", Logger::DOUBLE,   {.double_value   = geigerCounter.getMicrosievertsPerHour()}},
+        {"tubeType",             Logger::STRING,   {.string_value   = TUBE_TYPE_NAME}                         }
+
+      };
+
+      // Reset integration time
+      geigerCounter.setIntegrationTime(integrationTime);
+
+      // Append the Geiger counter data
+      logger.appendLogMessage("geigerCounter", geigerCounterData, 6, logMessage);
+
+    }
+
+    // --------------------------------------------
+    // Cosmic ray detector data
+
+    // If the cosmic ray detector is enabled
+    if (cosmicRayDetector.enabled()) {
+
+      // Get the cosmic ray detector data
+      Logger::KeyValuePair cosmicRayDetectorData[2] = {
+
+        {"coincidenceEvents",        Logger::UINT64_T, {.uint64_t_value = cosmicRayDetector.getCoincidenceEvents()}       },
+        {"coincidenceEventsPerHour", Logger::DOUBLE,   {.double_value   = cosmicRayDetector.getCoincidenceEventsPerHour()}}
+
+      };
+
+      // Append the cosmic ray detector data
+      logger.appendLogMessage("cosmicRayDetector", cosmicRayDetectorData, 2, logMessage);
+
+    }
+    
+    // Log the log message
+    logger.log(logMessage);
+
+    // Update log timer
+    logTimer = millis();
+
+  }
 
 }
 
@@ -905,6 +1051,78 @@ void toggleEnableWiFi(bool toggled) {
 
 }
 
+// ================================================================================================
+// Toggle serial logging
+// ================================================================================================
+void toggleSerialLogging(bool toggled) {
+
+  // If toggled on
+  if (toggled) {
+
+    // Enable serial logging
+    logger.enableSerialLogging();
+
+  // If toggled off
+  } else {
+
+    // Disable serial logging
+    logger.disableSerialLogging();
+
+  }
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
+
+}
+
+// ================================================================================================
+// Toggle SD card logging
+// ================================================================================================
+void toggleSDCardLogging(bool toggled) {
+
+  // If toggled on
+  if (toggled) {
+
+    // Enable SD card logging
+    logger.enableSDCardLogging();
+
+  // If toggled off
+  } else {
+
+    // Disable SD card logging
+    logger.disableSDCardLogging();
+
+  }
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
+
+}
+
+// ================================================================================================
+// Toggle system message logging
+// ================================================================================================
+void toggleSystemLogging(bool toggled) {
+
+  // If toggled on
+  if (toggled) {
+
+    // Enable system message logging
+    logger.enableSystemLogging();
+
+  // If toggled off
+  } else {
+
+    // Disable system message logging
+    logger.disableSystemLogging();
+
+  }
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
+
+}
+
 // ------------------------------------------------------------------------------------------------
 // Web server actions
 
@@ -913,8 +1131,28 @@ void toggleEnableWiFi(bool toggled) {
 // ================================================================================================
 void sendGeigerCounterData() {
 
-  // Send dummy response
-  wireless.server.send(200, "text/plain", "Not yet implemented!");
+  // Get Geiger counter data
+  Logger::KeyValuePair data[8] = {
+
+    {"enabled",                Logger::BOOL,     {.bool_value     = geigerCounter.enabled()}                },
+    {"totalCounts",            Logger::UINT64_T, {.uint64_t_value = geigerCounter.getCounts()}              },
+    {"mainTubeCounts",         Logger::UINT64_T, {.uint64_t_value = geigerCounter.getMainTubeCounts()}      },
+    {"mainFollowerCounts",     Logger::UINT64_T, {.uint64_t_value = geigerCounter.getFollowerTubeCounts()}  },
+    {"countsPerMinute",        Logger::DOUBLE,   {.double_value   = geigerCounter.getCountsPerMinute()}     },
+    {"microsievertsPerHour",   Logger::DOUBLE,   {.double_value   = geigerCounter.getMicrosievertsPerHour()}},
+    {"integrationTimeSeconds", Logger::UINT8_T,  {.uint8_t_value  = geigerCounter.getIntegrationTime()}     },
+    {"tubeType",               Logger::STRING,   {.string_value   = TUBE_TYPE_NAME}                         }
+
+  };
+
+  // JSON data string
+  String json;
+
+  // Construct the data string
+  logger.appendLogMessage("geigerCounter", data, 8, json);
+
+  // Send JSON data
+  wireless.server.send(200, "application/json", json);
 
 }
 
@@ -923,8 +1161,23 @@ void sendGeigerCounterData() {
 // ================================================================================================
 void sendCosmicRayDetectorData() {
 
-  // Send dummy response
-  wireless.server.send(200, "text/plain", "Not yet implemented!");
+  // Get the cosmic ray detector data
+  Logger::KeyValuePair data[3] = {
+
+    {"enabled",                  Logger::BOOL,     {.bool_value     = cosmicRayDetector.enabled()}                    },
+    {"coincidenceEvents",        Logger::UINT64_T, {.uint64_t_value = cosmicRayDetector.getCoincidenceEvents()}       },
+    {"coincidenceEventsPerHour", Logger::DOUBLE,   {.double_value   = cosmicRayDetector.getCoincidenceEventsPerHour()}}
+
+  };
+
+  // JSON data string
+  String json;
+
+  // Construct the data string
+  logger.appendLogMessage("cosmicRayDetector", data, 3, json);
+
+  // Send JSON data
+  wireless.server.send(200, "application/json", json);
 
 }
 
@@ -933,7 +1186,29 @@ void sendCosmicRayDetectorData() {
 // ================================================================================================
 void sendSystemData() {
 
-  // Send dummy response
-  wireless.server.send(200, "text/plain", "Not yet implemented!");
+  // Get system data
+  Logger::KeyValuePair data[10] = {
+
+    {"upTimeMilliseconds",          Logger::UINT64_T, {.uint64_t_value = millis()}                   },
+    {"averageLoopTimeMicroseconds", Logger::UINT64_T, {.uint64_t_value = averageLoopTimeMicroseconds}},
+    {"maximumLoopTimeMicroseconds", Logger::UINT64_T, {.uint64_t_value = maximumLoopTimeMicroseconds}},
+    {"totalHeapBytes",              Logger::UINT32_T, {.uint32_t_value = ESP.getHeapSize()}          },
+    {"freeHeapBytes",               Logger::UINT32_T, {.uint32_t_value = ESP.getFreeHeap()}          },
+    {"minimumHeapBytes",            Logger::UINT32_T, {.uint32_t_value = ESP.getMinFreeHeap()}       },
+    {"maximumHeapBlockBytes",       Logger::UINT32_T, {.uint32_t_value = ESP.getMaxAllocHeap()}      },
+    {"geigerCounterEnabled",        Logger::BOOL,     {.bool_value     = geigerCounter.enabled()}    },
+    {"cosmicRayDetectorEnabled",    Logger::BOOL,     {.bool_value     = cosmicRayDetector.enabled()}},
+    {"firmware",                    Logger::STRING,   {.string_value   = FIRMWARE_VERSION}           }
+
+  };
+
+  // JSON data string
+  String json;
+
+  // Construct the data string
+  logger.appendLogMessage("system", data, 10, json);
+
+  // Send JSON data
+  wireless.server.send(200, "application/json", json);
 
 }
