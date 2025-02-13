@@ -18,8 +18,8 @@ Wireless::Wireless():
   _wifiEnabled(false),
   _wifiName(WIFI_NAME),
   _wifiPassword(WIFI_PASSWORD),
-  _wifiConnectionTimeoutSeconds(WIFI_CONNECTION_TIMEOUT_SECONDS),
-  _ipAddressString(STRING_NON_APPLICABLE_ABBREVIATION)
+  _wifiIPAddress(STRING_NON_APPLICABLE_ABBREVIATION),
+  _hotspotIPAddress(STRING_NON_APPLICABLE_ABBREVIATION)
 
 {}
 
@@ -60,14 +60,16 @@ void Wireless::enableHotspot() {
     // Disable WiFi
     disableWiFi();
 
-    // Start a new hotspot
-    WiFi.softAP(HOTSPOT_NAME, HOTSPOT_PASSWORD);
+    // Try creating a new hotspot
+    if (WiFi.softAP(HOTSPOT_NAME, HOTSPOT_PASSWORD)) {
 
-    // Start the webserver
-    _startServer();
+      // Start the webserver
+      _startServer();
 
-    // Set the enable flag to true
-    _hotspotEnabled = true;
+      // Set the enable flag to true
+      _hotspotEnabled = true;
+
+    }
 
   }
 
@@ -117,35 +119,11 @@ void Wireless::enableWiFi() {
     // Connect to WiFi
     WiFi.begin(_wifiName, _wifiPassword);
 
-    // Get the current time in milliseconds
-    uint64_t connectionStartMilliseconds = millis();
+    // Start the webserver
+    _startServer();
 
-    // While connecting to WiFi
-    while (WiFi.status() != WL_CONNECTED) {
-      
-      // Check if connection timeout has been reached
-      if (millis() - connectionStartMilliseconds >= _wifiConnectionTimeoutSeconds * 1000){
-
-        // Stop waiting for connection
-        break;
-
-      }
-
-      // Keep the watchdog happy :)
-      yield();
-
-    }
-
-    // If connected to WiFi
-    if (WiFi.status() == WL_CONNECTED) {
-
-      // Start the webserver
-      _startServer();
-
-      // Set the enabled flag to true
-      _wifiEnabled = true;
-
-    }
+    // Set the enabled flag to true
+    _wifiEnabled = true;
 
   }
 
@@ -208,34 +186,62 @@ const char* Wireless::getWiFiName() {
 
 }
 
-
 // ================================================================================================
-// Get the IP address
+// Get the WiFi IP address
 // ================================================================================================
-const char* Wireless::getIPAddress() {
-
-  // If hotspot is enabled
-  if (_hotspotEnabled) {
-    
-    // Get the hotspot IP address
-    _ipAddressString = WiFi.softAPIP().toString();
+const char* Wireless::getWiFiIPAddress() {
 
   // If WiFi is enabled
-  } else if (_wifiEnabled) {
+  if (_wifiEnabled) {
 
-    // Get the WiFi IP address
-    _ipAddressString = WiFi.localIP().toString();
+    // If WiFi is connected
+    if (WiFi.status() == WL_CONNECTED) {
 
-  // If nothing is enabled
-  } else {
+      // Get the WiFi IP address
+      _wifiIPAddress = WiFi.localIP().toString();
     
-    // Set IP address to non-applicable
-    _ipAddressString = STRING_NON_APPLICABLE_ABBREVIATION;
+    // If not connected
+    } else {
+
+      // Set the IP address string to connecting
+      _wifiIPAddress = STRING_CONNECTING;
+
+    }
+  
+  // If WiFi is disabled
+  } else {
+
+    // Set the IP address string to non applicable
+    _wifiIPAddress = STRING_NON_APPLICABLE_ABBREVIATION;
 
   }
 
   // Return the IP address string
-  return _ipAddressString.c_str();
+  return _wifiIPAddress.c_str();
+
+}
+
+// ================================================================================================
+// Get the WiFi IP address
+// ================================================================================================
+const char* Wireless::getHotspotIPAddress() {
+
+  // If hotspot is enabled
+  if (_hotspotEnabled) {
+
+    // Get the hotspot IP address
+    _hotspotIPAddress = WiFi.softAPIP().toString();
+  
+  // If hotspot is disabled
+  } else {
+
+    // Set the IP address string to non applicable
+    _hotspotIPAddress = STRING_NON_APPLICABLE_ABBREVIATION;
+
+  }
+
+  // Return the IP address string
+  return _hotspotIPAddress.c_str();
 
 }
 
@@ -330,7 +336,7 @@ bool Wireless::_sdCardMounted() {
 // ================================================================================================
 void Wireless::_handleWiFiCredentials() {
 
-  // Flag for checking if the valid credentials data was transmitted 
+  // Flag for checking if the credentials data was valid 
   bool validCredentials = false;
 
   // If the request has a body
@@ -394,8 +400,7 @@ void Wireless::_handleRequest() {
   if (_instance->_sdCardMounted()) {
 
     // Construct the path of the requested file
-    String path  = SD_CARD_ROOT_DIRECTORY;
-           path += "/Web-App";
+    String path  = SD_CARD_WEB_APP_DIRECTORY;
            path += _instance->server.uri();
     
     // Check if the path is a directory if so add index.html to it
@@ -407,8 +412,8 @@ void Wireless::_handleRequest() {
       // Open the file
       File file = SD.open(path);
 
-      // Check if file is not a directory
-      if (!file.isDirectory()) {
+      // If file was successfully opened and is not a directory
+      if (file && !file.isDirectory()) {
 
         // Send data
         _instance->server.streamFile(file, "text/html");

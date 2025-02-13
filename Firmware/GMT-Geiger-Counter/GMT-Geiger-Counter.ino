@@ -334,12 +334,12 @@ void visualFeedback() {
 
   // Set hotspot settings screen values
   touchscreen.hotspotSettings.enable.toggle(wireless.hotspotEnabled());
-  touchscreen.hotspotSettings.setIPAddress(wireless.getIPAddress());
+  touchscreen.hotspotSettings.setIPAddress(wireless.getHotspotIPAddress());
 
   // Set WiFi settings screen values
   touchscreen.wifiSettings.enable.toggle(wireless.wifiEnabled());
   touchscreen.wifiSettings.setWiFiName(wireless.getWiFiName());
-  touchscreen.wifiSettings.setIPAddress(wireless.getIPAddress());
+  touchscreen.wifiSettings.setIPAddress(wireless.getWiFiIPAddress());
 
   // Set system settings screen values
   touchscreen.systemSettings.serialLogging.toggle(logger.serialLogging());
@@ -954,8 +954,6 @@ void toggleEnableHotspot(bool toggled) {
   if (toggled) {
 
     // Update screen elements
-    touchscreen.wifiSettings.enable.toggleOff();
-    touchscreen.wifiSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
     touchscreen.hotspotSettings.setIPAddress(STRING_CONNECTING);
 
     // Refresh the display
@@ -964,41 +962,19 @@ void toggleEnableHotspot(bool toggled) {
     // Enable hotspot
     wireless.enableHotspot();
 
-    // If hotspot was enabled
-    if (wireless.hotspotEnabled()) {
-
-      // Update screen elements
-      touchscreen.hotspotSettings.enable.toggleOn();
-      touchscreen.hotspotSettings.setIPAddress(wireless.getIPAddress());
-
-      // Play a success sound
-      buzzer.play(buzzer.next);
-
-    // If hotspot was not enabled
-    } else {
-
-      // Update screen elements
-      touchscreen.hotspotSettings.enable.toggleOff();
-      touchscreen.hotspotSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
-
-      // Play an error sound
-      buzzer.play(buzzer.error);
-
-    }
-
   // If toggled off
   } else {
+
+    // Update screen elements
+    touchscreen.hotspotSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
 
     // Disable hotspot
     wireless.disableHotspot();
 
-    // Update the hotspot IP address on screen
-    touchscreen.hotspotSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
-
-    // Play a sound
-    buzzer.play(buzzer.tap);
-
   }
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
 
 }
 
@@ -1011,51 +987,24 @@ void toggleEnableWiFi(bool toggled) {
   if (toggled) {
 
     // Update screen elements
-    touchscreen.hotspotSettings.enable.toggleOff();
-    touchscreen.hotspotSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
     touchscreen.wifiSettings.setIPAddress(STRING_CONNECTING);
-
-    // Refresh the display
-    touchscreen.refresh();
 
     // Enable WiFi
     wireless.enableWiFi();
 
-    // If WiFi was enabled
-    if (wireless.wifiEnabled()) {
-
-      // Update screen elements
-      touchscreen.wifiSettings.setIPAddress(wireless.getIPAddress());
-      touchscreen.wifiSettings.enable.toggleOn();
-
-      // Play a success sound
-      buzzer.play(buzzer.next);
-
-    // If WiFi did not connect
-    } else {
-
-      // Update screen elements
-      touchscreen.wifiSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
-      touchscreen.wifiSettings.enable.toggleOff();
-
-      // Play an error sound
-      buzzer.play(buzzer.error);
-
-    }
-
   // If toggled off
   } else {
+
+    // Update screen elements
+    touchscreen.hotspotSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
 
     // Disable WiFi
     wireless.disableWiFi();
 
-    // Update the WiFi IP address on screen
-    touchscreen.wifiSettings.setIPAddress(STRING_NON_APPLICABLE_ABBREVIATION);
-
-    // Play a sound
-    buzzer.play(buzzer.tap);
-
   }
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
 
 }
 
