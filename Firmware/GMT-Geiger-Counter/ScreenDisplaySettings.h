@@ -17,6 +17,7 @@ class ScreenDisplaySettings: public ScreenBasic {
 
     // Screen elements
     TouchToggle display;
+    TouchToggle timeout;
 
     // Constructor
     ScreenDisplaySettings();

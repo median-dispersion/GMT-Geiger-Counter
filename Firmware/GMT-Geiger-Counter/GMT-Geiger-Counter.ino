@@ -26,7 +26,6 @@ bool     playedDoseWarning           = false;
 uint64_t lastCounts                  = 0;
 uint64_t lastCoincidenceEvents       = 0;
 bool     lastMute                    = false;
-Screen   *lastScreen                 = nullptr;
 uint64_t logTimer                    = 0;
 uint64_t loops                       = 1;
 uint64_t totalLoopTimeMicroseconds   = 0;
@@ -58,6 +57,7 @@ void toggleAudioAlerts(bool toggled);
 void toggleAudioInterface(bool toggled);
 void toggleAudioMuteEverything(bool toggled);
 void toggleDisplayPower(bool toggled);
+void toggleDisplayTimeout(bool toggled);
 void goToSleep();
 void wakeFromSleep();
 void cosmicRayDetectorMute();
@@ -114,6 +114,7 @@ void setup() {
   // Display settings screen touch actions
   touchscreen.displaySettings.back.action                  = displayGeigerCounter;
   touchscreen.displaySettings.display.action               = toggleDisplayPower;
+  touchscreen.displaySettings.timeout.action               = toggleDisplayTimeout;
 
   // Sleep screen touch actions
   touchscreen.sleep.wakeup.action                          = wakeFromSleep;
@@ -324,6 +325,7 @@ void visualFeedback() {
 
   // Set display settings screen values
   touchscreen.displaySettings.display.toggle(touchscreen.enabled());
+  touchscreen.displaySettings.timeout.toggle(touchscreen.timeout());
 
   // Set cosmic ray detector screen values
   touchscreen.cosmicRayDetector.setCoincidenceEvents(cosmicRayDetector.getCoincidenceEvents());
@@ -863,9 +865,6 @@ void toggleDisplayPower(bool toggled) {
     // Store the last mute state
     lastMute = buzzer.muted();
 
-    // Store the last screen
-    lastScreen = touchscreen.getScreen();
-
     // Turn off the display
     touchscreen.disable();
 
@@ -879,6 +878,28 @@ void toggleDisplayPower(bool toggled) {
 
 }
 
+// ================================================================================================
+// Toggle the display auto timeout
+// ================================================================================================
+void toggleDisplayTimeout(bool toggled) {
+
+  // If toggled on
+  if (toggled) {
+
+    touchscreen.enableTimeout();
+
+  // If toggled off
+  } else {
+
+    // Turn off the display
+    touchscreen.disableTimeout();
+
+  }
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
+
+}
 
 // ================================================================================================
 // Go to sleep
@@ -887,9 +908,6 @@ void goToSleep() {
 
   // Store the last mute state
   lastMute = buzzer.muted();
-
-  // Store the last screen state
-  lastScreen = touchscreen.getScreen();
 
   // Mute the buzzer
   buzzer.mute();
@@ -907,8 +925,8 @@ void goToSleep() {
 // ================================================================================================
 void wakeFromSleep() {
 
-  // Draw the last screen
-  touchscreen.draw(lastScreen);
+  // Draw the previous screen
+  touchscreen.draw(touchscreen.getPreviousScreen());
 
   // Toggle on the display toggle
   touchscreen.displaySettings.display.toggleOn();
@@ -923,6 +941,9 @@ void wakeFromSleep() {
 
   // Turn on the touchscreen
   touchscreen.enable();
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
 
 }
 

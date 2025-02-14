@@ -18,6 +18,7 @@
 #define STRING_TOGGLE_MUTE_EVERYTHING         "Mute everything"
 #define STRING_DISPLAY_SETTINGS_TITLE         "Display settings"
 #define STRING_TOGGLE_DISPLAY                 "Display"
+#define STRING_AUTO_TIMEOUT                   "Auto timeout"
 #define STRING_RADIATION_HISTORY_TITLE        "Radiation history (CPM)"
 #define STRING_ROTATE_BY_90_DEGREES           "Rotate by 90 degrees"
 #define STRING_TAP_TO_CONTINUE                "Tap to continue..."

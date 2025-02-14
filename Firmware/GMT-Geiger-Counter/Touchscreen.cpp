@@ -13,9 +13,12 @@ Touchscreen::Touchscreen():
   _canvas(DISPLAY_WIDTH, DISPLAY_HEIGHT),
   _touch(TOUCH_CS_PIN, TOUCH_IRQ_PIN),
   _screen(&geigerCounter),
+  _previousScreen(&geigerCounter),
   _enabled(true),
   _lastRefreshMilliseconds(0),
-  _rotation(DISPLAY_SCREEN_ROTATION_LANDSCAPE)
+  _rotation(DISPLAY_SCREEN_ROTATION_LANDSCAPE),
+  _timeout(true),
+  _lastTouchMilliseconds(0)
 
 {}
 
@@ -81,6 +84,33 @@ bool Touchscreen::enabled() {
 }
 
 // ================================================================================================
+// Enable display auto timeout
+// ================================================================================================
+void Touchscreen::enableTimeout() {
+
+  _timeout = true;
+
+}
+
+// ================================================================================================
+// Disable display auto timeout
+// ================================================================================================
+void Touchscreen::disableTimeout() {
+
+  _timeout = false;
+
+}
+
+// ================================================================================================
+// Retruns if the auto timeout has been enabled
+// ================================================================================================
+bool Touchscreen::timeout() {
+
+  return _timeout;
+
+}
+
+// ================================================================================================
 // Update touchscreen
 // ================================================================================================
 void Touchscreen::update() {
@@ -104,6 +134,30 @@ void Touchscreen::update() {
 
       // Set the refresh flag to true
       refreshImmediately = true;
+
+      // Set the last touch event time
+      _lastTouchMilliseconds = millis();
+
+    }
+
+  }
+
+  // If auto timeout is enabled
+  if (_timeout) {
+
+    // If the screen is currently enabled
+    if (_enabled) {
+
+      // If the timeout has been reached
+      if (millis() - _lastTouchMilliseconds >= DISPLAY_AUTO_TIMEOUT_SECONDS * 1000) {
+
+        // Draw the sleep screen
+        draw(sleep);
+
+        // Disable the touchscreen
+        disable();
+
+      }
 
     }
 
@@ -151,6 +205,9 @@ void Touchscreen::refresh() {
 // ================================================================================================
 void Touchscreen::draw(Screen &screen) {
 
+  // Set the previous screen
+  _previousScreen = _screen;
+
   // Set the screen pointer to a pointer of a reference of the selected screen 
   // (cursed...)
   _screen = &screen;
@@ -162,6 +219,10 @@ void Touchscreen::draw(Screen &screen) {
 // ================================================================================================
 void Touchscreen::draw(Screen *screen) {
 
+  // Set the previous screen
+  _previousScreen = _screen;
+
+  // Set the new screen
   _screen = screen;
 
 }
@@ -191,5 +252,15 @@ Screen* Touchscreen::getScreen() {
 
   // Return a pointer to the curent screen
   return _screen;
+
+};
+
+// ================================================================================================
+// Retruns the previous screen
+// ================================================================================================
+Screen* Touchscreen::getPreviousScreen() {
+
+  // Return a pointer to the previous screen
+  return _previousScreen;
 
 };

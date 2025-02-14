@@ -96,6 +96,12 @@
 // Default: 3.5
 #define TOUCH_PRESSURE_THRESHOLD 3.5
 
+// Time until the display automatically turns off in seconds
+// If the auto timeout is enabled, the display will turn off after the specified time
+// For longer screen on time, increase this value
+// Default: 120 (2 min)
+#define DISPLAY_AUTO_TIMEOUT_SECONDS 120
+
 // The display width and height in pixels
 // These values should not be changed!
 // Default: 240 x 320
@@ -181,7 +187,7 @@
 // Firmware version
 // This can be set to any arbitrary string
 // This value should not be changed!
-#define FIRMWARE_VERSION "GMTGC-2025-02-13v2"
+#define FIRMWARE_VERSION "GMTGC-2025-02-14"
 
 // The minimum threshold of free heap the system is allowed to have
 // If the free heap falls below this value, the system will reboot to prevent software instability or lock-ups
