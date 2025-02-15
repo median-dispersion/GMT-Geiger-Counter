@@ -86,7 +86,7 @@ void Logger::appendLogMessage(const char *type, KeyValuePair *data, uint16_t siz
       case UINT32_T: message += data[pair].value.uint32_t_value; break;
       case UINT64_T: message += data[pair].value.uint64_t_value; break;
       case FLOAT:    message += data[pair].value.float_value;    break;
-      case DOUBLE:   message += data[pair].value.float_value;    break;
+      case DOUBLE:   message += data[pair].value.double_value;   break;
 
       // If value is a sting
       case STRING:
@@ -357,6 +357,9 @@ const char* Logger::_getLogFilePath() {
 
       // Close element
       file.close();
+
+      // Increase the log file ID to create the next log file
+      _logFileID++;
 
       // Construct log file path
       _logFilePath += "/Log";
