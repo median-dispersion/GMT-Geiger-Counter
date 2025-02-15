@@ -9,6 +9,7 @@
 #include "Strings.h"
 #include "Graphics.h"
 #include "DisplayDoseScreen.h"
+#include "TouchTarget.h"
 #include "DisplayInfoBox.h"
 #include "TouchIcon.h"
 
@@ -20,18 +21,19 @@ class ScreenGeigerCounter: public Screen {
   public:
     
     // Screen elements
-    TouchIcon audioSettings;
-    TouchIcon displaySettings;
-    TouchIcon goToSleep;
-    TouchIcon decreaseIntegrationTime;
-    TouchIcon resetIntegrationTime;
-    TouchIcon increaseIntegrationTime;
-    TouchIcon cosmicRayDetector;
-    TouchIcon radiationHistory;
-    TouchIcon trueRNG;
-    TouchIcon hotspotSettings;
-    TouchIcon wifiSettings;
-    TouchIcon systemSettings;
+    TouchIcon   audioSettings;
+    TouchIcon   displaySettings;
+    TouchIcon   goToSleep;
+    TouchIcon   decreaseIntegrationTime;
+    TouchIcon   resetIntegrationTime;
+    TouchIcon   increaseIntegrationTime;
+    TouchIcon   cosmicRayDetector;
+    TouchIcon   radiationHistory;
+    TouchIcon   trueRNG;
+    TouchIcon   hotspotSettings;
+    TouchIcon   wifiSettings;
+    TouchIcon   systemSettings;
+    TouchTarget geigerCounterSetting;
 
     // Constructor
     ScreenGeigerCounter();

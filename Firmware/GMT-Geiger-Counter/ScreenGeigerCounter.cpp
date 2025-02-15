@@ -22,6 +22,7 @@ ScreenGeigerCounter::ScreenGeigerCounter():
   wifiSettings(           215, 187, 51, 51, IMAGE_WIFI    ),
   systemSettings(         267, 187, 51, 51, IMAGE_SETTINGS),
 
+  geigerCounterSetting(2, 31, 160, 129),
   _equivalentDoseString("0.00"),
   _equivalentDoseUnitString(STRING_EQUIVALENT_DOSE_UNIT_USVH),
   _countsPerMinuteString("0 CPM"),
@@ -52,6 +53,7 @@ void ScreenGeigerCounter::update(const XPT2046::Point &position) {
   hotspotSettings.update(position);
   wifiSettings.update(position);
   systemSettings.update(position);
+  geigerCounterSetting.update(position);
 
 }
 

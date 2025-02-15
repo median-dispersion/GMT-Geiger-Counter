@@ -39,6 +39,8 @@ void audioFeedback();
 void visualFeedback();
 void dataFeedback();
 void displayGeigerCounter();
+void displayGeigerCounterSettings1();
+void displayGeigerCounterSettings2();
 void displayAudioSettings();
 void displayDisplaySettings();
 void displayRadiationHistory();
@@ -102,6 +104,17 @@ void setup() {
   touchscreen.geigerCounter.hotspotSettings.action         = displayHotspotSettings;
   touchscreen.geigerCounter.wifiSettings.action            = displayWiFiSettings;
   touchscreen.geigerCounter.systemSettings.action          = displaySystemSettings;
+  touchscreen.geigerCounter.geigerCounterSetting.action    = displayGeigerCounterSettings1;
+
+  // Geiger counter settings 1 touch actions
+  touchscreen.geigerCounterSettings1.back.action           = displayGeigerCounter;
+  touchscreen.geigerCounterSettings1.next.action           = displayGeigerCounterSettings2;
+  touchscreen.geigerCounterSettings1.previous.action       = displayGeigerCounterSettings2;
+
+  // Geiger counter settings 2 touch actions
+  touchscreen.geigerCounterSettings2.back.action           = displayGeigerCounter;
+  touchscreen.geigerCounterSettings2.next.action           = displayGeigerCounterSettings1;
+  touchscreen.geigerCounterSettings2.previous.action       = displayGeigerCounterSettings1;
 
   // Audio settings screen touch actions
   touchscreen.audioSettings.back.action                    = displayGeigerCounter;
@@ -316,6 +329,11 @@ void visualFeedback() {
   touchscreen.geigerCounter.setCountsPerMinute(geigerCounter.getCountsPerMinute());
   touchscreen.geigerCounter.setIntegrationTime(geigerCounter.getIntegrationTime());
 
+  // Set Geiger counter settings 1 screen values
+  touchscreen.geigerCounterSettings1.setCounts(geigerCounter.getCounts());
+  touchscreen.geigerCounterSettings1.setMainTubeCounts(geigerCounter.getMainTubeCounts());
+  touchscreen.geigerCounterSettings1.setFollowerTubeCounts(geigerCounter.getFollowerTubeCounts());
+
   // Set audio settings screen values
   touchscreen.audioSettings.detections.toggle(!buzzer.detections.muted());
   touchscreen.audioSettings.notifications.toggle(!buzzer.notifications.muted());
@@ -494,6 +512,38 @@ void displayGeigerCounter() {
 
   // Draw the Geiger counter screen
   touchscreen.draw(touchscreen.geigerCounter);
+
+  // Play the go back sound
+  buzzer.play(buzzer.back);
+
+}
+
+// ================================================================================================
+// Display the Geiger counter settings 1 screen
+// ================================================================================================
+void displayGeigerCounterSettings1() {
+
+  // Rotate to landscape orientation
+  touchscreen.rotateLandscape();
+
+  // Draw the Geiger counter settings 1 screen
+  touchscreen.draw(touchscreen.geigerCounterSettings1);
+
+  // Play the go back sound
+  buzzer.play(buzzer.back);
+
+}
+
+// ================================================================================================
+// Display the Geiger counter settings 2 screen
+// ================================================================================================
+void displayGeigerCounterSettings2() {
+
+  // Rotate to landscape orientation
+  touchscreen.rotateLandscape();
+
+  // Draw the Geiger counter settings 2 screen
+  touchscreen.draw(touchscreen.geigerCounterSettings2);
 
   // Play the go back sound
   buzzer.play(buzzer.back);

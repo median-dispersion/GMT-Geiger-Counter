@@ -8,6 +8,8 @@
 #include "XPT2046.h"
 #include "Screen.h"
 #include "ScreenGeigerCounter.h"
+#include "ScreenGeigerCounterSettings1.h"
+#include "ScreenGeigerCounterSettings2.h"
 #include "ScreenAudioSettings.h"
 #include "ScreenDisplaySettings.h"
 #include "ScreenSleep.h"
@@ -27,17 +29,19 @@ class Touchscreen {
   public:
 
     // Screens
-    ScreenGeigerCounter        geigerCounter;        // Geiger counter screen
-    ScreenAudioSettings        audioSettings;        // Audio settings screen
-    ScreenDisplaySettings      displaySettings;      // Display settings screen
-    ScreenSleep                sleep;                // Sleep / timeout screen for waking the display
-    ScreenRotationConfirmation rotationConfirmation; // Rotation confirmation screen
-    ScreenCosmicRayDetector    cosmicRayDetector;    // Cosmic ray detector screen
-    ScreenRadiationHistory     radiationHistory;     // Radiation history screen
-    ScreenTrueRNG              trueRNG;              // True random number generator screen
-    ScreenHotspotSettings      hotspotSettings;      // Hotspot settings screen
-    ScreenWiFiSettings         wifiSettings;         // WiFi settings screen
-    ScreenSystemSettings       systemSettings;       // System settings screen
+    ScreenGeigerCounter          geigerCounter;          // Geiger counter screen
+    ScreenGeigerCounterSettings1 geigerCounterSettings1; // Geiger counter settings screen 1
+    ScreenGeigerCounterSettings2 geigerCounterSettings2; // Geiger counter settings screen 2
+    ScreenAudioSettings          audioSettings;          // Audio settings screen
+    ScreenDisplaySettings        displaySettings;        // Display settings screen
+    ScreenSleep                  sleep;                  // Sleep / timeout screen for waking the display
+    ScreenRotationConfirmation   rotationConfirmation;   // Rotation confirmation screen
+    ScreenCosmicRayDetector      cosmicRayDetector;      // Cosmic ray detector screen
+    ScreenRadiationHistory       radiationHistory;       // Radiation history screen
+    ScreenTrueRNG                trueRNG;                // True random number generator screen
+    ScreenHotspotSettings        hotspotSettings;        // Hotspot settings screen
+    ScreenWiFiSettings           wifiSettings;           // WiFi settings screen
+    ScreenSystemSettings         systemSettings;         // System settings screen
 
     // Constructor
     Touchscreen();
