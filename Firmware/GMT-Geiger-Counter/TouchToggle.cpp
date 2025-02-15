@@ -18,7 +18,7 @@ TouchToggle::TouchToggle(const uint8_t row, const char *text, const bool toggled
 // ================================================================================================
 // Update the touch toggle with the touch position
 // ================================================================================================
-void TouchToggle::update(const XPT2046::Point position) {
+void TouchToggle::update(const XPT2046::Point &position) {
 
   // Check if touch position is inside the bounding box
   if (position.x >= 2 && position.x < 318 && position.y >= _y && position.y < (_y + 25)) {
@@ -79,7 +79,7 @@ void TouchToggle::toggle() {
 // ================================================================================================
 // Toggle a specific state
 // ================================================================================================
-void TouchToggle::toggle(bool toggled) {
+void TouchToggle::toggle(const bool toggled) {
 
   _toggled = toggled;
 

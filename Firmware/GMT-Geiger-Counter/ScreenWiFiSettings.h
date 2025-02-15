@@ -23,7 +23,7 @@ class ScreenWiFiSettings: public ScreenBasic {
     ScreenWiFiSettings();
 
     // Update and draw calls
-    void update(const XPT2046::Point position) override;
+    void update(const XPT2046::Point &position) override;
     void draw(GFXcanvas16 &canvas) override;
 
     void setWiFiName(const char *wifiName);   // Set the WiFi name / SSID

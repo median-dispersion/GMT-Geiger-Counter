@@ -1,6 +1,6 @@
 #include "Graphics.h"
 
-const uint8_t data[] = {
+const PROGMEM uint8_t data[] = {
 
   "\254R\254R\254R\254R\254R\254R\254R\254R\254R\254R\254R\355bz\316\377\377"
   "\327\275\254R\254R\255Z\223\224Nk\254R\254R\254R\254R\254R\254R\254R\254"

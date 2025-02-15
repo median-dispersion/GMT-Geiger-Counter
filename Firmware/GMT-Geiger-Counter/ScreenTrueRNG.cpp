@@ -17,7 +17,7 @@ ScreenTrueRNG::ScreenTrueRNG():
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenTrueRNG::update(const XPT2046::Point position) {
+void ScreenTrueRNG::update(const XPT2046::Point &position) {
 
   // Update the basic screen
   ScreenBasic::update(position);

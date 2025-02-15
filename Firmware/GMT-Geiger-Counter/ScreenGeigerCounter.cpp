@@ -37,7 +37,7 @@ ScreenGeigerCounter::ScreenGeigerCounter():
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenGeigerCounter::update(const XPT2046::Point position) {
+void ScreenGeigerCounter::update(const XPT2046::Point &position) {
 
   // Update screen elements
   audioSettings.update(position);
@@ -99,20 +99,17 @@ void ScreenGeigerCounter::draw(GFXcanvas16 &canvas) {
 // ================================================================================================
 // Set the equivalent dose
 // ================================================================================================
-void ScreenGeigerCounter::setEquivalentDose(double equivalentDose) {
-
-  // Clear last value
-  _equivalentDoseString = "";
+void ScreenGeigerCounter::setEquivalentDose(const double &equivalentDose) {
 
   // Convert equivalent dose to a string
-  _equivalentDoseString += equivalentDose;
+  _equivalentDoseString = equivalentDose;
 
 }
 
 // ================================================================================================
 // Set the equivalent dose unit
 // ================================================================================================
-void ScreenGeigerCounter::setEquivalentDoseUnit(String equivalentDoseUnit) {
+void ScreenGeigerCounter::setEquivalentDoseUnit(const String &equivalentDoseUnit) {
 
   _equivalentDoseUnitString = equivalentDoseUnit;
 
@@ -121,7 +118,7 @@ void ScreenGeigerCounter::setEquivalentDoseUnit(String equivalentDoseUnit) {
 // ================================================================================================
 // Set the radiation rating
 // ================================================================================================
-void ScreenGeigerCounter::setRadiationRating(GeigerCounter::RadiationRating radiationRating) {
+void ScreenGeigerCounter::setRadiationRating(const GeigerCounter::RadiationRating radiationRating) {
 
   // Depending on the radiation rating
   // Update the dose screen border and background color
@@ -167,11 +164,10 @@ void ScreenGeigerCounter::setRadiationRating(GeigerCounter::RadiationRating radi
 // ================================================================================================
 // Set the counts per minute
 // ================================================================================================
-void ScreenGeigerCounter::setCountsPerMinute(double countsPerMinute) {
+void ScreenGeigerCounter::setCountsPerMinute(const double &countsPerMinute) {
 
   // Convert counts per minute to a string with unit appended to it
-  _countsPerMinuteString = "";
-  _countsPerMinuteString += (uint32_t)(round(countsPerMinute));
+  _countsPerMinuteString  = (uint32_t)(round(countsPerMinute));
   _countsPerMinuteString += " ";
   _countsPerMinuteString += STRING_COUNTS_PER_MINUTE_ABBREVIATION;
 
@@ -180,11 +176,10 @@ void ScreenGeigerCounter::setCountsPerMinute(double countsPerMinute) {
 // ================================================================================================
 // Set the integration time
 // ================================================================================================
-void ScreenGeigerCounter::setIntegrationTime(uint8_t integrationTime) {
+void ScreenGeigerCounter::setIntegrationTime(const uint8_t integrationTime) {
   
   // Convert integration time to a string with unit appended to it
-  _integrationTimeString = "";
-  _integrationTimeString += integrationTime;
+  _integrationTimeString  = integrationTime;
   _integrationTimeString += " ";
   _integrationTimeString += STRING_SECONDS_ABBREVIATION;
 

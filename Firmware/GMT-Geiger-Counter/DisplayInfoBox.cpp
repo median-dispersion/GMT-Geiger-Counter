@@ -6,7 +6,7 @@
 // ================================================================================================
 // Constructor
 // ================================================================================================
-DisplayInfoBox::DisplayInfoBox(const uint16_t x, const uint16_t y, const uint16_t width, const Image icon, const char *value):
+DisplayInfoBox::DisplayInfoBox(const uint16_t x, const uint16_t y, const uint16_t width, const Image &icon, const char *value):
 
   // Initialize members
   _x(x),

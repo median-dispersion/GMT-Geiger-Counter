@@ -21,10 +21,10 @@ class ScreenRadiationHistory: public ScreenBasic {
     ScreenRadiationHistory();
 
     // Update and draw calls
-    void update(const XPT2046::Point position) override;
+    void update(const XPT2046::Point &position) override;
     void draw(GFXcanvas16 &canvas) override;
 
-    void setRadiationHistory(double countsPerMinute); // Update the radiation history
+    void setRadiationHistory(const double &countsPerMinute); // Update the radiation history
 
   //-----------------------------------------------------------------------------------------------
   // Private

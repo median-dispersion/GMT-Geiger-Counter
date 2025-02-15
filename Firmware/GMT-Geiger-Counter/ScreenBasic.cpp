@@ -17,7 +17,7 @@ ScreenBasic::ScreenBasic(const char *title):
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenBasic::update(const XPT2046::Point position) {
+void ScreenBasic::update(const XPT2046::Point &position) {
 
   // Update back button
   back.update(position);

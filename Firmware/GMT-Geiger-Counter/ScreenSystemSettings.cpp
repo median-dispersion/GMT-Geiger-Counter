@@ -20,7 +20,7 @@ ScreenSystemSettings::ScreenSystemSettings():
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenSystemSettings::update(const XPT2046::Point position) {
+void ScreenSystemSettings::update(const XPT2046::Point &position) {
 
   // Update the basic screen
   ScreenBasic::update(position);

@@ -31,7 +31,7 @@ ScreenCosmicRayDetector::ScreenCosmicRayDetector():
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenCosmicRayDetector::update(const XPT2046::Point position) {
+void ScreenCosmicRayDetector::update(const XPT2046::Point &position) {
 
   // Update the basic screen
   ScreenBasicPortrait::update(position);
@@ -69,7 +69,7 @@ void ScreenCosmicRayDetector::draw(GFXcanvas16 &canvas) {
 // ================================================================================================
 // Set the coincidence events offset
 // ================================================================================================
-void ScreenCosmicRayDetector::setCoincidenceEventsOffset(const uint64_t coincidenceEventsOffset) {
+void ScreenCosmicRayDetector::setCoincidenceEventsOffset(const uint64_t &coincidenceEventsOffset) {
 
   _coincidenceEventsOffset = coincidenceEventsOffset;
 
@@ -78,7 +78,7 @@ void ScreenCosmicRayDetector::setCoincidenceEventsOffset(const uint64_t coincide
 // ================================================================================================
 // Set the main tube offset
 // ================================================================================================
-void ScreenCosmicRayDetector::setMainTubeCountsOffset(const uint64_t mainTubeCountsOffset) {
+void ScreenCosmicRayDetector::setMainTubeCountsOffset(const uint64_t &mainTubeCountsOffset) {
 
   _mainTubeCountsOffset = mainTubeCountsOffset;
 
@@ -87,7 +87,7 @@ void ScreenCosmicRayDetector::setMainTubeCountsOffset(const uint64_t mainTubeCou
 // ================================================================================================
 // Set the follower tube offset
 // ================================================================================================
-void ScreenCosmicRayDetector::setFollowerTubeCountsOffset(const uint64_t followerTubeCountsOffset) {
+void ScreenCosmicRayDetector::setFollowerTubeCountsOffset(const uint64_t &followerTubeCountsOffset) {
 
   _followerTubeCountsOffset = followerTubeCountsOffset;
 
@@ -96,7 +96,7 @@ void ScreenCosmicRayDetector::setFollowerTubeCountsOffset(const uint64_t followe
 // ================================================================================================
 // Calculate and set coincidence events
 // ================================================================================================
-void ScreenCosmicRayDetector::setCoincidenceEvents(const uint64_t coincidenceEvents) {
+void ScreenCosmicRayDetector::setCoincidenceEvents(const uint64_t &coincidenceEvents) {
 
   _coincidenceEventsString = coincidenceEvents - _coincidenceEventsOffset;
 
@@ -105,11 +105,9 @@ void ScreenCosmicRayDetector::setCoincidenceEvents(const uint64_t coincidenceEve
 // ================================================================================================
 // Set the coincidence events per hour value
 // ================================================================================================
-void ScreenCosmicRayDetector::setCoincidenceEventsPerHour(const double coincidenceEventsPerHour) {
+void ScreenCosmicRayDetector::setCoincidenceEventsPerHour(const double &coincidenceEventsPerHour) {
 
-  _coincidenceEventsPerHourString = "";
-
-  _coincidenceEventsPerHourString += coincidenceEventsPerHour;
+  _coincidenceEventsPerHourString  = coincidenceEventsPerHour;
   _coincidenceEventsPerHourString += " ";
   _coincidenceEventsPerHourString += STRING_COUNTS_PER_HOUR_ABBREVIATION;
 
@@ -118,7 +116,7 @@ void ScreenCosmicRayDetector::setCoincidenceEventsPerHour(const double coinciden
 // ================================================================================================
 // Set the total number of coincidence events
 // ================================================================================================
-void ScreenCosmicRayDetector::setCoincidenceEventsTotal(const uint64_t coincidenceEventsTotal) {
+void ScreenCosmicRayDetector::setCoincidenceEventsTotal(const uint64_t &coincidenceEventsTotal) {
 
   _coincidenceEventsTotalString = coincidenceEventsTotal;
 
@@ -127,7 +125,7 @@ void ScreenCosmicRayDetector::setCoincidenceEventsTotal(const uint64_t coinciden
 // ================================================================================================
 // Calculate and set main tube counts
 // ================================================================================================
-void ScreenCosmicRayDetector::setMainTubeCounts(const uint64_t mainTubeCounts) {
+void ScreenCosmicRayDetector::setMainTubeCounts(const uint64_t &mainTubeCounts) {
 
   _mainTubeCountsString = mainTubeCounts - _mainTubeCountsOffset;
 
@@ -136,7 +134,7 @@ void ScreenCosmicRayDetector::setMainTubeCounts(const uint64_t mainTubeCounts) {
 // ================================================================================================
 // Calculate and set follower tube counts
 // ================================================================================================
-void ScreenCosmicRayDetector::setFollowerTubeCounts(const uint64_t followerTubeCounts) {
+void ScreenCosmicRayDetector::setFollowerTubeCounts(const uint64_t &followerTubeCounts) {
 
   _followerTubeCountsString = followerTubeCounts - _followerTubeCountsOffset;
 

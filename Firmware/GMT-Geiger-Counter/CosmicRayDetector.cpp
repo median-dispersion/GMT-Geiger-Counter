@@ -141,7 +141,7 @@ void IRAM_ATTR CosmicRayDetector::_advanceMovingAverage(void *instancePointer) {
   CosmicRayDetector *instance = (CosmicRayDetector*)instancePointer;
 
   // Calculate a wrapped index by using the current index + 1, if it overflows wrapped to the start of the array
-  uint16_t wrappedIndex = (instance->_movingAverageIndex + 1) % 60;
+  uint8_t wrappedIndex = (instance->_movingAverageIndex + 1) % 60;
 
   // Clear the next element in the array
   instance->_movingAverage[wrappedIndex] = 0;

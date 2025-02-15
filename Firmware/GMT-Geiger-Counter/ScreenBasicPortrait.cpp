@@ -17,7 +17,7 @@ ScreenBasicPortrait::ScreenBasicPortrait(const char *title):
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenBasicPortrait::update(const XPT2046::Point position) {
+void ScreenBasicPortrait::update(const XPT2046::Point &position) {
 
   // Update back button
   back.update(position);

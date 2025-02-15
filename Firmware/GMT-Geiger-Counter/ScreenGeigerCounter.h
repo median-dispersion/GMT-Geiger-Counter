@@ -37,15 +37,15 @@ class ScreenGeigerCounter: public Screen {
     ScreenGeigerCounter();
 
     // Update and draw calls
-    void update(const XPT2046::Point position) override;
+    void update(const XPT2046::Point &position) override;
     void draw(GFXcanvas16 &canvas) override;
 
     // Set screen variables
-    void setEquivalentDose(double equivalentDose);                           // Set the equivalent dose
-    void setEquivalentDoseUnit(String equivalentDoseUnit);                   // Set the equivalent dose unit
-    void setRadiationRating(GeigerCounter::RadiationRating radiationRating); // Set the radiation rating
-    void setCountsPerMinute(double countsPerMinute);                         // Set the counts per minute
-    void setIntegrationTime(uint8_t integrationTime);                        // Set the integration time
+    void setEquivalentDose(const double &equivalentDose);                          // Set the equivalent dose
+    void setEquivalentDoseUnit(const String &equivalentDoseUnit);                  // Set the equivalent dose unit
+    void setRadiationRating(const GeigerCounter::RadiationRating radiationRating); // Set the radiation rating
+    void setCountsPerMinute(const double &countsPerMinute);                        // Set the counts per minute
+    void setIntegrationTime(const uint8_t integrationTime);                        // Set the integration time
 
   // ----------------------------------------------------------------------------------------------
   // Private

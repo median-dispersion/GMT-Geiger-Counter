@@ -22,7 +22,7 @@ ScreenSleep::ScreenSleep():
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenSleep::update(const XPT2046::Point position) {
+void ScreenSleep::update(const XPT2046::Point &position) {
 
   // Update screen elements
   wakeup.update(position);

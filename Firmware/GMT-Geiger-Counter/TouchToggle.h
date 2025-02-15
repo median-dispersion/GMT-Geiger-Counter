@@ -16,14 +16,14 @@ class TouchToggle {
     // Constructor
     TouchToggle(const uint8_t row, const char *text, const bool toggled);
 
-    void update(const XPT2046::Point position); // Update the touch toggle with the touch position
-    void draw(GFXcanvas16 &canvas);             // Draw the touch toggle to the frame buffer
-    void (*action)(bool toggled);               // Function pointer to execute a function on touchdown
-    void toggle();                              // Toggle state
-    void toggle(bool toggled);                  // Toggle a specific state
-    void toggleOn();                            // Toggle on
-    void toggleOff();                           // Toggle off
-    bool toggled();                             // Return the toggle state
+    void update(const XPT2046::Point &position); // Update the touch toggle with the touch position
+    void draw(GFXcanvas16 &canvas);              // Draw the touch toggle to the frame buffer
+    void (*action)(const bool toggled);          // Function pointer to execute a function on touchdown
+    void toggle();                               // Toggle state
+    void toggle(const bool toggled);             // Toggle a specific state
+    void toggleOn();                             // Toggle on
+    void toggleOff();                            // Toggle off
+    bool toggled();                              // Return the toggle state
 
   //-----------------------------------------------------------------------------------------------
   // Private

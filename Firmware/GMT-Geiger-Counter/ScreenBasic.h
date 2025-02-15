@@ -22,7 +22,7 @@ class ScreenBasic: public Screen {
     ScreenBasic(const char *title);
 
     // Update and draw calls
-    void update(const XPT2046::Point position) override;
+    void update(const XPT2046::Point &position) override;
     void draw(GFXcanvas16 &canvas) override;
 
   //-----------------------------------------------------------------------------------------------

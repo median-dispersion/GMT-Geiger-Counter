@@ -1,6 +1,6 @@
 #include "Graphics.h"
 
-const uint8_t data[] = {
+const PROGMEM uint8_t data[] = {
 
   "F)F)\313Zy\316\354ZF)F)F)F)F)\354Z\232\326\313ZF)F)F)\354Z}\357\377\377y"
   "\316F)F)F)F)F)z\316\377\377~\357\354ZF)F)\373\336\377\377\377\377\377\377"

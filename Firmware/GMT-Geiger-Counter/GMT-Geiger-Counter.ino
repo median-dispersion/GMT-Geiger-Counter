@@ -51,21 +51,21 @@ void displaySystemSettings();
 void decreaseIntegrationTime();
 void resetIntegrationTime();
 void increaseIntegrationTime();
-void toggleAudioDetections(bool toggled);
-void toggleAudioNotifications(bool toggled);
-void toggleAudioAlerts(bool toggled);
-void toggleAudioInterface(bool toggled);
-void toggleAudioMuteEverything(bool toggled);
-void toggleDisplayPower(bool toggled);
-void toggleDisplayTimeout(bool toggled);
+void toggleAudioDetections(const bool toggled);
+void toggleAudioNotifications(const bool toggled);
+void toggleAudioAlerts(const bool toggled);
+void toggleAudioInterface(const bool toggled);
+void toggleAudioMuteEverything(const bool toggled);
+void toggleDisplayPower(const bool toggled);
+void toggleDisplayTimeout(const bool toggled);
 void goToSleep();
 void wakeFromSleep();
 void cosmicRayDetectorMute();
-void toggleEnableHotspot(bool toggled);
-void toggleEnableWiFi(bool toggled);
-void toggleSerialLogging(bool toggled);
-void toggleSDCardLogging(bool toggled);
-void toggleSystemLogging(bool toggled);
+void toggleEnableHotspot(const bool toggled);
+void toggleEnableWiFi(const bool toggled);
+void toggleSerialLogging(const bool toggled);
+void toggleSDCardLogging(const bool toggled);
+void toggleSystemLogging(const bool toggled);
 void sendGeigerCounterData();
 void sendCosmicRayDetectorData();
 void sendSystemData();
@@ -381,6 +381,9 @@ void dataFeedback() {
     // If system message logging is enabled
     if (logger.systemLogging()) {
 
+      // Clear the log message
+      logMessage = "";
+
       // Get system data
       Logger::KeyValuePair systemData[10] = {
 
@@ -400,6 +403,9 @@ void dataFeedback() {
       // Append the system data
       logger.appendLogMessage("system", systemData, 8, logMessage);
 
+      // Log the log message
+      logger.log(logMessage);
+
     }
 
     // --------------------------------------------
@@ -407,6 +413,9 @@ void dataFeedback() {
 
     // If the Geiger counter is enabled
     if (geigerCounter.enabled()) {
+
+      // Clear the log message
+      logMessage = "";
 
       // Get the current integration time
       uint8_t integrationTime = geigerCounter.getIntegrationTime();
@@ -432,6 +441,9 @@ void dataFeedback() {
       // Append the Geiger counter data
       logger.appendLogMessage("geigerCounter", geigerCounterData, 6, logMessage);
 
+      // Log the log message
+      logger.log(logMessage);
+
     }
 
     // --------------------------------------------
@@ -439,6 +451,9 @@ void dataFeedback() {
 
     // If the cosmic ray detector is enabled
     if (cosmicRayDetector.enabled()) {
+
+      // Clear the log message
+      logMessage = "";
 
       // Get the cosmic ray detector data
       Logger::KeyValuePair cosmicRayDetectorData[2] = {
@@ -451,10 +466,10 @@ void dataFeedback() {
       // Append the cosmic ray detector data
       logger.appendLogMessage("cosmicRayDetector", cosmicRayDetectorData, 2, logMessage);
 
+      // Log the log message
+      logger.log(logMessage);
+
     }
-    
-    // Log the log message
-    logger.log(logMessage);
 
     // Update log timer
     logTimer = millis();
@@ -732,7 +747,7 @@ void increaseIntegrationTime() {
 // ================================================================================================
 // Toggle detections audio channel
 // ================================================================================================
-void toggleAudioDetections(bool toggled) {
+void toggleAudioDetections(const bool toggled) {
 
   // If toggled on
   if (toggled) {
@@ -756,7 +771,7 @@ void toggleAudioDetections(bool toggled) {
 // ================================================================================================
 // Toggle notifications audio channel
 // ================================================================================================
-void toggleAudioNotifications(bool toggled) {
+void toggleAudioNotifications(const bool toggled) {
 
   // If toggled on
   if (toggled) {
@@ -780,7 +795,7 @@ void toggleAudioNotifications(bool toggled) {
 // ================================================================================================
 // Toggle alerts audio channel
 // ================================================================================================
-void toggleAudioAlerts(bool toggled) {
+void toggleAudioAlerts(const bool toggled) {
 
   // If toggled on
   if (toggled) {
@@ -804,7 +819,7 @@ void toggleAudioAlerts(bool toggled) {
 // ================================================================================================
 // Toggle interface audio channel
 // ================================================================================================
-void toggleAudioInterface(bool toggled) {
+void toggleAudioInterface(const bool toggled) {
 
   // If toggled on
   if (toggled) {
@@ -828,7 +843,7 @@ void toggleAudioInterface(bool toggled) {
 // ================================================================================================
 // Toggle buzzer mute
 // ================================================================================================
-void toggleAudioMuteEverything(bool toggled) {
+void toggleAudioMuteEverything(const bool toggled) {
 
   // If toggled on
   if (toggled) {
@@ -852,7 +867,7 @@ void toggleAudioMuteEverything(bool toggled) {
 // ================================================================================================
 // Toggle the display power state
 // ================================================================================================
-void toggleDisplayPower(bool toggled) {
+void toggleDisplayPower(const bool toggled) {
 
   // If toggled on
   if (toggled) {
@@ -881,7 +896,7 @@ void toggleDisplayPower(bool toggled) {
 // ================================================================================================
 // Toggle the display auto timeout
 // ================================================================================================
-void toggleDisplayTimeout(bool toggled) {
+void toggleDisplayTimeout(const bool toggled) {
 
   // If toggled on
   if (toggled) {
@@ -969,7 +984,7 @@ void cosmicRayDetectorMute() {
 // ================================================================================================
 // Enable the wireless hotspot
 // ================================================================================================
-void toggleEnableHotspot(bool toggled) {
+void toggleEnableHotspot(const bool toggled) {
 
   // If toggled on
   if (toggled) {
@@ -1002,7 +1017,7 @@ void toggleEnableHotspot(bool toggled) {
 // ================================================================================================
 // Enable the WiFi
 // ================================================================================================
-void toggleEnableWiFi(bool toggled) {
+void toggleEnableWiFi(const bool toggled) {
 
   // If toggled on
   if (toggled) {
@@ -1032,7 +1047,7 @@ void toggleEnableWiFi(bool toggled) {
 // ================================================================================================
 // Toggle serial logging
 // ================================================================================================
-void toggleSerialLogging(bool toggled) {
+void toggleSerialLogging(const bool toggled) {
 
   // If toggled on
   if (toggled) {
@@ -1056,7 +1071,7 @@ void toggleSerialLogging(bool toggled) {
 // ================================================================================================
 // Toggle SD card logging
 // ================================================================================================
-void toggleSDCardLogging(bool toggled) {
+void toggleSDCardLogging(const bool toggled) {
 
   // If toggled on
   if (toggled) {
@@ -1080,7 +1095,7 @@ void toggleSDCardLogging(bool toggled) {
 // ================================================================================================
 // Toggle system message logging
 // ================================================================================================
-void toggleSystemLogging(bool toggled) {
+void toggleSystemLogging(const bool toggled) {
 
   // If toggled on
   if (toggled) {

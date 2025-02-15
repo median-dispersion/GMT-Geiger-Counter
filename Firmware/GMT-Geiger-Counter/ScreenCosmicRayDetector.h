@@ -25,18 +25,18 @@ class ScreenCosmicRayDetector: public ScreenBasicPortrait {
     ScreenCosmicRayDetector();
 
     // Update and draw calls
-    void update(const XPT2046::Point position) override;
+    void update(const XPT2046::Point &position) override;
     void draw(GFXcanvas16 &canvas) override;
 
     // Set screen variables
-    void setCoincidenceEventsOffset(const uint64_t coincidenceEventsOffset);   // Set the coincidence events offset
-    void setMainTubeCountsOffset(const uint64_t mainTubeCountsOffset);         // Set the main tube offset
-    void setFollowerTubeCountsOffset(const uint64_t followerTubeCountsOffset); // Set the follower tube offset 
-    void setCoincidenceEvents(const uint64_t coincidenceEvents);               // Calculate and set coincidence events
-    void setCoincidenceEventsPerHour(const double coincidenceEventsPerHour);   // Set the coincidence events per hour value
-    void setCoincidenceEventsTotal(const uint64_t coincidenceEventsTotal);     // Set the total number of coincidence events
-    void setMainTubeCounts(const uint64_t mainTubeCounts);                     // Calculate and set main tube counts
-    void setFollowerTubeCounts(const uint64_t followerTubeCounts);             // Calculate and set follower tube counts
+    void setCoincidenceEventsOffset(const uint64_t &coincidenceEventsOffset);   // Set the coincidence events offset
+    void setMainTubeCountsOffset(const uint64_t &mainTubeCountsOffset);         // Set the main tube offset
+    void setFollowerTubeCountsOffset(const uint64_t &followerTubeCountsOffset); // Set the follower tube offset 
+    void setCoincidenceEvents(const uint64_t &coincidenceEvents);               // Calculate and set coincidence events
+    void setCoincidenceEventsPerHour(const double &coincidenceEventsPerHour);   // Set the coincidence events per hour value
+    void setCoincidenceEventsTotal(const uint64_t &coincidenceEventsTotal);     // Set the total number of coincidence events
+    void setMainTubeCounts(const uint64_t &mainTubeCounts);                     // Calculate and set main tube counts
+    void setFollowerTubeCounts(const uint64_t &followerTubeCounts);             // Calculate and set follower tube counts
 
   // ----------------------------------------------------------------------------------------------
   // Private

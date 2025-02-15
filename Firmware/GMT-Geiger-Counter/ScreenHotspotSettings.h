@@ -23,7 +23,7 @@ class ScreenHotspotSettings: public ScreenBasic {
     ScreenHotspotSettings();
 
     // Update and draw calls
-    void update(const XPT2046::Point position) override;
+    void update(const XPT2046::Point &position) override;
     void draw(GFXcanvas16 &canvas) override;
 
     void setIPAddress(const char *ipAddress); // Set hotspot IP address

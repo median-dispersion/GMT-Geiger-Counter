@@ -17,7 +17,7 @@ ScreenRotationConfirmation::ScreenRotationConfirmation():
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenRotationConfirmation::update(const XPT2046::Point position) {
+void ScreenRotationConfirmation::update(const XPT2046::Point &position) {
 
   // Update the basic screen
   ScreenBasicPortrait::update(position);

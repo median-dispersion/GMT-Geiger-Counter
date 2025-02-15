@@ -48,8 +48,7 @@ class Wireless {
     bool       _wifiEnabled;              // Flag for checking if the WiFi is enabled
     String     _wifiName;                 // WiFi Name
     String     _wifiPassword;             // WiFi password
-    String     _wifiIPAddress;            // WiFi IP address
-    String     _hotspotIPAddress;         // Hotspot IP address
+    String     _ipAddress;                // WiFi IP address
 
     void        _startServer();           // Start the webserver
     void        _stopServer();            // Stop the webserver

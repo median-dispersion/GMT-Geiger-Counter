@@ -21,7 +21,7 @@ ScreenAudioSettings::ScreenAudioSettings():
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenAudioSettings::update(const XPT2046::Point position) {
+void ScreenAudioSettings::update(const XPT2046::Point &position) {
 
   // Update the basic screen
   ScreenBasic::update(position);

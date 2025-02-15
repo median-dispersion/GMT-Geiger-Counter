@@ -35,7 +35,7 @@ ScreenRadiationHistory::ScreenRadiationHistory():
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenRadiationHistory::update(const XPT2046::Point position) {
+void ScreenRadiationHistory::update(const XPT2046::Point &position) {
 
   // Update the basic screen
   ScreenBasic::update(position);
@@ -88,8 +88,8 @@ void ScreenRadiationHistory::draw(GFXcanvas16 &canvas) {
   canvas.print(_countSteps * 4);
 
   // Calculate with and height of line elements
-  double width  = 294.0 / (RADIATION_HISTORY_LENGTH_MINUTES - 1);
-  double height = 159.0 / (_countSteps * 4); 
+  float width  = 294.0 / (RADIATION_HISTORY_LENGTH_MINUTES - 1);
+  float height = 159.0 / (_countSteps * 4); 
 
   // Get starting position of the first line element
   uint16_t x = 306;
@@ -135,7 +135,7 @@ void ScreenRadiationHistory::draw(GFXcanvas16 &canvas) {
 // ================================================================================================
 // Update the radiation history
 // ================================================================================================
-void ScreenRadiationHistory::setRadiationHistory(double countsPerMinute) {
+void ScreenRadiationHistory::setRadiationHistory(const double &countsPerMinute) {
 
   // If a minute has passed since the last update
   // This is not super precise but good enough to update the graph screen

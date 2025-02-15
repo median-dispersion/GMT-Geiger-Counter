@@ -20,7 +20,7 @@ Modify the exported `.c` file in such a way that the result looks like this:
 ```c++
 #include "Graphics.h"
 
-const uint8_t data[] = {
+const PROGMEM uint8_t data[] = {
 
     /* IMAGE DATA */
 

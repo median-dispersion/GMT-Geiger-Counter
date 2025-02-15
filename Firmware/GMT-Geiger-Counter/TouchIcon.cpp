@@ -6,7 +6,7 @@
 // ================================================================================================
 // Constructor
 // ================================================================================================
-TouchIcon::TouchIcon(const uint16_t x, const uint16_t y, const uint16_t width, const uint16_t height, const Image icon):
+TouchIcon::TouchIcon(const uint16_t x, const uint16_t y, const uint16_t width, const uint16_t height, const Image &icon):
 
   // Initialize members
   _x(x),
@@ -20,7 +20,7 @@ TouchIcon::TouchIcon(const uint16_t x, const uint16_t y, const uint16_t width, c
 // ================================================================================================
 // Update the touch icon with the touch position
 // ================================================================================================
-void TouchIcon::update(const XPT2046::Point position) {
+void TouchIcon::update(const XPT2046::Point &position) {
 
   // Check if touch position is inside the bounding box
   if (position.x >= _x && position.x < (_x + _width) && position.y >= _y && position.y < (_y + _height)) {

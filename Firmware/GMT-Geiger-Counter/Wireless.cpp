@@ -18,8 +18,7 @@ Wireless::Wireless():
   _wifiEnabled(false),
   _wifiName(WIFI_NAME),
   _wifiPassword(WIFI_PASSWORD),
-  _wifiIPAddress(STRING_NON_APPLICABLE_ABBREVIATION),
-  _hotspotIPAddress(STRING_NON_APPLICABLE_ABBREVIATION)
+  _ipAddress(STRING_NON_APPLICABLE_ABBREVIATION)
 
 {}
 
@@ -198,26 +197,26 @@ const char* Wireless::getWiFiIPAddress() {
     if (WiFi.status() == WL_CONNECTED) {
 
       // Get the WiFi IP address
-      _wifiIPAddress = WiFi.localIP().toString();
+      _ipAddress = WiFi.localIP().toString();
     
     // If not connected
     } else {
 
       // Set the IP address string to connecting
-      _wifiIPAddress = STRING_CONNECTING;
+      _ipAddress = STRING_CONNECTING;
 
     }
+
+    // Return the IP address string
+    return _ipAddress.c_str();
   
   // If WiFi is disabled
   } else {
 
-    // Set the IP address string to non applicable
-    _wifiIPAddress = STRING_NON_APPLICABLE_ABBREVIATION;
+    // Return the non applicable string
+    return STRING_NON_APPLICABLE_ABBREVIATION;
 
   }
-
-  // Return the IP address string
-  return _wifiIPAddress.c_str();
 
 }
 
@@ -230,18 +229,18 @@ const char* Wireless::getHotspotIPAddress() {
   if (_hotspotEnabled) {
 
     // Get the hotspot IP address
-    _hotspotIPAddress = WiFi.softAPIP().toString();
+    _ipAddress = WiFi.softAPIP().toString();
+
+    // Return the IP address string
+    return _ipAddress.c_str();
   
   // If hotspot is disabled
   } else {
 
-    // Set the IP address string to non applicable
-    _hotspotIPAddress = STRING_NON_APPLICABLE_ABBREVIATION;
+    // Return the non applicable string
+    return STRING_NON_APPLICABLE_ABBREVIATION;
 
   }
-
-  // Return the IP address string
-  return _hotspotIPAddress.c_str();
 
 }
 
