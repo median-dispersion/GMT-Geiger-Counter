@@ -256,7 +256,7 @@ void audioFeedback() {
   uint64_t coincidenceEvents    = cosmicRayDetector.getCoincidenceEvents();
 
   // If the dose reaches the alarm level
-  if (microsievertsPerHour >= BUZZER_ALARM_LEVEL_USVH) {
+  if (microsievertsPerHour >= BUZZER_ALARM_LEVEL_USVH && !buzzer.alerts.muted()) {
 
     // Play the alarm sound
     buzzer.play(buzzer.alarm);
