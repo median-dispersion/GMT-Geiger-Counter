@@ -11,6 +11,9 @@ GeigerCounter::GeigerCounter():
   // Initialize members
   _enabled(false),
   _integrationTimeSeconds(INTEGRATION_TIME_DEFAULT_SECONDS),
+  _measurementUnit(MEASUREMENT_UNIT_SIEVERT),
+  _metricPrefix(METRIC_PREFIX_MICRO),
+  _autoRange(true),
   _movingAverageIndex(0),
   _movingAverageTimer(NULL),
   _mainTube(MAIN_TRG_PIN, _movingAverage, _movingAverageIndex),
@@ -139,6 +142,24 @@ void GeigerCounter::setIntegrationTime(const uint8_t timeSeconds) {
 }
 
 // ================================================================================================
+// Set the measurement unit of the equivalent dose
+// ================================================================================================
+void GeigerCounter::setMeasurementUnit(const MeasurementUnit unit) {
+
+  _measurementUnit = unit;
+
+}
+
+// ================================================================================================
+// Set if the equivalent dose should auto range
+// ================================================================================================
+void GeigerCounter::setAutoRangeState(const bool state) {
+
+  _autoRange = state;
+
+}
+
+// ================================================================================================
 // Get the total number of counts
 // ================================================================================================
 uint64_t GeigerCounter::getCounts() {
@@ -207,6 +228,123 @@ double GeigerCounter::getMicrosievertsPerHour() {
 }
 
 // ================================================================================================
+// Get the equivalent dose in the selected measurement unit
+// ================================================================================================
+double GeigerCounter::getEquivalentDose() {
+
+  // Equivalent dose variable
+  double equivalentDose = 0.0;
+
+  // Depending on the selected measurement unit
+  // Convert the microsieverts per hour value to that unit
+  // Store the resulting value in the equivalent dose variable
+  switch (_measurementUnit) {
+
+    case MEASUREMENT_UNIT_SIEVERT: equivalentDose = getMicrosievertsPerHour();         break;
+    case MEASUREMENT_UNIT_REM:     equivalentDose = getMicrosievertsPerHour() * 100.0; break;
+    case MEASUREMENT_UNIT_RONTGEN: equivalentDose = getMicrosievertsPerHour() * 100.0; break;
+    case MEASUREMENT_UNIT_GRAY:    equivalentDose = getMicrosievertsPerHour();         break;
+
+  }
+  
+  // Set the micro prefix
+  _metricPrefix = METRIC_PREFIX_MICRO;
+
+  // If auto range is enabled
+  if (_autoRange) {
+
+    // If equivalent dose is >= 500 milli
+    // Divide value to convert to base unit and set metric prefix
+    if (equivalentDose >= 500000) {
+
+      equivalentDose /= 1000000.0;
+      _metricPrefix   = METRIC_PREFIX_BASE;
+    
+    // If equivalent dose is >= 500 micro
+    // Divide value to convert to milli unit and set metric prefix
+    } else if (equivalentDose >= 500) {
+
+      equivalentDose /= 1000.0;
+      _metricPrefix   = METRIC_PREFIX_MILLI;
+
+    }
+
+  }
+
+  // Return the equivalent dose
+  return equivalentDose;
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+const char* GeigerCounter::getEquivalentDoseUnit() {
+
+  // Unit string
+  const char *unit = STRING_MICRO_SIEVERTS_PER_HOUR_ABBREVIATION;
+
+  // Depending on the measurement unit and the metric prefix
+  // Select a unit string
+  // (A little messy but works)
+  switch (_measurementUnit) {
+
+    case MEASUREMENT_UNIT_SIEVERT:
+
+      switch (_metricPrefix) {
+
+        case METRIC_PREFIX_MICRO: unit = STRING_MICRO_SIEVERTS_PER_HOUR_ABBREVIATION; break;
+        case METRIC_PREFIX_MILLI: unit = STRING_MILLI_SIEVERTS_PER_HOUR_ABBREVIATION; break;
+        case METRIC_PREFIX_BASE:  unit = STRING_SIEVERTS_PER_HOUR_ABBREVIATION;       break;
+
+      }
+
+    break;
+
+    case MEASUREMENT_UNIT_REM:
+
+      switch (_metricPrefix) {
+
+        case METRIC_PREFIX_MICRO: unit = STRING_MICRO_REM_PER_HOUR_ABBREVIATION; break;
+        case METRIC_PREFIX_MILLI: unit = STRING_MILLI_REM_PER_HOUR_ABBREVIATION; break;
+        case METRIC_PREFIX_BASE:  unit = STRING_REM_PER_HOUR_ABBREVIATION;       break;
+
+      }
+
+    break;
+
+    case MEASUREMENT_UNIT_RONTGEN:
+
+      switch (_metricPrefix) {
+
+        case METRIC_PREFIX_MICRO: unit = STRING_MICRO_RONTGEN_PER_HOUR_ABBREVIATION; break;
+        case METRIC_PREFIX_MILLI: unit = STRING_MILLI_RONTGEN_PER_HOUR_ABBREVIATION; break;
+        case METRIC_PREFIX_BASE:  unit = STRING_RONTGEN_PER_HOUR_ABBREVIATION;       break;
+
+      }
+
+    break;
+
+    case MEASUREMENT_UNIT_GRAY:
+
+      switch (_metricPrefix) {
+
+        case METRIC_PREFIX_MICRO: unit = STRING_MICRO_GRAY_PER_HOUR_ABBREVIATION; break;
+        case METRIC_PREFIX_MILLI: unit = STRING_MILLI_GRAY_PER_HOUR_ABBREVIATION; break;
+        case METRIC_PREFIX_BASE:  unit = STRING_GRAY_PER_HOUR_ABBREVIATION;       break;
+
+      }
+
+    break;
+    
+  }
+
+  // Return the unit string
+  return unit;
+
+}
+
+// ================================================================================================
 // Get the integration time
 // ================================================================================================
 uint8_t GeigerCounter::getIntegrationTime() {
@@ -247,6 +385,15 @@ GeigerCounter::RadiationRating GeigerCounter::getRadiationRating() {
 
   // If nothing matches return unknown level
   return RADIATION_RATING_UNKNOWN;
+
+}
+
+// ================================================================================================
+// Get the auto range state
+// ================================================================================================
+bool GeigerCounter::getAutoRangeState() {
+
+  return _autoRange;
 
 }
 

@@ -1,0 +1,104 @@
+#include "TouchRadio.h"
+
+//-------------------------------------------------------------------------------------------------
+// Public
+
+// ================================================================================================
+// Constructor
+// ================================================================================================
+TouchRadio::TouchRadio(const uint8_t row, const char *text, const bool selected):
+
+  // Initialize members
+  _y((26 * row) + 31),
+  _text(text),
+  _selected(selected)
+
+{}
+
+// ================================================================================================
+// Update the touch radio with the touch position
+// ================================================================================================
+void TouchRadio::update(const XPT2046::Point &position) {
+
+  // Check if touch position is inside the bounding box
+  if (position.x >= 2 && position.x < 318 && position.y >= _y && position.y < (_y + 25)) {
+
+    // Select the touch radio
+    select();
+
+    // Execute action
+    action();
+
+  }
+
+}
+
+// ================================================================================================
+// Draw the touch radio to the frame buffer
+// ================================================================================================
+void TouchRadio::draw(GFXcanvas16 &canvas) {
+
+  // Draw background
+  canvas.fillRect(2, _y, 316, 25, COLOR_MEDIUM_GRAY);
+
+  // If selected
+  if (_selected) {
+
+    // Draw radio in selected state
+    canvas.drawRect(295, _y + 2, 21, 21, COLOR_WHITE);
+    canvas.fillRect(298, _y + 5, 15, 15, COLOR_WHITE);
+
+  // If deselected
+  } else {
+
+    // Draw radio in deselected state
+    canvas.drawRect(295, _y + 2, 21, 21, COLOR_LIGHT_GRAY);
+    //canvas.drawRect(295, _y + 2, 21, 21, COLOR_WHITE);
+    //canvas.fillRect(296, _y + 3, 19, 19, COLOR_DARK_GRAY);
+
+  }
+
+  // Draw text
+  canvas.setFont(&FreeSans9pt7b);
+  canvas.setTextColor(COLOR_WHITE);
+  canvas.setCursor(5, _y + 18);
+  canvas.print(_text);
+
+}
+
+// ================================================================================================
+// Select radio
+// ================================================================================================
+void TouchRadio::select() {
+
+  _selected = true;
+
+}
+
+// ================================================================================================
+// Select radio
+// ================================================================================================
+void TouchRadio::select(const bool selected) {
+
+  _selected = selected;
+
+}
+
+
+// ================================================================================================
+// Deselect radio
+// ================================================================================================
+void TouchRadio::deselect() {
+
+  _selected = false;
+
+}
+
+// ================================================================================================
+// Return the radio state
+// ================================================================================================
+bool TouchRadio::selected() {
+
+  return _selected;
+
+}

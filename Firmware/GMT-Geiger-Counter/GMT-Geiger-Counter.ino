@@ -60,6 +60,11 @@ void toggleAudioInterface(const bool toggled);
 void toggleAudioMuteEverything(const bool toggled);
 void toggleDisplayPower(const bool toggled);
 void toggleDisplayTimeout(const bool toggled);
+void toggleGeigerCounterAutoRange(const bool toggled);
+void setSievertUnit();
+void setRemUnit();
+void setRontgenUnit();
+void setGrayUnit();
 void goToSleep();
 void wakeFromSleep();
 void cosmicRayDetectorMute();
@@ -113,6 +118,11 @@ void setup() {
 
   // Geiger counter settings 2 touch actions
   touchscreen.geigerCounterSettings2.back.action           = displayGeigerCounter;
+  touchscreen.geigerCounterSettings2.autoRange.action      = toggleGeigerCounterAutoRange;
+  touchscreen.geigerCounterSettings2.sievert.action        = setSievertUnit;
+  touchscreen.geigerCounterSettings2.rem.action            = setRemUnit;
+  touchscreen.geigerCounterSettings2.rontgen.action        = setRontgenUnit;
+  touchscreen.geigerCounterSettings2.gray.action           = setGrayUnit;
   touchscreen.geigerCounterSettings2.next.action           = displayGeigerCounterSettings1;
   touchscreen.geigerCounterSettings2.previous.action       = displayGeigerCounterSettings1;
 
@@ -323,8 +333,8 @@ void audioFeedback() {
 void visualFeedback() {
 
   // Set Geiger counter screen values
-  touchscreen.geigerCounter.setEquivalentDose(geigerCounter.getMicrosievertsPerHour());
-  touchscreen.geigerCounter.setEquivalentDoseUnit(STRING_EQUIVALENT_DOSE_UNIT_USVH);
+  touchscreen.geigerCounter.setEquivalentDose(geigerCounter.getEquivalentDose());
+  touchscreen.geigerCounter.setEquivalentDoseUnit(geigerCounter.getEquivalentDoseUnit());
   touchscreen.geigerCounter.setRadiationRating(geigerCounter.getRadiationRating());
   touchscreen.geigerCounter.setCountsPerMinute(geigerCounter.getCountsPerMinute());
   touchscreen.geigerCounter.setIntegrationTime(geigerCounter.getIntegrationTime());
@@ -333,6 +343,9 @@ void visualFeedback() {
   touchscreen.geigerCounterSettings1.setCounts(geigerCounter.getCounts());
   touchscreen.geigerCounterSettings1.setMainTubeCounts(geigerCounter.getMainTubeCounts());
   touchscreen.geigerCounterSettings1.setFollowerTubeCounts(geigerCounter.getFollowerTubeCounts());
+
+  // Set Geiger counter settings 2 screen values
+  touchscreen.geigerCounterSettings2.autoRange.toggle(geigerCounter.getAutoRangeState());
 
   // Set audio settings screen values
   touchscreen.audioSettings.detections.toggle(!buzzer.detections.muted());
@@ -962,6 +975,102 @@ void toggleDisplayTimeout(const bool toggled) {
   }
 
   // Play a sound
+  buzzer.play(buzzer.tap);
+
+}
+
+// ================================================================================================
+// Toggle Geiger counter equivalent dose auto range
+// ================================================================================================
+void toggleGeigerCounterAutoRange(const bool toggled) {
+
+  // If toggled on
+  if (toggled) {
+
+    // Enable auto ranging
+    geigerCounter.setAutoRangeState(true);
+
+  // If toggled off
+  } else {
+
+    // Disable auto ranging
+    geigerCounter.setAutoRangeState(false);
+
+  }
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
+
+}
+
+// ================================================================================================
+// Set Sievert as the measurement unit
+// ================================================================================================
+void setSievertUnit() {
+
+  // Set Sieverts as the measurement unit
+  geigerCounter.setMeasurementUnit(GeigerCounter::MEASUREMENT_UNIT_SIEVERT);
+
+  // Deselect all other units
+  touchscreen.geigerCounterSettings2.rem.deselect();
+  touchscreen.geigerCounterSettings2.rontgen.deselect();
+  touchscreen.geigerCounterSettings2.gray.deselect();
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
+
+}
+
+// ================================================================================================
+// Set Rem as the measurement unit
+// ================================================================================================
+void setRemUnit() {
+
+  // Set Rem as the measurement unit
+  geigerCounter.setMeasurementUnit(GeigerCounter::MEASUREMENT_UNIT_REM);
+
+  // Deselect all other units
+  touchscreen.geigerCounterSettings2.sievert.deselect();
+  touchscreen.geigerCounterSettings2.rontgen.deselect();
+  touchscreen.geigerCounterSettings2.gray.deselect();
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
+
+}
+
+// ================================================================================================
+// Set Rontgen as the measurement unit
+// ================================================================================================
+void setRontgenUnit() {
+
+  // Set Rontgen as the measurement unit
+  geigerCounter.setMeasurementUnit(GeigerCounter::MEASUREMENT_UNIT_RONTGEN);
+
+  // Deselect all other units
+  touchscreen.geigerCounterSettings2.sievert.deselect();
+  touchscreen.geigerCounterSettings2.rem.deselect();
+  touchscreen.geigerCounterSettings2.gray.deselect();
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
+
+}
+
+// ================================================================================================
+// Set Gray as the measurement unit
+// ================================================================================================
+void setGrayUnit() {
+
+  // Set Gray as the measurement unit
+  geigerCounter.setMeasurementUnit(GeigerCounter::MEASUREMENT_UNIT_GRAY);
+
+  // Deselect all other units
+  touchscreen.geigerCounterSettings2.sievert.deselect();
+  touchscreen.geigerCounterSettings2.rem.deselect();
+  touchscreen.geigerCounterSettings2.rontgen.deselect();
+
+    // Play a sound
   buzzer.play(buzzer.tap);
 
 }

@@ -44,7 +44,7 @@ class ScreenGeigerCounter: public Screen {
 
     // Set screen variables
     void setEquivalentDose(const double &equivalentDose);                          // Set the equivalent dose
-    void setEquivalentDoseUnit(const String &equivalentDoseUnit);                  // Set the equivalent dose unit
+    void setEquivalentDoseUnit(const char *equivalentDoseUnit);                    // Set the equivalent dose unit
     void setRadiationRating(const GeigerCounter::RadiationRating radiationRating); // Set the radiation rating
     void setCountsPerMinute(const double &countsPerMinute);                        // Set the counts per minute
     void setIntegrationTime(const uint8_t integrationTime);                        // Set the integration time
@@ -55,7 +55,6 @@ class ScreenGeigerCounter: public Screen {
   private:
 
     String            _equivalentDoseString;     // Equivalent dose string
-    String            _equivalentDoseUnitString; // Equivalent dose unit string
     String            _countsPerMinuteString;    // Counts per minute string
     String            _integrationTimeString;    // Integration time string
     DisplayDoseScreen _equivalentDoseScreen;     // Equivalent dose screen

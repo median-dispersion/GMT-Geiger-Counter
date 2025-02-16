@@ -24,11 +24,10 @@ ScreenGeigerCounter::ScreenGeigerCounter():
 
   geigerCounterSetting(2, 31, 160, 129),
   _equivalentDoseString("0.00"),
-  _equivalentDoseUnitString(STRING_EQUIVALENT_DOSE_UNIT_USVH),
   _countsPerMinuteString("0 CPM"),
   _integrationTimeString("30 s"),
 
-  _equivalentDoseScreen(2, 31, 160, 129, COLOR_MEDIUM_GREEN, COLOR_DARK_GREEN, _equivalentDoseString.c_str(), _equivalentDoseUnitString.c_str()),
+  _equivalentDoseScreen(2, 31, 160, 129, COLOR_MEDIUM_GREEN, COLOR_DARK_GREEN, _equivalentDoseString.c_str(), STRING_MICRO_SIEVERTS_PER_HOUR_ABBREVIATION),
   _radiationRating(2, 161, 160, IMAGE_RADIATION, STRING_RADIATION_RATING_NORMAL),
   _countsPerMinute(2, 187, 160, IMAGE_PARTICLE,  _countsPerMinuteString.c_str()),
   _integrationTime(2, 213, 160, IMAGE_CLOCK,     _integrationTimeString.c_str())
@@ -111,9 +110,9 @@ void ScreenGeigerCounter::setEquivalentDose(const double &equivalentDose) {
 // ================================================================================================
 // Set the equivalent dose unit
 // ================================================================================================
-void ScreenGeigerCounter::setEquivalentDoseUnit(const String &equivalentDoseUnit) {
+void ScreenGeigerCounter::setEquivalentDoseUnit(const char *equivalentDoseUnit) {
 
-  _equivalentDoseUnitString = equivalentDoseUnit;
+  _equivalentDoseScreen.setUnit(equivalentDoseUnit);
 
 }
 

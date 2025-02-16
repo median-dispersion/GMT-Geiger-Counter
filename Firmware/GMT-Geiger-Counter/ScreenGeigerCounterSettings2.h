@@ -7,6 +7,8 @@
 #include "Strings.h"
 #include "Graphics.h"
 #include "ScreenBasic.h"
+#include "TouchToggle.h"
+#include "TouchRadio.h"
 #include "TouchIcon.h"
 
 class ScreenGeigerCounterSettings2: public ScreenBasic {
@@ -17,8 +19,13 @@ class ScreenGeigerCounterSettings2: public ScreenBasic {
   public:
 
     // Screen elements
-    TouchIcon next;
-    TouchIcon previous;
+    TouchToggle autoRange;
+    TouchRadio  sievert;
+    TouchRadio  rem;
+    TouchRadio  rontgen;
+    TouchRadio  gray;
+    TouchIcon   next;
+    TouchIcon   previous;
 
     // Constructor
     ScreenGeigerCounterSettings2();
