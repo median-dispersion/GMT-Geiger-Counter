@@ -141,12 +141,12 @@
 
 // WiFi name / SSID
 // The name of the default WiFi that the Geiger counter will try to connect to
-// This value can be changed during runtime
+// This value is only used for the initial flash and can later be changed during runtime
 #define WIFI_NAME "Your-WiFi-Name"
 
 // WiFi password
 // The password of the default WiFi that the Geiger counter will try to connect to
-// This value can be changed during runtime
+// This value is only used for the initial flash and can later be changed during runtime
 #define WIFI_PASSWORD "Your-WiFi-Password"
 
 // ================================================================================================
@@ -187,7 +187,7 @@
 // Firmware version
 // This can be set to any arbitrary string
 // This value should not be changed!
-#define FIRMWARE_VERSION "GMTGC-2025-02-16"
+#define FIRMWARE_VERSION "GMTGC-2025-02-16v2"
 
 // The minimum threshold of free heap the system is allowed to have
 // If the free heap falls below this value, the system will reboot to prevent software instability or lock-ups

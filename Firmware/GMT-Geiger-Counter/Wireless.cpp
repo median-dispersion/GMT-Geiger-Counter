@@ -30,6 +30,34 @@ void Wireless::begin() {
   // Set the instance pointer to this instance of the class
   _instance = this;
 
+  // Open non-volatile storage
+  _preferences.begin("wifi", false);
+
+  // Read WiFi name, password and last state from the non-volatile storage
+  _wifiName     = _preferences.getString("wifiName", "");
+  _wifiPassword = _preferences.getString("wifiPassword", "");
+  bool enabled  = _preferences.getBool("wifiEnabled", false);
+
+  // Close non-volatile storage
+  _preferences.end();
+
+  // If no WiFi name or password stored in the non-volatile storage
+  if (_wifiName.length() <= 0 || _wifiPassword.length() <= 0) {
+
+    // Use the WiFi name and password defined in the configuration
+    setWiFiName(WIFI_NAME);
+    setWiFiPassword(WIFI_PASSWORD);
+
+  }
+
+  // If the last WiFi state was enabled
+  if (enabled) {
+
+    // Reenable the WiFi
+    enableWiFi();
+
+  }
+
   // Handle updates of the WiFi credentials via the web interface
   server.on("/wifi-credentials", HTTP_PUT, _handleWiFiCredentials);
 
@@ -116,10 +144,19 @@ void Wireless::enableWiFi() {
     disableHotspot();
 
     // Connect to WiFi
-    WiFi.begin(_wifiName, _wifiPassword);
+    WiFi.begin(_wifiName.c_str(), _wifiPassword.c_str());
 
     // Start the webserver
     _startServer();
+
+    // Open non-volatile storage
+    _preferences.begin("wifi", false);
+
+    // Store WiFi state in non-volatile storage
+    _preferences.putBool("wifiEnabled", true);
+
+    // Close non-volatile storage
+    _preferences.end();
 
     // Set the enabled flag to true
     _wifiEnabled = true;
@@ -142,6 +179,15 @@ void Wireless::disableWiFi() {
     // Stop the webserver
     _stopServer();
 
+    // Open non-volatile storage
+    _preferences.begin("wifi", false);
+
+    // Store WiFi state in non-volatile storage
+    _preferences.putBool("wifiEnabled", false);
+
+    // Close non-volatile storage
+    _preferences.end();
+
     // Set the enabled flag to false
     _wifiEnabled = false;
 
@@ -163,7 +209,17 @@ bool Wireless::wifiEnabled() {
 // ================================================================================================
 void Wireless::setWiFiName(const char *name) {
 
+  // Change WiFi name
   _wifiName = name;
+
+  // Open non-volatile storage
+  _preferences.begin("wifi", false);
+
+  // Store WiFi name in non-volatile storage
+  _preferences.putString("wifiName", _wifiName.c_str());
+
+  // Close non-volatile storage
+  _preferences.end();
 
 }
 
@@ -172,7 +228,17 @@ void Wireless::setWiFiName(const char *name) {
 // ================================================================================================
 void Wireless::setWiFiPassword(const char *password) {
 
+  // Change WiFi password
   _wifiPassword = password;
+
+  // Open non-volatile storage
+  _preferences.begin("wifi", false);
+
+  // Store WiFi password in non-volatile storage
+  _preferences.putString("wifiPassword", _wifiPassword.c_str());
+
+  // Close non-volatile storage
+  _preferences.end();
 
 }
 

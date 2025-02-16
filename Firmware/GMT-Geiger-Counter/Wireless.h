@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "Configuration.h"
+#include "Preferences.h"
 #include "WiFi.h"
 #include "SD.h"
 #include "WebServer.h"
@@ -43,12 +44,13 @@ class Wireless {
     // Static instance pointer to itself
     static Wireless *_instance;
 
-    bool       _serverRunning;            // Flag for checking if the webserver is running
-    bool       _hotspotEnabled;           // Flag for checking if the hotspot is enabled
-    bool       _wifiEnabled;              // Flag for checking if the WiFi is enabled
-    String     _wifiName;                 // WiFi Name
-    String     _wifiPassword;             // WiFi password
-    String     _ipAddress;                // WiFi IP address
+    bool        _serverRunning;           // Flag for checking if the webserver is running
+    bool        _hotspotEnabled;          // Flag for checking if the hotspot is enabled
+    bool        _wifiEnabled;             // Flag for checking if the WiFi is enabled
+    String      _wifiName;                // WiFi Name
+    String      _wifiPassword;            // WiFi password
+    String      _ipAddress;               // WiFi IP address
+    Preferences _preferences;             // WiFi preferences stored in non-volatile memory
 
     void        _startServer();           // Start the webserver
     void        _stopServer();            // Stop the webserver
