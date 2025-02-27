@@ -20,7 +20,6 @@ class TouchRadio {
     void draw(GFXcanvas16 &canvas);              // Draw the touch radio to the frame buffer
     void (*action)();                            // Function pointer to execute a function on touchdown
     void select();                               // Select radio
-    void select(const bool selected);            // Select a specific state
     void deselect();                             // Deselect radio
     bool selected();                             // Return the radio state
 

@@ -30,6 +30,9 @@ void Wireless::begin() {
   // Set the instance pointer to this instance of the class
   _instance = this;
 
+  // Initialize logger if not already
+  logger.begin();
+
   // Open non-volatile storage
   _preferences.begin("wifi", false);
 
@@ -93,6 +96,17 @@ void Wireless::enableHotspot() {
       // Start the webserver
       _startServer();
 
+      // Get logger event data
+      Logger::KeyValuePair event[2] = {
+
+        {"event",   Logger::STRING, {.string_value = "hotspot"}},
+        {"enabled", Logger::BOOL,   {.bool_value   = true}     }
+
+      };
+
+      // Log event
+      logger.event(event, 2);
+
       // Set the enable flag to true
       _hotspotEnabled = true;
 
@@ -115,6 +129,17 @@ void Wireless::disableHotspot() {
 
     // Stop the webserver
     _stopServer();
+
+    // Get logger event data
+    Logger::KeyValuePair event[2] = {
+
+      {"event",   Logger::STRING, {.string_value = "hotspot"}},
+      {"enabled", Logger::BOOL,   {.bool_value   = false}    }
+
+    };
+
+    // Log event
+    logger.event(event, 2);
 
     // Set the enabled flag to false
     _hotspotEnabled = false;
@@ -158,6 +183,17 @@ void Wireless::enableWiFi() {
     // Close non-volatile storage
     _preferences.end();
 
+    // Get logger event data
+    Logger::KeyValuePair event[2] = {
+
+      {"event",   Logger::STRING, {.string_value = "wifi"}},
+      {"enabled", Logger::BOOL,   {.bool_value   = true}  }
+
+    };
+
+    // Log event
+    logger.event(event, 2);
+
     // Set the enabled flag to true
     _wifiEnabled = true;
 
@@ -188,6 +224,17 @@ void Wireless::disableWiFi() {
     // Close non-volatile storage
     _preferences.end();
 
+    // Get logger event data
+    Logger::KeyValuePair event[2] = {
+
+      {"event",   Logger::STRING, {.string_value = "wifi"}},
+      {"enabled", Logger::BOOL,   {.bool_value   = false} }
+
+    };
+
+    // Log event
+    logger.event(event, 2);
+
     // Set the enabled flag to false
     _wifiEnabled = false;
 
@@ -203,6 +250,16 @@ bool Wireless::wifiEnabled() {
   return _wifiEnabled;
 
 }
+
+// ================================================================================================
+// Returns if the webserver is running
+// ================================================================================================
+bool Wireless::serverRunning() {
+
+  return _serverRunning;
+
+}
+
 
 // ================================================================================================
 // Set the WiFi name / SSID
@@ -324,6 +381,17 @@ void Wireless::_startServer() {
     // Start the server
     server.begin();
 
+    // Get logger event data
+    Logger::KeyValuePair event[2] = {
+
+      {"event",   Logger::STRING, {.string_value = "server"}},
+      {"enabled", Logger::BOOL,   {.bool_value   = true}    }
+
+    };
+
+    // Log event
+    logger.event(event, 2);
+
     // Set the running flag to true
     _serverRunning = true;
 
@@ -341,6 +409,17 @@ void Wireless::_stopServer() {
 
     // Stop the server
     server.stop();
+
+    // Get logger event data
+    Logger::KeyValuePair event[2] = {
+
+      {"event",   Logger::STRING, {.string_value = "server"}},
+      {"enabled", Logger::BOOL,   {.bool_value   = false}   }
+
+    };
+
+    // Log event
+    logger.event(event, 2);
 
     // Set the running flag to false
     _serverRunning = false;

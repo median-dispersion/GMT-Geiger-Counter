@@ -23,11 +23,11 @@ DisplayInfoBox::DisplayInfoBox(const uint16_t x, const uint16_t y, const uint16_
 void DisplayInfoBox::draw(GFXcanvas16 &canvas) {
 
   // Draw icon & icon background
-  canvas.fillRect(_x, _y, 25, 25, COLOR_DARK_GRAY);
+  canvas.fillRect(_x, _y, 25, 25, COLOR_GRAY_DARK);
   canvas.drawRGBBitmap(_x + ((25 - _icon.width) / 2), _y + ((25 - _icon.height) / 2), _icon.data, _icon.width, _icon.height);
 
   // Draw value background
-  canvas.fillRect(_x + 26, _y, _width, 25, COLOR_DARK_GRAY);
+  canvas.fillRect(_x + 26, _y, _width, 25, COLOR_GRAY_DARK);
 
   // Draw value string
   canvas.setFont(&FreeSans9pt7b);

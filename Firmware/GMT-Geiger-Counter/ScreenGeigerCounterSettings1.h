@@ -41,7 +41,7 @@ class ScreenGeigerCounterSettings1: public ScreenBasic {
     String            _countsString;             // Counts string
     String            _mainTubeCountsString;     // Main tube counts string
     String            _followerTubeCountsString; // Follower tube counts string
-    DisplayDoseScreen _equivalentDoseScreen;     // Counts screen
+    DisplayDoseScreen _countsScreen;             // Counts screen
     DisplayToastBox   _mainTubeCounts;           // Main tube counts screen element
     DisplayToastBox   _followerTubeCounts;       // Follower tube counts screen element
 

@@ -38,6 +38,7 @@
 // The default integration time the Geiger counter starts at
 // The integration time is the number of seconds the Geiger counter will average over to calculate the CPM value
 // A shorter integration time gives more accurate values for high levels of radiation, a lower in integration time for lower levels
+// This can be adjusted during runtime and is just the default value
 #define INTEGRATION_TIME_DEFAULT_SECONDS 30
 
 // The number of minutes the radiation history screen displays
@@ -187,7 +188,7 @@
 // Firmware version
 // This can be set to any arbitrary string
 // This value should not be changed!
-#define FIRMWARE_VERSION "GMTGC-2025-02-16v2"
+#define FIRMWARE_VERSION "GMTGC-2025-02-27"
 
 // The minimum threshold of free heap the system is allowed to have
 // If the free heap falls below this value, the system will reboot to prevent software instability or lock-ups

@@ -27,6 +27,9 @@ Touchscreen::Touchscreen():
 // ================================================================================================
 void Touchscreen::begin() {
 
+  // Initialize logger if not already
+  logger.begin();
+
   // Setup display
   _display.begin();
   _display.fillScreen(ILI9341_BLACK);
@@ -53,11 +56,27 @@ void Touchscreen::begin() {
 // ================================================================================================
 void Touchscreen::enable() {
 
-  // Turn on display LED
-  digitalWrite(DISPLAY_LED_PIN, HIGH);
+  // If touchscreen is not already enabled
+  if (!_enabled) {
 
-  // Set on flag to true
-  _enabled = true;
+    // Turn on display LED
+    digitalWrite(DISPLAY_LED_PIN, HIGH);
+
+    // Get logger event data
+    Logger::KeyValuePair event[2] = {
+
+      {"event",   Logger::STRING, {.string_value = "touchscreen"}},
+      {"enabled", Logger::BOOL,   {.bool_value   = true}         }
+
+    };
+
+    // Log event
+    logger.event(event, 2);
+
+    // Set on flag to true
+    _enabled = true;
+
+  }
 
 }
 
@@ -66,11 +85,27 @@ void Touchscreen::enable() {
 // ================================================================================================
 void Touchscreen::disable() {
 
-  // Turn off display LED
-  digitalWrite(DISPLAY_LED_PIN, LOW);
+  // If touchscreen is enabled
+  if (_enabled) {
+  
+    // Turn off display LED
+    digitalWrite(DISPLAY_LED_PIN, LOW);
 
-  // Set on flag to false
-  _enabled = false;
+    // Get logger event data
+    Logger::KeyValuePair event[2] = {
+
+      {"event",   Logger::STRING, {.string_value = "touchscreen"}},
+      {"enabled", Logger::BOOL,   {.bool_value   = false}        }
+
+    };
+
+    // Log event
+    logger.event(event, 2);
+
+    // Set on flag to false
+    _enabled = false;
+
+  }
 
 }
 

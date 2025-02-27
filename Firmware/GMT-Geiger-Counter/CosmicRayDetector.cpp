@@ -21,6 +21,9 @@ CosmicRayDetector::CosmicRayDetector():
 // ================================================================================================
 void CosmicRayDetector::begin() {
 
+  // Initialize logger if not already
+  logger.begin();
+
   // Initialize the coincidence tube
   _coincidenceTube.begin();
 
@@ -52,6 +55,17 @@ void CosmicRayDetector::enable() {
     // Set alarm to call the ISR function, every minute, repeat, forever
     timerAlarm(_movingAverageTimer, 60000000, true, 0);
 
+    // Get logger event data
+    Logger::KeyValuePair event[2] = {
+
+      {"event",   Logger::STRING, {.string_value = "cosmicRayDetector"}},
+      {"enabled", Logger::BOOL,   {.bool_value   = true }              }
+
+    };
+
+    // Log cosmic ray detector enable event
+    logger.event(event, 2);
+
     // Set the enabled flag to true
     _enabled = true;
 
@@ -78,6 +92,17 @@ void CosmicRayDetector::disable() {
 
     // Clear the hardware timer
     _movingAverageTimer = NULL;
+
+    // Get logger event data
+    Logger::KeyValuePair event[2] = {
+
+      {"event",   Logger::STRING, {.string_value = "cosmicRayDetector"}},
+      {"enabled", Logger::BOOL,   {.bool_value   = false }             }
+
+    };
+
+    // Log cosmic ray detector disable event
+    logger.event(event, 2);
 
     // Set the enabled flag to false
     _enabled = false;
@@ -108,10 +133,10 @@ uint64_t CosmicRayDetector::getCoincidenceEvents() {
 // ================================================================================================
 // Get the number of coincidence events per hour
 // ================================================================================================
-double CosmicRayDetector::getCoincidenceEventsPerHour() {
+uint32_t CosmicRayDetector::getCoincidenceEventsPerHour() {
 
   // Coincidence events per hour variable
-  double cph = 0.0;
+  uint32_t cph = 0;
 
   // For all element in the moving average array
   for (uint8_t i = 0; i < 60; i++) {
@@ -120,9 +145,6 @@ double CosmicRayDetector::getCoincidenceEventsPerHour() {
     cph += _movingAverage[i];
 
   }
-
-  // Average all values
-  cph = cph / 60.0;
 
   // Return the number of coincidence events per hour
   return cph;

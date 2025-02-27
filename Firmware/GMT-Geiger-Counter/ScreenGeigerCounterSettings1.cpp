@@ -12,7 +12,7 @@ ScreenGeigerCounterSettings1::ScreenGeigerCounterSettings1():
   ScreenBasic(STRING_GEIGER_COUNTER_SETTINGS_SCREEN_TITLE),
   next(160, 213, 158, 25, IMAGE_NEXT),
   previous(2, 213, 157, 25, IMAGE_BACK),
-  _equivalentDoseScreen(2, 31, 316, 77, COLOR_MEDIUM_GREEN, COLOR_DARK_GREEN, _countsString.c_str(), STRING_COUNTS),
+  _countsScreen(2, 31, 316, 77, COLOR_BLUE_MEDIUM, COLOR_BLUE_DARK, _countsString.c_str(), STRING_COUNTS),
   _mainTubeCounts(160, 109, 158, STRING_COUNTS, _mainTubeCountsString.c_str()),
   _followerTubeCounts(160, 161, 158, STRING_COUNTS, _followerTubeCountsString.c_str())
 
@@ -41,14 +41,14 @@ void ScreenGeigerCounterSettings1::draw(GFXcanvas16 &canvas) {
   ScreenBasic::draw(canvas);
 
   // Draw the diagram background and diagram
-  canvas.fillRect(2, 109, 157, 51, COLOR_DARK_GRAY);
-  canvas.fillRect(2, 161, 157, 51, COLOR_DARK_GRAY);
+  canvas.fillRect(2, 109, 157, 51, COLOR_GRAY_DARK);
+  canvas.fillRect(2, 161, 157, 51, COLOR_GRAY_DARK);
   canvas.drawRGBBitmap(32, 111, IMAGE_DIAGRAM.data, IMAGE_DIAGRAM.width, IMAGE_DIAGRAM.height);
 
   // Draw screen elements
   next.draw(canvas);
   previous.draw(canvas);
-  _equivalentDoseScreen.draw(canvas);
+  _countsScreen.draw(canvas);
   _mainTubeCounts.draw(canvas);
   _followerTubeCounts.draw(canvas);
 

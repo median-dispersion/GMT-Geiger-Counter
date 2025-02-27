@@ -26,16 +26,32 @@
     --color-black-010: rgba(0, 0, 0, 0.1);
     --color-black-000: rgba(0, 0, 0, 0.0);
 
-    --color-main-background: rgba(16, 16, 24, 1.0);
-    --color-main-foreground: rgba(40, 40, 48, 1.0);
+    --color-gray-darkest: rgba(16,  16,  24,  1.0);
+    --color-gray-dark:    rgba(40,  40,  48,  1.0);
+    --color-gray-medium:  rgba(88,  88,  96,  1.0);
+    --color-gray-light :  rgba(136, 136, 144, 1.0);
+    --color-red-dark:     rgba(48,  0,   0,   1.0);
+    --color-red-medium:   rgba(192, 0,   0,   1.0);
+    --color-green-dark:   rgba(0,   32,  8,   1.0);
+    --color-green-medium: rgba(0,   160, 64,  1.0);
+    --color-blue-dark:    rgba(0,   24,  56,  1.0);
+    --color-blue-medium:  rgba(0,   128, 255, 1.0);
+    --color-yellow-dark:  rgba(56,  40,  0,   1.0);
+    --color-yellow-medium:rgba(224, 160, 0,   1.0);
+    --color-purple-dark:  rgba(24,  0,   48,  1.0);
+    --color-purple-medium:rgba(128, 0,   255, 1.0);
 
-    --color-info-background:    rgba(0,   24,  56,  1.0);
-    --color-info-foreground:    rgba(0,   128, 255, 1.0);
-    --color-success-background: rgba(0,   32,  16,  1.0);
-    --color-success-foreground: rgba(0,   160, 96,  1.0);
-    --color-error-background:   rgba(48,  0,   0,   1.0);
-    --color-error-foreground:   rgba(160, 0,   0,   1.0);
-
+    --color-main-background:    var(--color-gray-darkest);
+    --color-main-foreground:    var(--color-gray-dark);
+    --color-info-background:    var(--color-blue-dark);
+    --color-info-foreground:    var(--color-blue-medium);
+    --color-success-background: var(--color-green-dark);
+    --color-success-foreground: var(--color-green-medium);
+    --color-error-background:   var(--color-red-dark);
+    --color-error-foreground:   var(--color-red-medium);
+    --color-warning-background: var(--color-yellow-dark);
+    --color-warning-foreground: var(--color-yellow-medium);
+    
     --color-hover: var(--color-white-020);
     --color-active: var(--color-black-020);
 
@@ -49,6 +65,7 @@
 .icon-info       { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m256 32c-123.52 0-224 100.48-224 224s100.48 224 224 224 224-100.48 224-224-100.48-224-224-224zm0 32c106.23 0 192 85.772 192 192s-85.772 192-192 192-192-85.772-192-192 85.772-192 192-192zm0 80a16 16 0 0 0-16 16 16 16 0 0 0 16 16 16 16 0 0 0 16-16 16 16 0 0 0-16-16zm0 64a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16 16 16 0 0 0 16-16v-128a16 16 0 0 0-16-16z'/%3E%3C/svg%3E"); }
 .icon-success    { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m256 32c-123.52 0-224 100.48-224 224s100.48 224 224 224 224-100.48 224-224-100.48-224-224-224zm0 32c106.23 0 192 85.772 192 192s-85.772 192-192 192-192-85.772-192-192 85.772-192 192-192zm97.395 104.06a16 16 0 0 0-5.5352 0.48437 16 16 0 0 0-7.1738 4.1426l-132.69 132.69-36.686-36.686a16 16 0 0 0-22.629 0 16 16 0 0 0 0 22.627l48 48a16.002 16.002 0 0 0 22.629 0l144-144a16 16 0 0 0 0-22.627 16 16 0 0 0-9.9199-4.627z'/%3E%3C/svg%3E"); }
 .icon-error      { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m256 32c-123.52 0-224 100.48-224 224s100.48 224 224 224 224-100.48 224-224-100.48-224-224-224zm0 32c106.23 0 192 85.772 192 192s-85.772 192-192 192-192-85.772-192-192 85.772-192 192-192zm-94.605 80.061a16 16 0 0 0-5.5352 0.48437 16 16 0 0 0-7.1738 4.1406 16 16 0 0 0 0 22.629l84.686 84.686-84.686 84.686a16 16 0 0 0 0 22.629 16 16 0 0 0 22.629 0l84.686-84.686 84.686 84.686a16 16 0 0 0 22.629 0 16 16 0 0 0 0-22.629l-84.686-84.686 84.686-84.686a16 16 0 0 0 0-22.629 16 16 0 0 0-15.455-4.1406 16 16 0 0 0-7.1738 4.1406l-84.686 84.686-84.686-84.686a16 16 0 0 0-9.9199-4.625z'/%3E%3C/svg%3E"); }
+.icon-warning    { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m256 32c-123.52 0-224 100.48-224 224s100.48 224 224 224 224-100.48 224-224-100.48-224-224-224zm0 32c106.23 0 192 85.772 192 192s-85.772 192-192 192-192-85.772-192-192 85.772-192 192-192zm0 80a16 16 0 0 0-16 16v128a16 16 0 0 0 16 16 16 16 0 0 0 16-16v-128a16 16 0 0 0-16-16zm0 192a16 16 0 0 0-16 16 16 16 0 0 0 16 16 16 16 0 0 0 16-16 16 16 0 0 0-16-16z'/%3E%3C/svg%3E"); }
 
 body {
 
@@ -65,6 +82,13 @@ body * {
     all: unset;
     display: block;
     box-sizing: border-box;
+
+}
+
+b {
+
+    display: inline-block;
+    font-weight: bold;
 
 }
 
@@ -185,6 +209,13 @@ body * {
 
     border-color: var(--color-error-foreground);
     background-color: var(--color-error-background);
+
+}
+
+.toast-message-warning {
+
+    border-color: var(--color-warning-foreground);
+    background-color: var(--color-warning-background);
 
 }
 

@@ -11,7 +11,7 @@ ScreenGeigerCounterSettings2::ScreenGeigerCounterSettings2():
   // Initialize members
   ScreenBasic(STRING_GEIGER_COUNTER_SETTINGS_SCREEN_TITLE),
   autoRange(0, STRING_AUTO_RANGE, true),
-  sievert( 1, STRING_SIEVERTS,   true),
+  sievert(  1, STRING_SIEVERTS,   true),
   rem(      2, STRING_REM,        false),
   rontgen(  3, STRING_RONTGEN,    false),
   gray(     4, STRING_GRAY,       false),

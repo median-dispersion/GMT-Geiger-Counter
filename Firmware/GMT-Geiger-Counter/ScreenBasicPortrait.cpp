@@ -37,7 +37,7 @@ void ScreenBasicPortrait::draw(GFXcanvas16 &canvas) {
 
   // Draw title bar
   canvas.drawRect(0, 0, 240, 30, COLOR_WHITE);
-  canvas.fillRect(1, 1, 238, 28, COLOR_DARK_GRAY);
+  canvas.fillRect(1, 1, 238, 28, COLOR_GRAY_DARK);
 
   // Draw title text
   canvas.setFont(&FreeSans9pt7b);

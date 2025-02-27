@@ -38,7 +38,7 @@ void TouchIcon::update(const XPT2046::Point &position) {
 void TouchIcon::draw(GFXcanvas16 &canvas) {
 
   // Draw background
-  canvas.fillRect(_x, _y, _width, _height, COLOR_MEDIUM_GRAY);
+  canvas.fillRect(_x, _y, _width, _height, COLOR_GRAY_MEDIUM);
 
   // Draw icon at the center
   canvas.drawRGBBitmap(_x + ((_width - _icon.width) / 2), _y + ((_height - _icon.height) / 2), _icon.data, _icon.width, _icon.height);

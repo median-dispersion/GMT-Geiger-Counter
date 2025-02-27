@@ -32,4 +32,8 @@ void ScreenSleep::update(const XPT2046::Point &position) {
 // ================================================================================================
 // Draw
 // ================================================================================================
-void ScreenSleep::draw(GFXcanvas16 &canvas) {}
+void ScreenSleep::draw(GFXcanvas16 &canvas) {
+
+  // Dont draw anything on the sleep screen
+
+}

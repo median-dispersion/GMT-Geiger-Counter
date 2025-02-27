@@ -11,6 +11,7 @@ class Watchdog {
 
   public:
 
+    void begin();  // Initialize everything
     void update(); // Update the watchdog
 
 };

@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "Configuration.h"
+#include "Logger.h"
 #include "Preferences.h"
 #include "WiFi.h"
 #include "SD.h"
@@ -30,6 +31,7 @@ class Wireless {
     void        enableWiFi();                          // Enable the WiFi
     void        disableWiFi();                         // Disable the WiFi
     bool        wifiEnabled();                         // Returns if the WiFi is enabled
+    bool        serverRunning();                       // Returns if the webserver is running
     void        setWiFiName(const char *name);         // Set the WiFi name / SSID
     void        setWiFiPassword(const char *password); // Set the WiFi password
     const char* getWiFiName();                         // Get the current WiFi name

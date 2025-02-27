@@ -26,6 +26,9 @@ GeigerCounter::GeigerCounter():
 // ================================================================================================
 void GeigerCounter::begin() {
 
+  // Initialize logger if not already
+  logger.begin();
+
   // Initialize all tubes
   _mainTube.begin();
   _followerTube.begin();
@@ -65,6 +68,17 @@ void GeigerCounter::enable() {
     // Set alarm to call the ISR function, every second, repeat, forever
     timerAlarm(_movingAverageTimer, 1000000, true, 0);
 
+    // Get logger event data
+    Logger::KeyValuePair event[2] = {
+
+      {"event",   Logger::STRING, {.string_value = "geigerCounter"}},
+      {"enabled", Logger::BOOL,   {.bool_value   = true }          }
+
+    };
+
+    // Log geiger counter enable event
+    logger.event(event, 2);
+
     // Set the enabled flag to true
     _enabled = true;
 
@@ -98,6 +112,17 @@ void GeigerCounter::disable() {
 
     // Clear the hardware timer
     _movingAverageTimer = NULL;
+
+    // Get logger event data
+    Logger::KeyValuePair event[2] = {
+
+      {"event",   Logger::STRING, {.string_value = "geigerCounter"}},
+      {"enabled", Logger::BOOL,   {.bool_value   = false }         }
+
+    };
+
+    // Log geiger counter disable event
+    logger.event(event, 2);
 
     // Set the enabled flag to false
     _enabled = false;
@@ -361,30 +386,31 @@ GeigerCounter::RadiationRating GeigerCounter::getRadiationRating() {
 
   double microsievertsPerHours = getMicrosievertsPerHour();
 
+  RadiationRating rating = RADIATION_RATING_NORMAL;
+
   // Normal rating
   if (microsievertsPerHours < RADIATION_RATING_ELEVATED_USVH) {
 
-    return RADIATION_RATING_NORMAL;
+    rating = RADIATION_RATING_NORMAL;
 
   // Elevated rating
   } else if (microsievertsPerHours >= RADIATION_RATING_ELEVATED_USVH && microsievertsPerHours < RADIATION_RATING_HIGH_USVH) {
 
-    return RADIATION_RATING_ELEVATED;
+    rating = RADIATION_RATING_ELEVATED;
 
   // High rating
   } else if (microsievertsPerHours >= RADIATION_RATING_HIGH_USVH && microsievertsPerHours < RADIATION_RATING_EXTREME_USVH) {
 
-    return RADIATION_RATING_HIGH;
+    rating = RADIATION_RATING_HIGH;
   
   // Extreme rating
   } else if (microsievertsPerHours >= RADIATION_RATING_EXTREME_USVH) {
 
-    return RADIATION_RATING_EXTREME;
+    rating = RADIATION_RATING_EXTREME;
 
   }
 
-  // If nothing matches return unknown level
-  return RADIATION_RATING_UNKNOWN;
+  return rating;
 
 }
 

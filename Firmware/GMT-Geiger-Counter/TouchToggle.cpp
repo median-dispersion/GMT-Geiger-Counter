@@ -39,22 +39,21 @@ void TouchToggle::update(const XPT2046::Point &position) {
 void TouchToggle::draw(GFXcanvas16 &canvas) {
 
   // Draw background
-  canvas.fillRect(2, _y, 316, 25, COLOR_MEDIUM_GRAY);
+  canvas.fillRect(2, _y, 316, 25, COLOR_GRAY_MEDIUM);
 
   // If toggled on
   if (_toggled) {
 
     // Draw toggle in on position
-    canvas.drawRect(280, _y + 2, 36, 21, COLOR_WHITE);
-    canvas.fillRect(298, _y + 5, 15, 15, COLOR_WHITE);
+    canvas.drawRect(284, _y + 4, 28, 17, COLOR_WHITE);
+    canvas.fillRect(298, _y + 7, 11, 11, COLOR_WHITE);
 
   // If toggled off
   } else {
 
     // Draw toggle in off position
-    canvas.drawRect(280, _y + 2, 36, 21, COLOR_LIGHT_GRAY);
-    canvas.fillRect(281, _y + 3, 34, 19, COLOR_DARK_GRAY);
-    canvas.fillRect(283, _y + 5, 15, 15, COLOR_LIGHT_GRAY);
+    canvas.drawRect(284, _y + 4, 28, 17, COLOR_GRAY_LIGHT);
+    canvas.fillRect(287, _y + 7, 11, 11, COLOR_GRAY_LIGHT);
 
   }
 

@@ -8,7 +8,6 @@
 #define STRING_REM                                  "Rem"
 #define STRING_RONTGEN                              "Rontgen"
 #define STRING_GRAY                                 "Gray"
-#define STRING_RADIATION_RATING_UNKNOWN             "Unkown"
 #define STRING_RADIATION_RATING_NORMAL              "Normal"
 #define STRING_RADIATION_RATING_ELEVATED            "Elevated"
 #define STRING_RADIATION_RATING_HIGH                "High"
@@ -61,7 +60,8 @@
 #define STRING_SYSTEM_SETTINGS_TITLE                "System settings"
 #define STRING_LOG_TO_SERIAL_CONSOLE                "Log to serial console"
 #define STRING_LOG_TO_SD_CARD                       "Log to SD card"
-#define STRING_LOG_SYSTEM_MESSAGES                  "Log system messages"
+#define STRING_LOG_SYSTEM_EVENT_MESSAGES            "Log system event messages"
+#define STRING_LOG_SYSTEM_DATA                      "Log system data"
 #define STRING_FIRMWARE_VERSION                     "Firmware version"
 
 #endif

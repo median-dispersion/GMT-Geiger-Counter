@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "Configuration.h"
+#include "Logger.h"
 #include "Tube.h"
 
 class CosmicRayDetector {
@@ -20,7 +21,7 @@ class CosmicRayDetector {
     void     disable();                     // Disable the cosmic ray detector
     bool     enabled();                     // Returns if the cosmic ray detector is enabled
     uint64_t getCoincidenceEvents();        // Get the total number of coincidence events
-    double   getCoincidenceEventsPerHour(); // Get the number of coincidence events per hour
+    uint32_t getCoincidenceEventsPerHour(); // Get the number of coincidence events per hour
 
   // ----------------------------------------------------------------------------------------------
   // Private

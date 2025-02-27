@@ -21,7 +21,6 @@ Buzzer::Buzzer():
   next({interface, MELODY_NEXT}),
   tap({interface, MELODY_TAP}),
   warning({notifications, MELODY_WARNING}),
-  error({interface, MELODY_ERROR}),
   _muted(false),
   _audio(BUZZER_PIN)
 

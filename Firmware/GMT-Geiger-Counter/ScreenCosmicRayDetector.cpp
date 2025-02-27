@@ -20,10 +20,10 @@ ScreenCosmicRayDetector::ScreenCosmicRayDetector():
   _coincidenceEventsTotalString("0"),
   _mainTubeCountsString("0"),
   _followerTubeCountsString("0"),
-  _coincidenceEventsScreen(2, 31, 236, 131, COLOR_MEDIUM_GREEN, COLOR_DARK_GREEN, _coincidenceEventsString.c_str(), STRING_COINCIDENCE_EVENTS),
+  _coincidenceEventsScreen(2, 31, 236, 131, COLOR_PURPLE_MEDIUM, COLOR_PURPLE_DARK, _coincidenceEventsString.c_str(), STRING_COINCIDENCE_EVENTS),
   _coincidenceEventsPerHour(2, 163, 210, IMAGE_MUON_SMALL, _coincidenceEventsPerHourString.c_str()),
-  _coincidenceEventsTotal(  2, 189, 210, IMAGE_SUM, _coincidenceEventsTotalString.c_str()),
-  _mainTubeCounts( 120, 215, 118, STRING_COUNTS, _mainTubeCountsString.c_str()),
+  _coincidenceEventsTotal(2, 189, 210, IMAGE_SUM, _coincidenceEventsTotalString.c_str()),
+  _mainTubeCounts(120, 215, 118, STRING_COUNTS, _mainTubeCountsString.c_str()),
   _followerTubeCounts(120, 267, 118, STRING_COUNTS, _followerTubeCountsString.c_str())
 
 {}
@@ -51,8 +51,8 @@ void ScreenCosmicRayDetector::draw(GFXcanvas16 &canvas) {
   ScreenBasicPortrait::draw(canvas);
 
   // Draw the diagram background and diagram
-  canvas.fillRect(2, 215, 117, 51, COLOR_DARK_GRAY);
-  canvas.fillRect(2, 267, 117, 51, COLOR_DARK_GRAY);
+  canvas.fillRect(2, 215, 117, 51, COLOR_GRAY_DARK);
+  canvas.fillRect(2, 267, 117, 51, COLOR_GRAY_DARK);
   canvas.drawRGBBitmap(12, 217, IMAGE_DIAGRAM.data, IMAGE_DIAGRAM.width, IMAGE_DIAGRAM.height);
 
   // Draw screen elements
@@ -105,7 +105,7 @@ void ScreenCosmicRayDetector::setCoincidenceEvents(const uint64_t &coincidenceEv
 // ================================================================================================
 // Set the coincidence events per hour value
 // ================================================================================================
-void ScreenCosmicRayDetector::setCoincidenceEventsPerHour(const double &coincidenceEventsPerHour) {
+void ScreenCosmicRayDetector::setCoincidenceEventsPerHour(const uint32_t &coincidenceEventsPerHour) {
 
   _coincidenceEventsPerHourString  = coincidenceEventsPerHour;
   _coincidenceEventsPerHourString += " ";

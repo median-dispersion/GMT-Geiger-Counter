@@ -39,22 +39,20 @@ void TouchRadio::update(const XPT2046::Point &position) {
 void TouchRadio::draw(GFXcanvas16 &canvas) {
 
   // Draw background
-  canvas.fillRect(2, _y, 316, 25, COLOR_MEDIUM_GRAY);
+  canvas.fillRect(2, _y, 316, 25, COLOR_GRAY_MEDIUM);
 
   // If selected
   if (_selected) {
 
     // Draw radio in selected state
-    canvas.drawRect(295, _y + 2, 21, 21, COLOR_WHITE);
-    canvas.fillRect(298, _y + 5, 15, 15, COLOR_WHITE);
+    canvas.drawRect(291, _y + 5, 15, 15, COLOR_WHITE);
+    canvas.fillRect(294, _y + 8, 9, 9, COLOR_WHITE);
 
   // If deselected
   } else {
 
     // Draw radio in deselected state
-    canvas.drawRect(295, _y + 2, 21, 21, COLOR_LIGHT_GRAY);
-    //canvas.drawRect(295, _y + 2, 21, 21, COLOR_WHITE);
-    //canvas.fillRect(296, _y + 3, 19, 19, COLOR_DARK_GRAY);
+    canvas.drawRect(291, _y + 5, 15, 15, COLOR_GRAY_LIGHT);
 
   }
 
@@ -74,16 +72,6 @@ void TouchRadio::select() {
   _selected = true;
 
 }
-
-// ================================================================================================
-// Select radio
-// ================================================================================================
-void TouchRadio::select(const bool selected) {
-
-  _selected = selected;
-
-}
-
 
 // ================================================================================================
 // Deselect radio

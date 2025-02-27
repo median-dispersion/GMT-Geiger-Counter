@@ -10,7 +10,7 @@ ScreenRotationConfirmation::ScreenRotationConfirmation():
 
   // Initialize members
   ScreenBasicPortrait(STRING_COSMIC_RAY_DETECTOR_TITLE),
-  confirm(2, 56, 236, 262)
+  confirm(2, 31, 236, 287)
 
 {}
 
@@ -36,8 +36,9 @@ void ScreenRotationConfirmation::draw(GFXcanvas16 &canvas) {
   ScreenBasicPortrait::draw(canvas);
 
   // Draw the confirmation background
-  canvas.fillRect(2, 31, 236, 287, COLOR_DARK_GRAY);
+  canvas.fillRect(2, 31, 236, 287, COLOR_GRAY_DARK);
 
+  // Draw the rotation icon
   canvas.drawRGBBitmap(105, 67, IMAGE_ROTATE.data, IMAGE_ROTATE.width, IMAGE_ROTATE.height);
 
   // Set the font family, size and color

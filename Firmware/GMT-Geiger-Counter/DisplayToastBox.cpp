@@ -23,11 +23,11 @@ DisplayToastBox::DisplayToastBox(const uint16_t x, const uint16_t y, const uint1
 void DisplayToastBox::draw(GFXcanvas16 &canvas) {
 
   // Draw background
-  canvas.fillRect(_x, _y, _width, 51, COLOR_DARK_GRAY);
+  canvas.fillRect(_x, _y, _width, 51, COLOR_GRAY_DARK);
 
   // Set the font family, size and color
   canvas.setFont(&FreeSans9pt7b);
-  canvas.setTextColor(COLOR_LIGHT_GRAY);
+  canvas.setTextColor(COLOR_GRAY_LIGHT);
 
   // Draw title
   canvas.setCursor(_x + 5, _y + 20);

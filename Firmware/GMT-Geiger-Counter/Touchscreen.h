@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "Configuration.h"
+#include "Logger.h"
 #include "Adafruit_ILI9341.h"
 #include "Adafruit_GFX.h"
 #include "XPT2046.h"

@@ -23,6 +23,5 @@ extern Melody MELODY_JINGLE;
 extern Melody MELODY_NEXT;
 extern Melody MELODY_TAP;
 extern Melody MELODY_WARNING;
-extern Melody MELODY_ERROR;
 
 #endif

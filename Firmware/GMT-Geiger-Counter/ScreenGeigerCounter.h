@@ -54,13 +54,13 @@ class ScreenGeigerCounter: public Screen {
 
   private:
 
-    String            _equivalentDoseString;     // Equivalent dose string
-    String            _countsPerMinuteString;    // Counts per minute string
-    String            _integrationTimeString;    // Integration time string
-    DisplayDoseScreen _equivalentDoseScreen;     // Equivalent dose screen
-    DisplayInfoBox    _radiationRating;          // Radiation rating info box
-    DisplayInfoBox    _countsPerMinute;          // Counts per minute info box
-    DisplayInfoBox    _integrationTime;          // Integration time info box
+    String            _equivalentDoseString;  // Equivalent dose string
+    String            _countsPerMinuteString; // Counts per minute string
+    String            _integrationTimeString; // Integration time string
+    DisplayDoseScreen _equivalentDoseScreen;  // Equivalent dose screen
+    DisplayInfoBox    _radiationRating;       // Radiation rating info box
+    DisplayInfoBox    _countsPerMinute;       // Counts per minute info box
+    DisplayInfoBox    _integrationTime;       // Integration time info box
 
 };
 

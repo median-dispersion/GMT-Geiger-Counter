@@ -23,11 +23,12 @@ ScreenGeigerCounter::ScreenGeigerCounter():
   systemSettings(         267, 187, 51, 51, IMAGE_SETTINGS),
 
   geigerCounterSetting(2, 31, 160, 129),
+  
   _equivalentDoseString("0.00"),
   _countsPerMinuteString("0 CPM"),
   _integrationTimeString("30 s"),
 
-  _equivalentDoseScreen(2, 31, 160, 129, COLOR_MEDIUM_GREEN, COLOR_DARK_GREEN, _equivalentDoseString.c_str(), STRING_MICRO_SIEVERTS_PER_HOUR_ABBREVIATION),
+  _equivalentDoseScreen(2, 31, 160, 129, COLOR_GREEN_MEDIUM, COLOR_GREEN_DARK, _equivalentDoseString.c_str(), STRING_MICRO_SIEVERTS_PER_HOUR_ABBREVIATION),
   _radiationRating(2, 161, 160, IMAGE_RADIATION, STRING_RADIATION_RATING_NORMAL),
   _countsPerMinute(2, 187, 160, IMAGE_PARTICLE,  _countsPerMinuteString.c_str()),
   _integrationTime(2, 213, 160, IMAGE_CLOCK,     _integrationTimeString.c_str())
@@ -69,7 +70,7 @@ void ScreenGeigerCounter::draw(GFXcanvas16 &canvas) {
 
   // Draw title bar
   canvas.drawRect(0, 0, 320, 30, COLOR_WHITE);
-  canvas.fillRect(1, 1, 318, 28, COLOR_DARK_GRAY);
+  canvas.fillRect(1, 1, 318, 28, COLOR_GRAY_DARK);
 
   // Draw title text
   canvas.setFont(&FreeSans9pt7b);
@@ -102,8 +103,19 @@ void ScreenGeigerCounter::draw(GFXcanvas16 &canvas) {
 // ================================================================================================
 void ScreenGeigerCounter::setEquivalentDose(const double &equivalentDose) {
 
-  // Convert equivalent dose to a string
-  _equivalentDoseString = equivalentDose;
+  // If equivalent dose value is less than 1000
+  if (equivalentDose < 1000) {
+
+    // Convert equivalent dose to a string
+    _equivalentDoseString = equivalentDose;
+
+  // If equivalent dose value is more than 1000
+  } else {
+
+    // Drop decimal places and convert to string
+    _equivalentDoseString = (uint64_t)(round(equivalentDose));
+
+  }
 
 }
 
@@ -127,33 +139,27 @@ void ScreenGeigerCounter::setRadiationRating(const GeigerCounter::RadiationRatin
   
   switch (radiationRating) {
 
-    case GeigerCounter::RADIATION_RATING_UNKNOWN:
-      _equivalentDoseScreen.setBorderColor(COLOR_MEDIUM_GREEN);
-      _equivalentDoseScreen.setBackgroundColor(COLOR_DARK_GREEN);
-      _radiationRating.setValue(STRING_RADIATION_RATING_UNKNOWN);
-    break;
-
     case GeigerCounter::RADIATION_RATING_NORMAL:
-      _equivalentDoseScreen.setBorderColor(COLOR_MEDIUM_GREEN);
-      _equivalentDoseScreen.setBackgroundColor(COLOR_DARK_GREEN);
+      _equivalentDoseScreen.setBorderColor(COLOR_GREEN_MEDIUM);
+      _equivalentDoseScreen.setBackgroundColor(COLOR_GREEN_DARK);
       _radiationRating.setValue(STRING_RADIATION_RATING_NORMAL);
     break;
 
     case GeigerCounter::RADIATION_RATING_ELEVATED:
-      _equivalentDoseScreen.setBorderColor(COLOR_MEDIUM_ORANGE);
-      _equivalentDoseScreen.setBackgroundColor(COLOR_DARK_ORANGE);
+      _equivalentDoseScreen.setBorderColor(COLOR_YELLOW_MEDIUM);
+      _equivalentDoseScreen.setBackgroundColor(COLOR_YELLOW_DARK);
       _radiationRating.setValue(STRING_RADIATION_RATING_ELEVATED);
     break;
 
     case GeigerCounter::RADIATION_RATING_HIGH:
-      _equivalentDoseScreen.setBorderColor(COLOR_MEDIUM_RED);
-      _equivalentDoseScreen.setBackgroundColor(COLOR_DARK_RED);
+      _equivalentDoseScreen.setBorderColor(COLOR_RED_MEDIUM);
+      _equivalentDoseScreen.setBackgroundColor(COLOR_RED_DARK);
       _radiationRating.setValue(STRING_RADIATION_RATING_HIGH);
     break;
 
     case GeigerCounter::RADIATION_RATING_EXTREME:
-      _equivalentDoseScreen.setBorderColor(COLOR_MEDIUM_RED);
-      _equivalentDoseScreen.setBackgroundColor(COLOR_DARK_RED);
+      _equivalentDoseScreen.setBorderColor(COLOR_RED_MEDIUM);
+      _equivalentDoseScreen.setBackgroundColor(COLOR_RED_DARK);
       _radiationRating.setValue(STRING_RADIATION_RATING_EXTREME);
     break;
 
@@ -168,7 +174,7 @@ void ScreenGeigerCounter::setRadiationRating(const GeigerCounter::RadiationRatin
 void ScreenGeigerCounter::setCountsPerMinute(const double &countsPerMinute) {
 
   // Convert counts per minute to a string with unit appended to it
-  _countsPerMinuteString  = (uint32_t)(round(countsPerMinute));
+  _countsPerMinuteString  = (uint64_t)(round(countsPerMinute));
   _countsPerMinuteString += " ";
   _countsPerMinuteString += STRING_COUNTS_PER_MINUTE_ABBREVIATION;
 

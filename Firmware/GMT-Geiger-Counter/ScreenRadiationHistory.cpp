@@ -51,21 +51,21 @@ void ScreenRadiationHistory::draw(GFXcanvas16 &canvas) {
   ScreenBasic::draw(canvas);
 
   // Draw background
-  canvas.fillRect(2, 31, 316, 181, COLOR_DARK_GRAY);
+  canvas.fillRect(2, 31, 316, 181, COLOR_GRAY_DARK);
 
   // Draw grid
-  canvas.drawFastVLine( 86,  42, 159, COLOR_LIGHT_GRAY);
-  canvas.drawFastVLine(160,  42, 159, COLOR_LIGHT_GRAY);
-  canvas.drawFastVLine(234,  42, 159, COLOR_LIGHT_GRAY);
-  canvas.drawFastVLine(307,  42, 159, COLOR_LIGHT_GRAY);
-  canvas.drawFastHLine( 13,  41, 295, COLOR_LIGHT_GRAY);
-  canvas.drawFastHLine( 13,  81, 294, COLOR_LIGHT_GRAY);
-  canvas.drawFastHLine( 13, 121, 294, COLOR_LIGHT_GRAY);
-  canvas.drawFastHLine( 13, 161, 294, COLOR_LIGHT_GRAY);
+  canvas.drawFastVLine( 86,  42, 159, COLOR_GRAY_LIGHT);
+  canvas.drawFastVLine(160,  42, 159, COLOR_GRAY_LIGHT);
+  canvas.drawFastVLine(234,  42, 159, COLOR_GRAY_LIGHT);
+  canvas.drawFastVLine(307,  42, 159, COLOR_GRAY_LIGHT);
+  canvas.drawFastHLine( 13,  41, 295, COLOR_GRAY_LIGHT);
+  canvas.drawFastHLine( 13,  81, 294, COLOR_GRAY_LIGHT);
+  canvas.drawFastHLine( 13, 121, 294, COLOR_GRAY_LIGHT);
+  canvas.drawFastHLine( 13, 161, 294, COLOR_GRAY_LIGHT);
 
   // Set the font family, size and color
   canvas.setFont(&FreeSans9pt7b);
-  canvas.setTextColor(COLOR_LIGHT_GRAY);
+  canvas.setTextColor(COLOR_GRAY_LIGHT);
 
   // Draw time steps
   canvas.setCursor(236, 199);
@@ -109,7 +109,7 @@ void ScreenRadiationHistory::draw(GFXcanvas16 &canvas) {
       uint16_t dy = 200 - round(height * _history[wrappedIndex]);
 
       // Draw line between the two positions
-      canvas.drawLine(x, y, dx, dy, COLOR_MEDIUM_GREEN);
+      canvas.drawLine(x, y, dx, dy, COLOR_NEON);
 
       // Set the next starting position to the current end position
       x = dx;

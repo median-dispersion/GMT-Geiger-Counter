@@ -20,6 +20,7 @@ class ScreenSystemSettings: public ScreenBasic {
     // Screen elements
     TouchToggle serialLogging;
     TouchToggle sdCardLogging;
+    TouchToggle eventLogging;
     TouchToggle systemLogging;
 
     // Constructor

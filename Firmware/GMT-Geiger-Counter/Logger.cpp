@@ -4,7 +4,7 @@
 // Public
 
 // Define the global reference
-Logger& logger = Logger::getInstance();
+Logger &logger = Logger::getInstance();
 
 // ================================================================================================
 // Constructor
@@ -12,30 +12,192 @@ Logger& logger = Logger::getInstance();
 Logger::Logger():
 
   // Initialize members
-  _serialLogging(false),
-  _sdCardLogging(false),
-  _systemLogging(true),
+  _initialized(false),
   _logFileSelected(false),
+  _logFilePath(""),
   _logFileID(0),
   _logFilePart(0),
-  _logFilePath("")
+  _serialLogging(false),
+  _sdCardLogging(false),
+  _eventLogging(false)
 
-{
+{}
 
-  // Begin Serial communication if not already established
-  Serial.begin(SERIAL_BAUD_RATE);
+// ================================================================================================
+// Initialize everything
+// ================================================================================================
+void Logger::begin() {
 
-  // Enable Serial logging
-  enableSerialLogging();
+  // If logger is not already initialized
+  if (!_initialized) {
 
-  // Check if SD card is mounted
-  if (_sdCardMounted()) {
+    // Begin Serial communication if not already established
+    Serial.begin(SERIAL_BAUD_RATE);
 
-    // Get the log file path
-    _getLogFilePath();
+    // Enable Serial logging
+    enableSerialLogging();
 
-    // Enable SD card logging
-    enableSDCardLogging();
+    // Check if SD card is mounted
+    if (_sdCardMounted()) {
+
+      // Get the log file path
+      _getLogFilePath();
+
+      // Enable SD card logging
+      enableSDCardLogging();
+
+    }
+
+    // Enable event logging
+    enableEventLogging();
+
+    // Set initialized flag to true
+    _initialized = true;
+
+  }
+
+}
+
+// ================================================================================================
+// Enable serial logging
+// ================================================================================================
+void Logger::enableSerialLogging() {
+
+  _serialLogging = true;
+
+}
+
+// ================================================================================================
+// Disable serial logging
+// ================================================================================================
+void Logger::disableSerialLogging() {
+
+  _serialLogging = false;
+
+}
+
+// ================================================================================================
+// Enable SD card logging
+// ================================================================================================
+void Logger::enableSDCardLogging() {
+
+  _sdCardLogging = true;
+
+}
+
+// ================================================================================================
+// Disable SD card logging
+// ================================================================================================
+void Logger::disableSDCardLogging() {
+
+  _sdCardLogging = false;
+
+}
+
+// ================================================================================================
+// Enable event logging
+// ================================================================================================
+void Logger::enableEventLogging() {
+
+  _eventLogging = true;
+
+}
+
+// ================================================================================================
+// Disable event logging
+// ================================================================================================
+void Logger::disableEventLogging() {
+
+  _eventLogging = false;
+
+}
+
+// ================================================================================================
+// Retruns if serial logging is enabled
+// ================================================================================================
+bool Logger::serialLogging() {
+
+  return _serialLogging;
+
+}
+
+// ================================================================================================
+// Retruns if SD card logging is enabled
+// ================================================================================================
+bool Logger::sdCardLogging() {
+
+  return _sdCardLogging;
+
+}
+
+// ================================================================================================
+// Returns if event logging is enabled
+// ================================================================================================
+bool Logger::eventLogging() {
+
+  return _eventLogging;
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void Logger::log(const String &message) {
+
+  // If serial logging is enabled print log message to the serial console
+  if (serialLogging()) { Serial.println(message); }
+
+  // If SD card logging is enabled
+  if (sdCardLogging()) {
+    
+    // Check if the SD card is mounted
+    if (_sdCardMounted()) {
+
+      // Get log file path
+      const char *path = _getLogFilePath();
+
+      // Open log file
+      File file = SD.open(path, FILE_APPEND);
+
+      // If successfully opend log file
+      if (file) {
+
+        // Write log message to file
+        file.print(message);
+
+      }
+
+      // Close log file
+      file.close();
+    
+    // If the SD card is not or no longer mounted
+    } else {
+
+      // Disable SD card logging
+      disableSDCardLogging();
+
+    }
+
+  }
+
+}
+
+// ================================================================================================
+// Log event message
+// ================================================================================================
+void Logger::event(const KeyValuePair *data, const uint8_t size) {
+
+  // If event logging is enabled
+  if (eventLogging()) {
+
+    // Event message string
+    String eventMessage;
+
+    // Construct the event message
+    getLogMessage("event", data, size, eventMessage);
+
+    // Log the event message
+    log(eventMessage);
 
   }
 
@@ -57,7 +219,7 @@ Logger& Logger::getInstance() {
 // ================================================================================================
 // Construct and append a JSON log message
 // ================================================================================================
-void Logger::appendLogMessage(const char *type, KeyValuePair *data, uint16_t size, String &message) {
+void Logger::getLogMessage(const char *type, const KeyValuePair *data, const uint8_t size, String &message) {
 
   // Add log message type
   message += "{\"type\":\"";
@@ -71,7 +233,7 @@ void Logger::appendLogMessage(const char *type, KeyValuePair *data, uint16_t siz
   message += ",\"data\":{";
 
   // For each key value pair
-  for (uint16_t pair = 0; pair < size; pair++) {
+  for (uint8_t pair = 0; pair < size; pair++) {
 
     // Add the key
     message += "\"";
@@ -85,8 +247,14 @@ void Logger::appendLogMessage(const char *type, KeyValuePair *data, uint16_t siz
       case UINT16_T: message += data[pair].value.uint16_t_value; break;
       case UINT32_T: message += data[pair].value.uint32_t_value; break;
       case UINT64_T: message += data[pair].value.uint64_t_value; break;
-      case FLOAT:    message += data[pair].value.float_value;    break;
-      case DOUBLE:   message += data[pair].value.double_value;   break;
+
+      // If value is a double
+      case DOUBLE: 
+
+        // Format the double to have 5 decimal places
+        message += String(data[pair].value.double_value, 5);
+      
+      break;
 
       // If value is a sting
       case STRING:
@@ -131,130 +299,6 @@ void Logger::appendLogMessage(const char *type, KeyValuePair *data, uint16_t siz
 
   // Add trailing "}}"
   message += "}}";
-
-}
-
-// ================================================================================================
-// 
-// ================================================================================================
-void Logger::log(const String &message) {
-
-  // If serial logging is enabled print log message to the serial console
-  if (serialLogging()) { Serial.print(message); }
-
-  // If SD card logging is enabled
-  if (sdCardLogging()) {
-    
-    // Check if the SD card is mounted
-    if (_sdCardMounted()) {
-
-      // Get log file path
-      const char *path = _getLogFilePath();
-
-      // Open log file
-      File file = SD.open(path, FILE_APPEND);
-
-      // If successfully opend log file
-      if (file) {
-
-        // Write log message to file
-        file.print(message);
-
-      }
-
-      // Close log file
-      file.close();
-    
-    // If the SD card is not or no longer mounted
-    } else {
-
-      // Disable SD card logging
-      disableSDCardLogging();
-
-    }
-
-  }
-
-}
-
-// ================================================================================================
-// Enable serial logging
-// ================================================================================================
-void Logger::enableSerialLogging() {
-
-  _serialLogging = true;
-
-}
-
-// ================================================================================================
-// Disable serial logging
-// ================================================================================================
-void Logger::disableSerialLogging() {
-
-  _serialLogging = false;
-
-}
-
-// ================================================================================================
-// Retruns if serial logging is enabled
-// ================================================================================================
-bool Logger::serialLogging() {
-
-  return _serialLogging;
-
-}
-
-// ================================================================================================
-// Enable SD card logging
-// ================================================================================================
-void Logger::enableSDCardLogging() {
-
-  _sdCardLogging = true;
-
-}
-
-// ================================================================================================
-// Disable SD card logging
-// ================================================================================================
-void Logger::disableSDCardLogging() {
-
-  _sdCardLogging = false;
-
-}
-
-// ================================================================================================
-// Retruns if SD card logging is enabled
-// ================================================================================================
-bool Logger::sdCardLogging() {
-
-  return _sdCardLogging;
-
-}
-
-// ================================================================================================
-// Enable system message logging
-// ================================================================================================
-void Logger::enableSystemLogging() {
-
-  _systemLogging = true;
-
-}
-
-// ================================================================================================
-// Disable system message logging
-// ================================================================================================
-void Logger::disableSystemLogging() {
-
-  _systemLogging = false;
-
-}
-
-// ================================================================================================
-// Retruns if system message logging is enabled
-// ================================================================================================
-bool Logger::systemLogging() {
-
-  return _systemLogging;
 
 }
 

@@ -37,7 +37,6 @@ class Buzzer {
     Sound next;             // UI next sound effect
     Sound tap;              // UI touch press sound effect
     Sound warning;          // Radiation warning sound effect
-    Sound error;            // Error sound effect
 
     // Constructor
     Buzzer();
