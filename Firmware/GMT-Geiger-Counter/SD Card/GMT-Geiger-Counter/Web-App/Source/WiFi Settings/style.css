@@ -258,6 +258,7 @@ b {
     border-bottom: 3px solid transparent;
     font-size: 15px;
     background-color: var(--color-main-foreground);
+    box-shadow: 0px 0px 5px 0px var(--color-black-070);
     transition: var(--transition-time-default);
 
 }
@@ -290,6 +291,7 @@ b {
     text-align: center;
     border-radius: var(--border-radius-default);
     background-color: var(--color-main-foreground);
+    box-shadow: 0px 0px 5px 0px var(--color-black-070);
     cursor: pointer;
     transition: var(--transition-time-default);
 

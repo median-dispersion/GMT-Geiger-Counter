@@ -1,7 +1,13 @@
+// Global variables
+let GLOBAL_LANGUAGE;
+
 // ================================================================================================
 // Initialization once the DOM has finished loading
 // ================================================================================================
 document.addEventListener("DOMContentLoaded", () => {
+
+    // Apply language
+    applyLanguage();
 
     // Add an event listener for submits on the main input area
     document.getElementById("wifi-credentials").addEventListener("submit", (event) => {
@@ -23,6 +29,49 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
+// ================================================================================================
+// Apply interface language based on the browser settings
+// ================================================================================================
+function applyLanguage(selectedLanguage) {
+
+    // If no language was provided
+    if (selectedLanguage === undefined) {
+
+        // Get the first two letters of the browser language code
+        selectedLanguage = navigator.language.slice(0, 2);
+
+    }
+
+    // Check if language is available
+    if (GLOBAL_STRINGS[selectedLanguage]) {
+
+        // Set language based on browser language
+        GLOBAL_LANGUAGE = GLOBAL_STRINGS[selectedLanguage];
+
+        // Change the html tag language value
+        document.documentElement.lang = selectedLanguage;
+    
+    // If language is not available
+    } else {
+
+        // Default to English
+        GLOBAL_LANGUAGE = GLOBAL_STRINGS["en"];
+
+    }
+
+    // Apply strings for the selected language
+    document.title = GLOBAL_LANGUAGE.title;
+    document.getElementById("header-title").innerHTML = GLOBAL_LANGUAGE.header_title;
+    document.getElementById("toast-message-encryption-info").innerHTML = GLOBAL_LANGUAGE.toast_message_encryption_info;
+    document.getElementById("toast-mesaage-update-info").innerHTML = GLOBAL_LANGUAGE.toast_message_update_info;
+    document.getElementById("wifi-credentials-title").innerHTML = GLOBAL_LANGUAGE.wifi_credentials_title;
+    document.getElementById("wifi-credentials-name").placeholder = GLOBAL_LANGUAGE.wifi_credentials_name_placeholder;
+    document.getElementById("wifi-credentials-password").placeholder = GLOBAL_LANGUAGE.wifi_credentials_password_placeholder;
+    document.getElementById("wifi-credentials-button").innerHTML = GLOBAL_LANGUAGE.wifi_credentials_button;
+    document.getElementById("update-info-title").innerHTML = GLOBAL_LANGUAGE.update_info_title;
+
+}
 
 // ================================================================================================
 // Send WiFi credentials to the Geiger counter
@@ -128,7 +177,7 @@ function displayUpdateStatus(success) {
         // Add success classes and text
         toastMessage.classList.add("toast-message-success");
         toastMessageIcon.classList.add("icon-success");
-        toastMessageText.innerHTML = "Successfully updated WiFi credentials!";
+        toastMessageText.innerHTML = GLOBAL_LANGUAGE.toast_message_success_info;
     
     // If error message
     } else {
@@ -136,7 +185,7 @@ function displayUpdateStatus(success) {
         // Add error classes and text
         toastMessage.classList.add("toast-message-error");
         toastMessageIcon.classList.add("icon-error");
-        toastMessageText.innerHTML = "Something went wrong while updating the WiFi credentials!";
+        toastMessageText.innerHTML = GLOBAL_LANGUAGE.toast_message_failure_info;
 
     }
 
