@@ -394,9 +394,14 @@ GeigerCounter::RadiationRating GeigerCounter::getRadiationRating() {
     rating = RADIATION_RATING_NORMAL;
 
   // Elevated rating
-  } else if (microsievertsPerHours >= RADIATION_RATING_ELEVATED_USVH && microsievertsPerHours < RADIATION_RATING_HIGH_USVH) {
+  } else if (microsievertsPerHours >= RADIATION_RATING_ELEVATED_USVH && microsievertsPerHours < RADIATION_RATING_MEDIUM_USVH) {
 
     rating = RADIATION_RATING_ELEVATED;
+  
+  // Medium rating
+  } else if (microsievertsPerHours >= RADIATION_RATING_MEDIUM_USVH && microsievertsPerHours < RADIATION_RATING_HIGH_USVH) {
+
+    rating = RADIATION_RATING_MEDIUM;
 
   // High rating
   } else if (microsievertsPerHours >= RADIATION_RATING_HIGH_USVH && microsievertsPerHours < RADIATION_RATING_EXTREME_USVH) {

@@ -1295,6 +1295,12 @@ void toggleSystemLogging(const bool toggled) {
 // ================================================================================================
 void sendGeigerCounterData() {
 
+  // Get the current integration time
+  uint8_t integrationTime = geigerCounter.getIntegrationTime();
+
+  // Set integration time to the max value
+  geigerCounter.setIntegrationTime(60);
+
   // Get Geiger counter data
   Logger::KeyValuePair data[8] = {
 
@@ -1304,10 +1310,13 @@ void sendGeigerCounterData() {
     {"follower",    Logger::UINT64_T, {.uint64_t_value = geigerCounter.getFollowerTubeCounts()}   },
     {"cpm",         Logger::DOUBLE,   {.double_value   = geigerCounter.getCountsPerMinute()}      },
     {"usvh",        Logger::DOUBLE,   {.double_value   = geigerCounter.getMicrosievertsPerHour()} },
-    {"integration", Logger::UINT8_T,  {.uint8_t_value  = geigerCounter.getIntegrationTime()}      },
+    {"rating",      Logger::UINT8_T,  {.uint8_t_value  = geigerCounter.getRadiationRating()}      },
     {"tube",        Logger::STRING,   {.string_value   = TUBE_TYPE_NAME}                          }
 
   };
+
+  // Reset integration time
+  geigerCounter.setIntegrationTime(integrationTime);
 
   // JSON data string
   String json;
@@ -1326,11 +1335,13 @@ void sendGeigerCounterData() {
 void sendCosmicRayDetectorData() {
 
   // Get the cosmic ray detector data
-  Logger::KeyValuePair data[3] = {
+  Logger::KeyValuePair data[5] = {
 
-    {"enabled",                  Logger::BOOL,     {.bool_value     = cosmicRayDetector.enabled()}                    },
-    {"coincidenceEvents",        Logger::UINT64_T, {.uint64_t_value = cosmicRayDetector.getCoincidenceEvents()}       },
-    {"coincidenceEventsPerHour", Logger::UINT32_T, {.uint32_t_value = cosmicRayDetector.getCoincidenceEventsPerHour()}}
+    {"enabled",  Logger::BOOL,     {.bool_value     = cosmicRayDetector.enabled()}                    },
+    {"events",   Logger::UINT64_T, {.uint64_t_value = cosmicRayDetector.getCoincidenceEvents()}       },
+    {"cph",      Logger::UINT32_T, {.uint32_t_value = cosmicRayDetector.getCoincidenceEventsPerHour()}},
+    {"main",     Logger::UINT64_T, {.uint64_t_value = geigerCounter.getMainTubeCounts()}              },
+    {"follower", Logger::UINT64_T, {.uint64_t_value = geigerCounter.getFollowerTubeCounts()}          }
 
   };
 
@@ -1338,7 +1349,7 @@ void sendCosmicRayDetectorData() {
   String json;
 
   // Construct the data string
-  logger.getLogMessage("cosmicRayDetector", data, 3, json);
+  logger.getLogMessage("cosmicRayDetector", data, 5, json);
 
   // Send JSON data
   wireless.server.send(200, "application/json", json);

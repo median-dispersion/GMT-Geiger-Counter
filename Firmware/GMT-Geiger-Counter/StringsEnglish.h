@@ -10,6 +10,7 @@
 #define STRING_GRAY                                 "Gray"
 #define STRING_RADIATION_RATING_NORMAL              "Normal"
 #define STRING_RADIATION_RATING_ELEVATED            "Elevated"
+#define STRING_RADIATION_RATING_MEDIUM              "Medium"
 #define STRING_RADIATION_RATING_HIGH                "High"
 #define STRING_RADIATION_RATING_EXTREME             "EXTREME"
 #define STRING_MICRO_SIEVERTS_PER_HOUR_ABBREVIATION "uSv/h"
