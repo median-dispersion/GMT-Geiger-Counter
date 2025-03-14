@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geiger counter | GMT Geiger Counter</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m374.35 68.461a16.002 16.002 0 0 0-14.682 7.9785l-56.344 97.592a16.002 16.002 0 0 0 3.6562 20.326c14.788 12.24 24.675 29.378 27.871 48.307a16.002 16.002 0 0 0 15.777 13.336h112.69a16.002 16.002 0 0 0 15.953-17.232c-5.2189-67.588-40.787-129.2-96.705-167.53a16.002 16.002 0 0 0-8.2207-2.7812zm-236.56 0.26562a16.002 16.002 0 0 0-8.2266 2.7949c-55.715 38.332-91.144 99.816-96.367 167.24a16.002 16.002 0 0 0 15.953 17.236h112.34a16.002 16.002 0 0 0 15.775-13.324c3.2053-18.89 13.077-35.992 27.83-48.217a16.002 16.002 0 0 0 3.6465-20.32l-56.254-97.436a16.002 16.002 0 0 0-14.697-7.9766zm118.21 139.27c-26.32 0-48 21.68-48 48s21.68 48 48 48 48-21.68 48-48-21.68-48-48-48zm-33.186 121.76a16.002 16.002 0 0 0-5.5332 0.92773 16.002 16.002 0 0 0-8.4844 7.0723l-56.369 97.635a16.002 16.002 0 0 0 6.9121 22.414c30.144 14.52 63.158 22.103 96.617 22.191a16.002 16.002 0 0 0 0.0859 0c33.459-0.088 66.473-7.6716 96.617-22.191a16.002 16.002 0 0 0 6.9121-22.414l-56.369-97.635a16.002 16.002 0 0 0-19.531-6.959c-8.8445 3.3556-18.213 5.1099-27.672 5.1934-9.4587-0.0835-18.827-1.8378-27.672-5.1934a16.002 16.002 0 0 0-5.5137-1.041z'/%3E%3C/svg%3E">
+
+    <link rel="stylesheet" href="./style.css">
+
+    <script src="./main.js"></script>
+
+</head>
+
+<body>
+
+    <div id="settings">
+
+        <div id="setting-background" onclick="hideSettings();"></div>
+
+        <div id="settings-panel">
+
+            <div id="settings-panel-header">
+
+                <button id="settings-panel-header-button" class="main-header-button icon-close" onclick="hideSettings();"></button>
+                <div id="settings-panel-header-title">Settings</div>
+
+            </div>
+
+            <div id="settings-panel-content">
+
+                <div class="settings-panel-content-header">Unit settings</div>
+                
+                <div class="settings-panel-content-collection">
+
+                    <label class="settings-panel-content-collection-toggle">
+
+                        <input class="settings-panel-content-collection-toggle-input" type="checkbox" checked="checked">
+                        <div class="settings-panel-content-collection-toggle-title">Auto range units</div>
+                        <div class="settings-panel-content-collection-toggle-checkmark"></div>
+    
+                    </label>
+
+                </div>
+
+                <div class="settings-panel-content-header">Main screen unit</div>
+
+                <div class="settings-panel-content-collection">
+
+                    <label class="settings-panel-content-collection-radio">
+
+                        <input class="settings-panel-content-collection-radio-input" type="radio" name="screen-unit" checked="checked">
+                        <div class="settings-panel-content-collection-radio-title">Sievert</div>
+                        <div class="settings-panel-content-collection-radio-checkmark"></div>
+    
+                    </label>
+
+                    <label class="settings-panel-content-collection-radio">
+
+                        <input class="settings-panel-content-collection-radio-input" type="radio" name="screen-unit">
+                        <div class="settings-panel-content-collection-radio-title">Rem</div>
+                        <div class="settings-panel-content-collection-radio-checkmark"></div>
+    
+                    </label>
+
+                    <label class="settings-panel-content-collection-radio">
+
+                        <input class="settings-panel-content-collection-radio-input" type="radio" name="screen-unit">
+                        <div class="settings-panel-content-collection-radio-title">Röntgen</div>
+                        <div class="settings-panel-content-collection-radio-checkmark"></div>
+    
+                    </label>
+
+                    <label class="settings-panel-content-collection-radio">
+
+                        <input class="settings-panel-content-collection-radio-input" type="radio" name="screen-unit">
+                        <div class="settings-panel-content-collection-radio-title">Gray</div>
+                        <div class="settings-panel-content-collection-radio-checkmark"></div>
+    
+                    </label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="main">
+
+        <div id="main-header">
+
+            <button id="main-header-button-back" class="main-header-button icon-back" onclick="window.history.back()"></button>
+            <div id="main-header-title">Geiger counter</div>
+            <button id="main-header-button-settings" class="main-header-button icon-settings" onclick="showSettings();"></button>
+
+        </div>
+
+        <div id="main-content">
+
+            <div id="main-content-shelf">
+
+                <div id="main-content-shelf-screen" class="main-content-shelf-screen-normal">
+
+                    <div id="main-content-shelf-screen-pulse"></div>
+                    <div id="main-content-shelf-screen-dose">0.0</div>
+                    <div id="main-content-shelf-screen-unit">µSv/h</div>
+
+                </div>
+
+                <div class="main-content-shelf-readings">
+
+                    <div id="main-content-shelf-readings-value-cps" class="main-content-shelf-readings-value"><b>0</b> CPS</div>
+                    <div id="main-content-shelf-readings-value-cpm" class="main-content-shelf-readings-value"><b>0</b> CPM</div>
+
+                </div>
+
+                <div id="main-content-shelf-separator-equivalent-doses" class="main-content-shelf-separator">Equivalent doses</div>
+
+                <div class="main-content-shelf-readings">
+
+                    <div id="main-content-shelf-readings-value-sieverts" class="main-content-shelf-readings-value"><b>0.0</b> µS/h</div>
+                    <div id="main-content-shelf-readings-value-rem" class="main-content-shelf-readings-value"><b>0.0</b> µrem/h</div>
+
+                </div>
+
+                <div class="main-content-shelf-readings">
+
+                    <div id="main-content-shelf-readings-value-rontgen" class="main-content-shelf-readings-value"><b>0.0</b> µR/h</div>
+                    <div id="main-content-shelf-readings-value-gray" class="main-content-shelf-readings-value"><b>0.0</b> µGy/h</div>
+
+                </div>
+
+                <div id="main-content-shelf-separator-radiation-rating" class="main-content-shelf-separator">Radiation rating</div>
+
+                <div id="main-content-shelf-rating">
+
+                    <div id="main-content-shelf-rating-icon" class="icon-radiation"></div>
+
+                    <div id="main-content-shelf-rating-content">
+
+                        <div id="main-content-shelf-rating-content-value">UNKNOWN</div>
+                        <div id="main-content-shelf-rating-content-description">Unknown radiation rating, which is indicative of a communication error.</div>
+
+                    </div>
+
+                </div>
+
+                <div id="main-content-shelf-separator-tube-statistics" class="main-content-shelf-separator">Tube statistics</div>
+
+                <div id="main-content-shelf-tubes">
+
+                    <div class="main-content-shelf-tubes-tube">
+
+                        <div id="main-content-shelf-tubes-tube-header-tube-info" class="main-content-shelf-tubes-tube-header">Tube info</div>
+
+                        <div class="main-content-shelf-tubes-tube-content">
+
+                            <div class="main-content-shelf-tubes-tube-content-reading">
+
+                                <div id="main-content-shelf-tubes-tube-content-reading-title-total-count" class="main-content-shelf-tubes-tube-content-reading-title">Total counts</div>
+                                <div id="main-content-shelf-tubes-tube-content-reading-value-total-count" class="main-content-shelf-tubes-tube-content-reading-value">0</div>
+    
+                            </div>
+    
+                            <div class="main-content-shelf-tubes-tube-content-reading">
+    
+                                <div id="main-content-shelf-tubes-tube-content-reading-title-number-of-tubes" class="main-content-shelf-tubes-tube-content-reading-title">Number of tubes</div>
+                                <div id="main-content-shelf-tubes-tube-content-reading-value-number-of-tubes" class="main-content-shelf-tubes-tube-content-reading-value">0</div>
+    
+                            </div>
+    
+                            <div class="main-content-shelf-tubes-tube-content-reading">
+    
+                                <div id="main-content-shelf-tubes-tube-content-reading-title-tube-type" class="main-content-shelf-tubes-tube-content-reading-title">Tube type</div>
+                                <div id="main-content-shelf-tubes-tube-content-reading-value-tube-type" class="main-content-shelf-tubes-tube-content-reading-value">Unknown</div>
+    
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="main-content-shelf-tubes-tube">
+
+                        <div id="main-content-shelf-tubes-tube-header-main-tube" class="main-content-shelf-tubes-tube-header">Main tube</div>
+
+                        <div class="main-content-shelf-tubes-tube-content">
+
+                            <div class="main-content-shelf-tubes-tube-content-reading">
+
+                                <div id="main-content-shelf-tubes-tube-content-reading-title-main-counts" class="main-content-shelf-tubes-tube-content-reading-title">Counts</div>
+                                <div id="main-content-shelf-tubes-tube-content-reading-value-main-counts" class="main-content-shelf-tubes-tube-content-reading-value">0</div>
+    
+                            </div>
+    
+                            <div class="main-content-shelf-tubes-tube-content-reading">
+    
+                                <div id="main-content-shelf-tubes-tube-content-reading-title-main-relative" class="main-content-shelf-tubes-tube-content-reading-title">Relative</div>
+                                <div id="main-content-shelf-tubes-tube-content-reading-value-main-relative" class="main-content-shelf-tubes-tube-content-reading-value">0 %</div>
+    
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="main-content-shelf-tubes-tube">
+
+                        <div id="main-content-shelf-tubes-tube-header-follower-tube" class="main-content-shelf-tubes-tube-header">Follower tube</div>
+
+                        <div class="main-content-shelf-tubes-tube-content">
+
+                            <div class="main-content-shelf-tubes-tube-content-reading">
+
+                                <div id="main-content-shelf-tubes-tube-content-reading-title-follower-counts" class="main-content-shelf-tubes-tube-content-reading-title">Counts</div>
+                                <div id="main-content-shelf-tubes-tube-content-reading-value-follower-counts" class="main-content-shelf-tubes-tube-content-reading-value">0</div>
+    
+                            </div>
+    
+                            <div class="main-content-shelf-tubes-tube-content-reading">
+    
+                                <div id="main-content-shelf-tubes-tube-content-reading-title-follower-relative" class="main-content-shelf-tubes-tube-content-reading-title">Relative</div>
+                                <div id="main-content-shelf-tubes-tube-content-reading-value-follower-relative" class="main-content-shelf-tubes-tube-content-reading-value">0 %</div>
+    
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    
+</body>
+
+</html>
