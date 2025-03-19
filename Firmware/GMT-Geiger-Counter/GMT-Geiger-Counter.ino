@@ -427,14 +427,15 @@ void dataFeedback() {
       geigerCounter.setIntegrationTime(60);
 
       // Get Geiger counter data
-      Logger::KeyValuePair geigerCounterData[6] = {
+      Logger::KeyValuePair geigerCounterData[7] = {
 
         {"counts",   Logger::UINT64_T, {.uint64_t_value = geigerCounter.getCounts()}                            },
         {"main",     Logger::UINT64_T, {.uint64_t_value = geigerCounter.getMainTubeCounts()}                    },
         {"follower", Logger::UINT64_T, {.uint64_t_value = geigerCounter.getFollowerTubeCounts()}                },
         {"cpm",      Logger::UINT64_T, {.uint64_t_value = (uint64_t)(round(geigerCounter.getCountsPerMinute()))}},
         {"usvh",     Logger::DOUBLE,   {.double_value   = geigerCounter.getMicrosievertsPerHour()}              },
-        {"tube",     Logger::STRING,   {.string_value   = TUBE_TYPE_NAME}                                       }
+        {"tubes",    Logger::UINT8_T,  {.uint8_t_value  = TOTAL_NUMBER_OF_TUBES}                                },
+        {"type",     Logger::STRING,   {.string_value   = TUBE_TYPE_NAME}                                       }
 
       };
 
@@ -442,7 +443,7 @@ void dataFeedback() {
       geigerCounter.setIntegrationTime(integrationTime);
 
       // Append the Geiger counter data
-      logger.getLogMessage("geigerCounter", geigerCounterData, 6, logMessage);
+      logger.getLogMessage("geigerCounter", geigerCounterData, 7, logMessage);
 
       // Log the log message
       logger.log(logMessage);
@@ -1302,7 +1303,7 @@ void sendGeigerCounterData() {
   geigerCounter.setIntegrationTime(60);
 
   // Get Geiger counter data
-  Logger::KeyValuePair data[8] = {
+  Logger::KeyValuePair data[9] = {
 
     {"enabled",     Logger::BOOL,     {.bool_value     = geigerCounter.enabled()}                 },
     {"counts",      Logger::UINT64_T, {.uint64_t_value = geigerCounter.getCounts()}               },
@@ -1311,7 +1312,8 @@ void sendGeigerCounterData() {
     {"cpm",         Logger::DOUBLE,   {.double_value   = geigerCounter.getCountsPerMinute()}      },
     {"usvh",        Logger::DOUBLE,   {.double_value   = geigerCounter.getMicrosievertsPerHour()} },
     {"rating",      Logger::UINT8_T,  {.uint8_t_value  = geigerCounter.getRadiationRating()}      },
-    {"tube",        Logger::STRING,   {.string_value   = TUBE_TYPE_NAME}                          }
+    {"tubes",       Logger::UINT8_T,  {.uint8_t_value  = TOTAL_NUMBER_OF_TUBES}                   },
+    {"type",        Logger::STRING,   {.string_value   = TUBE_TYPE_NAME}                          }
 
   };
 
@@ -1322,7 +1324,7 @@ void sendGeigerCounterData() {
   String json;
 
   // Construct the data string
-  logger.getLogMessage("geigerCounter", data, 8, json);
+  logger.getLogMessage("geigerCounter", data, 9, json);
 
   // Send JSON data
   wireless.server.send(200, "application/json", json);

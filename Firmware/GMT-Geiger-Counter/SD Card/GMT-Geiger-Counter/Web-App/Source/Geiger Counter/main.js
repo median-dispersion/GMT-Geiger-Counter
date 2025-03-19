@@ -1,17 +1,45 @@
+// ------------------------------------------------------------------------------------------------
+// Global variables
+
+let GEIGER_COUNTER_DATA      = {latest: {}, history: []};
+let LAST_UPDATE_MILLISECONDS = 0;
+
 // ================================================================================================
 // Initialization once the DOM has finished loading
 // ================================================================================================
 document.addEventListener("DOMContentLoaded", () => {
 
-    updateInputRange();
-    main();
+    initializeInputs();
+    initializeRangeSliders();
+    getData();
+    loop();
 
 });
 
 // ================================================================================================
-// Apply input range updates
+// Initialize all inputs
 // ================================================================================================
-function updateInputRange() {
+function initializeInputs() {
+    
+    // For all inputs
+    document.querySelectorAll("input").forEach(input => {
+
+        // Add an input event listener
+        input.addEventListener("input", () => {
+
+            // Whenever a user input is registered update all values on screen
+            setDOMElements();
+
+        });
+
+    });
+
+}
+
+// ================================================================================================
+// Initialize all range sliders
+// ================================================================================================
+function initializeRangeSliders() {
 
     // For all input ranges
     document.querySelectorAll("input[type='range']").forEach(range => {
@@ -62,23 +90,28 @@ function showError(message, title = "Error") {
     const titleElement       = document.getElementById("error-message-title");
     const descriptionElement = document.getElementById("error-message-description");
 
-    // Prevent page scrolling
-    document.body.style.overflow = "hidden"
-
-    // Remove old animation classes
-    errorElement.classList.remove("error-fade-out");
-    messageElement.classList.remove("error-message-scale-up");
-
     // Fill error message
     titleElement.innerHTML = title;
     descriptionElement.innerHTML = message;
 
-    // Render error element
-    errorElement.style.display = "flex";
-    
-    // Add animation classes
-    errorElement.classList.add("error-fade-in");
-    messageElement.classList.add("error-message-scale-up");
+    // If the error message is not already being rendered
+    if (window.getComputedStyle(errorElement).display != "flex") {
+        
+        // Remove old animation classes
+        errorElement.classList.remove("error-fade-out");
+        messageElement.classList.remove("error-message-scale-up");
+
+        // Add animation classes
+        errorElement.classList.add("error-fade-in");
+        messageElement.classList.add("error-message-scale-up");
+
+        // Prevent page scrolling
+        document.body.style.overflow = "hidden"
+
+        // Render error element
+        errorElement.style.display = "flex";
+
+    }
 
 }
 
@@ -88,32 +121,37 @@ function showError(message, title = "Error") {
 function hideError() {
 
     // Get DOM elements
-    const errorElement       = document.getElementById("error");
-    const messageElement     = document.getElementById("error-message");
+    const errorElement   = document.getElementById("error");
+    const messageElement = document.getElementById("error-message");
 
-    // Remove old animation classes
-    errorElement.classList.remove("error-fade-in");
-    
-    // Add animation classes
-    errorElement.classList.add("error-fade-out");
-
-    // Add an event listener that checks if the animation has finished playing
-    errorElement.addEventListener("animationend", function callback() {
-
-        // Hide error element
-        errorElement.style.display = "none";
+    // If the error message is visible
+    if (window.getComputedStyle(errorElement).display != "none") {
 
         // Remove old animation classes
-        errorElement.classList.remove("error-fade-out");
-        messageElement.classList.remove("error-message-scale-up");
+        errorElement.classList.remove("error-fade-in");
+        
+        // Add animation classes
+        errorElement.classList.add("error-fade-out");
 
-        // Allow page scrolling
-        document.body.style.overflow = "auto"
+        // Add an event listener that checks if the animation has finished playing
+        errorElement.addEventListener("animationend", function callback() {
 
-        // Remove the event listener
-        errorElement.removeEventListener("animationend", callback);
+            // Hide error element
+            errorElement.style.display = "none";
 
-    });
+            // Allow page scrolling
+            document.body.style.overflow = "auto"
+
+            // Remove old animation classes
+            errorElement.classList.remove("error-fade-out");
+            messageElement.classList.remove("error-message-scale-up");
+
+            // Remove the event listener
+            errorElement.removeEventListener("animationend", callback);
+
+        });
+
+    }
 
 }
 
@@ -178,9 +216,39 @@ function hideSettings() {
 }
 
 // ================================================================================================
+// Pulse the main screen
+// ================================================================================================
+function pulseScreen() {
+
+    // Get the pulse element
+    const pulseElement = document.getElementById("main-screen-pulse");
+
+    // Render the pulse element
+    pulseElement.style.display = "block";
+
+    // Add the animation class to start the animation
+    pulseElement.classList.add("main-screen-pulse-scale");
+
+    // Add an event listener that checks if the animation has finished playing
+    pulseElement.addEventListener("animationend", function callback(event) {
+
+        // Hide the pulse element
+        pulseElement.style.display = "none";
+
+        // Remove the animation class
+        pulseElement.classList.remove("main-screen-pulse-scale");
+
+        // Remove the event listener
+        pulseElement.removeEventListener("animationend", callback);
+
+    });
+
+}
+
+// ================================================================================================
 // Set the screen values
 // ================================================================================================
-function setScreen(data, readings) {
+function setDoseScreen(data, readings) {
 
     // Get DOM elements
     const selectedRadio = document.querySelector("input[name='screen-unit']:checked");
@@ -250,36 +318,6 @@ function setReadings(data) {
 }
 
 // ================================================================================================
-// Pulse the main screen
-// ================================================================================================
-function pulseScreen() {
-
-    // Get the pulse element
-    const pulseElement = document.getElementById("main-screen-pulse");
-
-    // Render the pulse element
-    pulseElement.style.display = "block";
-
-    // Add the animation class to start the animation
-    pulseElement.classList.add("main-screen-pulse-scale");
-
-    // Add an event listener that checks if the animation has finished playing
-    pulseElement.addEventListener("animationend", function callback(event) {
-
-        // Hide the pulse element
-        pulseElement.style.display = "none";
-
-        // Remove the animation class
-        pulseElement.classList.remove("main-screen-pulse-scale");
-
-        // Remove the event listener
-        pulseElement.removeEventListener("animationend", callback);
-
-    });
-
-}
-
-// ================================================================================================
 // Set the radiation rating
 // ================================================================================================
 function setRating(data) {
@@ -338,9 +376,18 @@ function setTubes(data) {
     const followerCountsElement   = document.getElementById("main-tube-content-value-follower-counts");
     const followerRelativeElement = document.getElementById("main-tube-content-value-follower-relative");
 
-    // Calculate relative values
-    const mainRelative     = Math.round((100 / data.counts) * data.main);
-    const followerRelative = Math.round((100 / data.counts) * data.follower);
+    // Relative values
+    let mainRelative     = 0;
+    let followerRelative = 0;
+
+    // Only do this if there are any counts (prevent division by 0)
+    if (data.counts > 0) {
+
+        // Calculate relative values
+        mainRelative     = Math.round((100 / data.counts) * data.main);
+        followerRelative = Math.round((100 / data.counts) * data.follower);
+
+    }
 
     // Fill elements
     totalCountsElement.innerHTML = data.counts;
@@ -354,9 +401,36 @@ function setTubes(data) {
 }
 
 // ================================================================================================
+// Update all DOM elements
+// ================================================================================================
+function setDOMElements() {
+
+    // If Geiger counter data is initialized
+    if (Object.keys(GEIGER_COUNTER_DATA.latest).length) {
+
+        // Get the latest Geiger counter message
+        const message = GEIGER_COUNTER_DATA.latest;
+
+        // Get the latest Geiger counter data
+        const data = message.data;
+
+        // Get the Geiger counter readings
+        const readings = getReadings(data);
+
+        // Update all window elements
+        setDoseScreen(data, readings);
+        setReadings(readings);
+        setRating(data);
+        setTubes(data);
+
+    }
+
+}
+
+// ================================================================================================
 // Calculate equivalent doses
 // ================================================================================================
-function calculateReadings(data) {
+function getReadings(data) {
     
     // Get DOM elements
     const autoRangeToggleElement = document.getElementById("settings-panel-content-section-toggle-input-auto-range-units");
@@ -419,7 +493,7 @@ function calculateReadings(data) {
 function getData() {
     
     // Geiger counter data URL
-    url = `${window.location.host}/data/geiger-counter`;
+    url = `${window.location.protocol}//${window.location.host}/data/geiger-counter`;
 
     // Request data
     fetch(url)
@@ -443,29 +517,37 @@ function getData() {
 
     })
 
-    // Handle new data
-    .then(data => {
+    // Handle new message
+    .then(message => {
 
-        // Log Geiger counter data
-        console.log(data);
+        // Log Geiger counter message
+        console.log(message);
 
         // If the Geiger counter is enabled
-        if (data.enabled) {
+        if (message.data.enabled) {
+
+            // If the message doesn't contain a date
+            if (!("date" in message)) {
+
+                // Append the current date to the Geiger counter message
+                message.date = new Date();
+
+            }
+
+            // Update the global Geiger counter data variable with the latest message
+            GEIGER_COUNTER_DATA.latest = message;
+
+            // Append the new geiger counter message to the history
+            GEIGER_COUNTER_DATA.history.push(message);
 
             // Hide any previous error messages
             hideError();
 
-            // Calculate Geiger counter readings
-            const readings = calculateReadings(data);
-
-            // Set all screen values
-            setScreen(data, readings);
-            setReadings(readings);
-            setRating(data);
-            setTubes(data);
-
             // Play pulse animation
             pulseScreen();
+
+            // Update all values
+            setDOMElements();
 
         // If the Geiger counter is disabled
         } else {
@@ -493,12 +575,23 @@ function getData() {
 // ================================================================================================
 // Main loop
 // ================================================================================================
-function main() {
-    
-    //getData();
+function loop() {
 
+    // Get DOM elements
     const update = document.getElementById("settings-panel-content-section-range-container-input-update-interval");
-    
-    setTimeout(main, update.value * 1000);
+
+    // If the last update time is greater or equal to the set update interval
+    if (performance.now() - LAST_UPDATE_MILLISECONDS >= update.value * 1000) {
+
+        // Get Geiger counter data
+        getData();
+
+        // Set the last update time
+        LAST_UPDATE_MILLISECONDS = performance.now();
+
+    }
+
+    // Loop forever
+    requestAnimationFrame(loop);
 
 }
