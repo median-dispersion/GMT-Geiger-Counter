@@ -146,8 +146,8 @@ void ScreenGeigerCounter::setRadiationRating(const GeigerCounter::RadiationRatin
     break;
 
     case GeigerCounter::RADIATION_RATING_ELEVATED:
-      _equivalentDoseScreen.setBorderColor(COLOR_GREEN_MEDIUM);
-      _equivalentDoseScreen.setBackgroundColor(COLOR_GREEN_DARK);
+      _equivalentDoseScreen.setBorderColor(COLOR_LIME_MEDIUM);
+      _equivalentDoseScreen.setBackgroundColor(COLOR_LIME_DARK);
       _radiationRating.setValue(STRING_RADIATION_RATING_ELEVATED);
     break;
 

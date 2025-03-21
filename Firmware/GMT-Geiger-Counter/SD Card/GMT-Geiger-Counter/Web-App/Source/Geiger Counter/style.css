@@ -34,6 +34,8 @@
     --color-red-medium-100:   rgba(192, 0,   0,   1.0);
     --color-green-dark-100:   rgba(0,   32,  8,   1.0);
     --color-green-medium-100: rgba(0,   160, 64,  1.0);
+    --color-lime-dark-100:    rgba(24,  32,  8,   1.0);
+    --color-lime-medium-100:  rgba(96,  160, 16,  1.0);
     --color-blue-dark-100:    rgba(0,   24,  56,  1.0);
     --color-blue-medium-100:  rgba(0,   128, 255, 1.0);
     --color-yellow-dark-100:  rgba(56,  40,  0,   1.0);
@@ -63,8 +65,8 @@
 
     --screen-color-normal-border:       var(--color-green-medium-100);
     --screen-color-normal-background:   var(--color-green-dark-100);
-    --screen-color-elevated-border:     var(--color-green-medium-100);
-    --screen-color-elevated-background: var(--color-green-dark-100);
+    --screen-color-elevated-border:     var(--color-lime-medium-100);
+    --screen-color-elevated-background: var(--color-lime-dark-100);
     --screen-color-medium-border:       var(--color-yellow-medium-100);
     --screen-color-medium-background:   var(--color-yellow-dark-100);
     --screen-color-high-border:         var(--color-red-medium-100);
@@ -781,6 +783,7 @@ b {
     border-style: solid;
     border-radius: var(--border-radius-default);
     box-shadow: var(--element-box-shadow);
+    transition: 300ms;
 
 }
 
@@ -816,6 +819,15 @@ b {
 
     border-color: var(--screen-color-extreme-border);
     background-color: var(--screen-color-extreme-background);
+    animation: animation-main-screen-extreme 500ms ease infinite;
+
+}
+
+@keyframes animation-main-screen-extreme {
+    
+    0%   { background-color: var(--screen-color-extreme-background); }
+    50%  { background-color: var(--screen-color-extreme-border);     }
+    100% { background-color: var(--screen-color-extreme-background); }
 
 }
 

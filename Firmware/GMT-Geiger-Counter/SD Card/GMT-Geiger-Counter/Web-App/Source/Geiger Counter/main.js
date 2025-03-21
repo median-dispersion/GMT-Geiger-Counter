@@ -9,9 +9,17 @@ let LAST_UPDATE_MILLISECONDS = 0;
 // ================================================================================================
 document.addEventListener("DOMContentLoaded", () => {
 
+    // Get stored settings
+    getSettings();
+
+    // Initialize all inputs
     initializeInputs();
     initializeRangeSliders();
+
+    // Get latest data
     getData();
+
+    // Loop forever
     loop();
 
 });
@@ -26,6 +34,9 @@ function initializeInputs() {
 
         // Add an input event listener
         input.addEventListener("input", () => {
+
+            // Store currently applied settings
+            setSettings();
 
             // Whenever a user input is registered update all values on screen
             setDOMElements();
@@ -248,7 +259,7 @@ function pulseScreen() {
 // ================================================================================================
 // Set the screen values
 // ================================================================================================
-function setDoseScreen(data, readings) {
+function setDoseScreen(rating, readings) {
 
     // Get DOM elements
     const selectedRadio = document.querySelector("input[name='screen-unit']:checked");
@@ -257,7 +268,7 @@ function setDoseScreen(data, readings) {
     const unitElement   = document.getElementById("main-screen-unit");
 
     // Depending on the rating set the appropriate screen color
-    switch (data.rating) {
+    switch (rating) {
 
         case 0:  screenElement.className = "main-screen-normal";   break;
         case 1:  screenElement.className = "main-screen-elevated"; break;
@@ -265,6 +276,7 @@ function setDoseScreen(data, readings) {
         case 3:  screenElement.className = "main-screen-high";     break;
         case 4:  screenElement.className = "main-screen-extreme";  break;
         default: screenElement.className = "main-screen-normal";   break;
+
     }
 
     // Depending on the selected screen unit set the appropriate value and unit
@@ -290,6 +302,11 @@ function setDoseScreen(data, readings) {
             unitElement.innerHTML = readings.gray.prefix + readings.gray.unit;
         break;
 
+        default:
+            doseElement.innerHTML = readings.sievert.value;
+            unitElement.innerHTML = readings.sievert.prefix + readings.sievert.unit;
+        break;
+
     }
 
 }
@@ -297,7 +314,7 @@ function setDoseScreen(data, readings) {
 // ================================================================================================
 // Set the readings
 // ================================================================================================
-function setReadings(data) {
+function setReadings(readings) {
     
     // Get DOM elements
     const cpsReadingElement     = document.getElementById("main-readings-value-cps");
@@ -308,26 +325,26 @@ function setReadings(data) {
     const grayReadingElement    = document.getElementById("main-readings-value-gray");
 
     // Fill readings
-    cpsReadingElement.innerHTML     = `<b>${data.cps.value}</b> ${data.cps.prefix}${data.cps.unit}`;
-    cpmReadingElement.innerHTML     = `<b>${data.cpm.value}</b> ${data.cpm.prefix}${data.cpm.unit}`;
-    sievertReadingElement.innerHTML = `<b>${data.sievert.value}</b> ${data.sievert.prefix}${data.sievert.unit}`;
-    remReadingElement.innerHTML     = `<b>${data.rem.value}</b> ${data.rem.prefix}${data.rem.unit}`;
-    rontgenReadingElement.innerHTML = `<b>${data.rontgen.value}</b> ${data.rontgen.prefix}${data.rontgen.unit}`;
-    grayReadingElement.innerHTML    = `<b>${data.gray.value}</b> ${data.gray.prefix}${data.gray.unit}`;
+    cpsReadingElement.innerHTML     = `<b>${readings.cps.value}</b> ${readings.cps.prefix}${readings.cps.unit}`;
+    cpmReadingElement.innerHTML     = `<b>${readings.cpm.value}</b> ${readings.cpm.prefix}${readings.cpm.unit}`;
+    sievertReadingElement.innerHTML = `<b>${readings.sievert.value}</b> ${readings.sievert.prefix}${readings.sievert.unit}`;
+    remReadingElement.innerHTML     = `<b>${readings.rem.value}</b> ${readings.rem.prefix}${readings.rem.unit}`;
+    rontgenReadingElement.innerHTML = `<b>${readings.rontgen.value}</b> ${readings.rontgen.prefix}${readings.rontgen.unit}`;
+    grayReadingElement.innerHTML    = `<b>${readings.gray.value}</b> ${readings.gray.prefix}${readings.gray.unit}`;
 
 }
 
 // ================================================================================================
 // Set the radiation rating
 // ================================================================================================
-function setRating(data) {
+function setRating(rating) {
     
     // Get DOM elements
     const ratingElement      = document.getElementById("main-radiation-rating-content-value");
     const descriptionElement = document.getElementById("main-radiation-rating-content-description");
 
     // Depending on the rating set the appropriate value and description
-    switch (data.rating) {
+    switch (rating) {
 
         case 0:
             ratingElement.innerHTML = "NORMAL";
@@ -418,13 +435,77 @@ function setDOMElements() {
         const readings = getReadings(data);
 
         // Update all window elements
-        setDoseScreen(data, readings);
+        setDoseScreen(data.rating, readings);
         setReadings(readings);
-        setRating(data);
+        setRating(data.rating);
         setTubes(data);
 
     }
 
+}
+
+// ================================================================================================
+// Store the applied settings
+// ================================================================================================
+function setSettings() {
+
+    // Get DOM elements
+    const autoRangeElement      = document.getElementById("settings-panel-content-section-toggle-input-auto-range-units");
+    const updateIntervalElement = document.getElementById("settings-panel-content-section-range-container-input-update-interval");
+    const selectedUnitElement   = document.querySelector("input[name='screen-unit']:checked");
+
+    // Construct JSON settings object
+    const settings = {
+
+        autoRange:      autoRangeElement.checked,
+        screenUnit:     selectedUnitElement.value,
+        updateInterval: updateIntervalElement.value
+
+    };
+
+    // Convert to JSON string and store in localStorage
+    localStorage.setItem("geigerCounterSettings", JSON.stringify(settings));
+
+}
+
+// ================================================================================================
+// Apply stored settings
+// ================================================================================================
+function getSettings() {
+
+    // Get DOM elements
+    const autoRangeElement      = document.getElementById("settings-panel-content-section-toggle-input-auto-range-units");
+    const updateIntervalElement = document.getElementById("settings-panel-content-section-range-container-input-update-interval");
+    const unitSievertElement    = document.getElementById("settings-panel-content-section-radio-input-sievert");
+    const unitRemElement        = document.getElementById("settings-panel-content-section-radio-input-rem");
+    const unitRontgenElement    = document.getElementById("settings-panel-content-section-radio-input-rontgen");
+    const unitGrayElement       = document.getElementById("settings-panel-content-section-radio-input-gray");
+
+    // Try to retrieve the stored settings
+    let settings = localStorage.getItem("geigerCounterSettings");
+
+    // Check if the settings exists
+    if (settings) {
+
+        // Convert settings string to JSON
+        settings = JSON.parse(settings);
+
+        // Apply settings
+        autoRangeElement.checked    = settings.autoRange;
+        updateIntervalElement.value = settings.updateInterval;
+
+        // Depending on the selected unit apply selected unit
+        switch (settings.screenUnit) {
+
+            case "sievert": unitSievertElement.checked = true; break;
+            case "rem":     unitRemElement.checked     = true; break;
+            case "rontgen": unitRontgenElement.checked = true; break;
+            case "gray":    unitGrayElement.checked    = true; break;
+
+        }
+
+    }
+    
 }
 
 // ================================================================================================
@@ -433,7 +514,7 @@ function setDOMElements() {
 function getReadings(data) {
     
     // Get DOM elements
-    const autoRangeToggleElement = document.getElementById("settings-panel-content-section-toggle-input-auto-range-units");
+    const autoRangeElement = document.getElementById("settings-panel-content-section-toggle-input-auto-range-units");
 
     // Construct and calculate reading objects
     let cps     = {value: data.cpm / 60,   prefix: "",  unit: "CPS"  };
@@ -444,7 +525,7 @@ function getReadings(data) {
     let gray    = {value: data.usvh,       prefix: "µ", unit: "Gy/h" };
 
     // If auto ranging units is enabled
-    if (autoRangeToggleElement.checked) {
+    if (autoRangeElement.checked) {
 
         // Function for auto ranging
         const autoRange = (reading) => {
