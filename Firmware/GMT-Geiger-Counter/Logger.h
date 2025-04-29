@@ -78,7 +78,7 @@ class Logger {
     Logger(const Logger&) = delete;
     Logger& operator=(const Logger&) = delete;
 
-    bool     _initialized;   // Flag for checking if SD card was initialized
+    bool     _initialized;   // Flag for checking if the logger was initialized
     bool     _serialLogging; // Flag for checking if serial logging is enabled
     bool     _sdCardLogging; // Flag for checking if SD card logging is enabled
     bool     _logLevels[3];  // Log level flags

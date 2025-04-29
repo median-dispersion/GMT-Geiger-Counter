@@ -262,8 +262,8 @@ void Logger::getLogMessage(const char *type, const KeyValuePair *data, const uin
 
   }
 
-  // Add the trailing "}}" to the message
-  message += "}}";
+  // Add the trailing "}}," to the message
+  message += "}},";
 
 }
 

@@ -1,6 +1,35 @@
 // ================================================================================================
+// Wireless setting
+// ================================================================================================
+
+// Wireless hotspot name / SSID
+// The name of the wireless hotspot the Geiger counter will create for wireless communication
+#define HOTSPOT_NAME "GMT-Geiger-Counter"
+
+// Wireless hotspot password
+// The password of the wireless hotspot the Geiger counter will create for wireless communication
+// This must be at least 8 characters long!
+// PLEASE CHANGE THIS FOR SECURITY!
+#define HOTSPOT_PASSWORD "Change-This-Immediately!1!1!"
+
+// WiFi name / SSID
+// The name of the default WiFi that the Geiger counter will try to connect to
+// This value is only used for the initial flash and can later be changed during runtime
+#define WIFI_NAME "Your-WiFi-Name"
+
+// WiFi password
+// The password of the default WiFi that the Geiger counter will try to connect to
+// This value is only used for the initial flash and can later be changed during runtime
+#define WIFI_PASSWORD "Your-WiFi-Password"
+
+// ================================================================================================
 // System setting
 // ================================================================================================
+
+// Interface language
+// Available options:
+// LANGUAGE_ENGLISH
+#define INTERFACE_LANGUAGE LANGUAGE_ENGLISH
 
 // The root directories on the SD card the Geiger counter will look for
 // This is used for all applications that require storage, like logging or the web interface
