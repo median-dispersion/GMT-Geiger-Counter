@@ -31,14 +31,21 @@
 // LANGUAGE_ENGLISH
 #define INTERFACE_LANGUAGE LANGUAGE_ENGLISH
 
-// The root directories on the SD card the Geiger counter will look for
+// Log interval in seconds
+// How often the data should be logged to the serial console and the SD card (if available)
+// This should be treated as long-term data acquisition and therefore should have a relatively high value >= 1 minute
+// Default: 60
+#define LOG_INTERVAL_SECONDS 60
+
+// The filesystem structure the Geiger counter is using
 // This is used for all applications that require storage, like logging or the web interface
 // The root directory will be used to detect if an SD card is present
-// The specific subdirectories are based on the root directory
+// The specific subdirectories and files are based on the root directory
 // These values should not be changed!
 #define SD_CARD_ROOT_DIRECTORY     "/GMT-Geiger-Counter"
 #define SD_CARD_LOG_DIRECTORY      SD_CARD_ROOT_DIRECTORY"/Logs"
 #define SD_CARD_WEB_APP_DIRECTORY  SD_CARD_ROOT_DIRECTORY"/Web-App"
+#define SD_CARD_SETTINGS_FILE      SD_CARD_ROOT_DIRECTORY"/Settings.bin"
 
 // The maximum log file size in bytes
 // If the log file reaches a size larger than this, it will be split up into parts
@@ -50,6 +57,11 @@
 // This value should not be changed!
 // Default: 115200
 #define SERIAL_BAUD_RATE 115200
+
+// Firmware version
+// This can be set to any arbitrary string
+// This value should not be changed!
+#define FIRMWARE_VERSION "GMTGC-REWRITE"
 
 // ================================================================================================
 // Pin assignments
