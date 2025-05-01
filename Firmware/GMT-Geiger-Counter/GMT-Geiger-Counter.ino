@@ -5,6 +5,7 @@
 #include "Wireless.h"
 #include "Settings.h"
 #include "GeigerCounter.h"
+#include "CosmicRayDetector.h"
 
 // ------------------------------------------------------------------------------------------------
 // Global
@@ -31,6 +32,7 @@ void setup() {
   wireless.begin();
   settings.begin();
   geigerCounter.begin();
+  cosmicRayDetector.begin();
 
   // Load user settings
   loadSettings();
@@ -133,7 +135,7 @@ void dataFeedback() {
     }
 
     // --------------------------------------------
-    // System data
+    // Geiger counter data
 
     // If the Geiger counter is enabled
     if (geigerCounter.getGeigerCounterState()) {
@@ -153,6 +155,27 @@ void dataFeedback() {
 
       // Log Geiger counter data
       logger.log(Logger::DATA, "geigerCounter", geigerCounterData, 7, message);
+
+    }
+
+    // --------------------------------------------
+    // Cosmic ray detector data
+
+    // If the cosmic ray detector is enabled
+    if (cosmicRayDetector.getCosmicRayDetectorSate()) {
+
+      // Get cosmic ray detector data
+      Logger::KeyValuePair cosmicRayDetectorData[4] = {
+
+        {"coincidenceEvents", Logger::UINT64_T, {.uint64_v = cosmicRayDetector.getCoincidenceEvents()}       },
+        {"eventsPerHour",     Logger::UINT32_T, {.uint32_v = cosmicRayDetector.getCoincidenceEventsPerHour()}},
+        {"mainCounts",        Logger::UINT64_T, {.uint64_v = cosmicRayDetector.getMainTubeCounts()}          },
+        {"followerCounts",    Logger::UINT64_T, {.uint64_v = cosmicRayDetector.getFollowerTubeCounts()}      }
+
+      };
+
+      // Log cosmic ray detector data
+      logger.log(Logger::DATA, "cosmicRayDetector", cosmicRayDetectorData, 4, message);
 
     }
 
