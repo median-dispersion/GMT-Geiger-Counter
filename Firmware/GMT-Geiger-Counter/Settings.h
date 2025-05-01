@@ -46,6 +46,19 @@ class Settings {
         } geigerCounter;
 
         // --------------------------------------------
+        // Buzzer parameter
+
+        struct BuzzerParameter {
+
+          bool alerts;
+          bool detections;
+          bool interface;
+          bool notifications;
+          bool muted;
+
+        } buzzer;
+
+        // --------------------------------------------
         // Wireless parameter
         
         struct WirelessParameter {

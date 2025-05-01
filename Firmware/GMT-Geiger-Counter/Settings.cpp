@@ -158,6 +158,15 @@ void Settings::reset() {
   data.parameters.geigerCounter.measurementUnit = GeigerCounter::SIEVERTS;
 
   // --------------------------------------------
+  // Buzzer parameter
+
+  data.parameters.buzzer.alerts        = true;
+  data.parameters.buzzer.detections    = true;
+  data.parameters.buzzer.interface     = true;
+  data.parameters.buzzer.notifications = true;
+  data.parameters.buzzer.muted         = false;
+
+  // --------------------------------------------
   // Wireless parameter
 
   data.parameters.wireless.hotspot = false;

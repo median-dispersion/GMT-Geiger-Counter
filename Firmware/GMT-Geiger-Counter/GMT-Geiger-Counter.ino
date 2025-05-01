@@ -6,6 +6,7 @@
 #include "Settings.h"
 #include "GeigerCounter.h"
 #include "CosmicRayDetector.h"
+#include "Buzzer.h"
 
 // ------------------------------------------------------------------------------------------------
 // Global
@@ -33,12 +34,16 @@ void setup() {
   settings.begin();
   geigerCounter.begin();
   cosmicRayDetector.begin();
+  buzzer.begin();
 
   // Load user settings
   loadSettings();
 
   // Enable the Geiger counter
   geigerCounter.enable();
+
+  // Play the power on jingle
+  buzzer.play(buzzer.jingle);
 
 }
 
@@ -50,11 +55,10 @@ void loop() {
   // Give data feedback
   dataFeedback();
 
-  // Update the wireless inteface
+  // Update all objects
   wireless.update();
-
-  // Update the user settings
   settings.update();
+  buzzer.update();
 
 }
 
@@ -84,6 +88,15 @@ void loadSettings() {
   geigerCounter.setAutoIntegrateState(settings.data.parameters.geigerCounter.autoIntegrate);
   geigerCounter.setAutoRangeState(settings.data.parameters.geigerCounter.autoRange);
   geigerCounter.setMeasurementUnit(settings.data.parameters.geigerCounter.measurementUnit);
+
+  // --------------------------------------------
+  // Buzzer settings
+
+  buzzer.alerts.setMuteState(settings.data.parameters.buzzer.alerts);
+  buzzer.detections.setMuteState(settings.data.parameters.buzzer.detections);
+  buzzer.interface.setMuteState(settings.data.parameters.buzzer.interface);
+  buzzer.notifications.setMuteState(settings.data.parameters.buzzer.notifications);
+  buzzer.setMuteState(settings.data.parameters.buzzer.muted);
 
   // --------------------------------------------
   // Wireless settings

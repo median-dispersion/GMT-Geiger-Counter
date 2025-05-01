@@ -62,6 +62,20 @@
 #define RADIATION_HISTORY_LENGTH_MINUTES 20
 
 // ================================================================================================
+// Buzzer / audio settings
+// ================================================================================================
+
+// The buzzers base frequency in Hertz
+// This should be provided by the buzzer manufacture
+// Most buzzers have a base frequency of around 2000 Hertz
+#define BUZZER_FREQUENCY_HERTZ 2400
+
+// The radiation level at which the buzzer starts playing the alert sounds
+// By default, they are tied to the radiation rating but can be set to any value in microsieverts per hour
+#define BUZZER_WARNING_LEVEL_USVH RADIATION_RATING_MEDIUM_USVH
+#define BUZZER_ALARM_LEVEL_USVH   RADIATION_RATING_HIGH_USVH
+
+// ================================================================================================
 // Wireless setting
 // ================================================================================================
 
