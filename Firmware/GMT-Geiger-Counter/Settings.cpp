@@ -141,11 +141,24 @@ void Settings::reset() {
 
   // Set all parameters to their default value
 
+  // --------------------------------------------
+  // Logger parameter
+
   data.parameters.logger.serial = true;
   data.parameters.logger.sdCard = true;
   data.parameters.logger.data   = true;
   data.parameters.logger.event  = true;
   data.parameters.logger.system = true;
+
+  // --------------------------------------------
+  // Geiger counter parameter
+
+  data.parameters.geigerCounter.autoIntegrate   = true;
+  data.parameters.geigerCounter.autoRange       = true;
+  data.parameters.geigerCounter.measurementUnit = GeigerCounter::SIEVERTS;
+
+  // --------------------------------------------
+  // Wireless parameter
 
   data.parameters.wireless.hotspot = false;
   data.parameters.wireless.wifi    = false;

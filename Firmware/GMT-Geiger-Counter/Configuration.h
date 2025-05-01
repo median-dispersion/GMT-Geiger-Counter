@@ -1,3 +1,66 @@
+// The main configuration file for the GMT-Geiger-Counter firmware
+
+// ================================================================================================
+// Geiger counter / tube settings
+// ================================================================================================
+
+// Enable pulse counting for a specific tube header
+// If only one tube is connected, disable the follower tube pin header
+// If two or more tubes are connected, split them evenly and enable both pin headers
+#define ENABLE_MAIN_TUBE     1
+#define ENABLE_FOLLOWER_TUBE 1
+
+// The total number of tubes connected to the motherboard (both main and follower)
+// This will be used to divide the equivalent dose by the number of tubes to get an accurate reading
+#define TOTAL_NUMBER_OF_TUBES 1
+
+// Conversion factor to convert counts per minute to microsieverts per hour
+// This is different for each type of tube and must be calculated from the datasheet
+// SMB-20: 0.008095385
+#define TUBE_CONVERSION_FACTOR_CPM_TO_USVH 0.008095385
+
+// CURRENTLY NOT USED, PLEASE IGNORE FOR NOW!
+// The average length of a pulse in microseconds
+// This is not the tube's dead time, but the length of the pulse the tube driver board generates
+// To get an accurate value for a specific tube type, use the Calibrate-Average-Pulse-Length firmware to measure it
+// SBM-20: 115 µs
+#define TUBE_PULSE_LENGTH_MICROSECONDS 115
+
+// Noise threshold, the minimum length in microseconds a pulse must be to count as an actual pulse
+// Anything shorter than that will be ignored as noise
+// This should be around 30% of the pulse length in microseconds
+#define TUBE_NOISE_THRESHOLD_MICROSECONDS 30
+
+// Name of the tube type
+// This can be set to an arbitrary string and is only used for logging
+#define TUBE_TYPE_NAME "SBM-20"
+
+// Radiation rating values in microsieverts per hour
+// These values are used to classify the recorded radiation level
+#define RADIATION_RATING_NORMAL_USVH   0.0
+#define RADIATION_RATING_ELEVATED_USVH 0.5
+#define RADIATION_RATING_MEDIUM_USVH   2.0
+#define RADIATION_RATING_HIGH_USVH     10.0
+#define RADIATION_RATING_EXTREME_USVH  20.0
+
+// The default integration time settings
+// The integration time is the number of seconds the Geiger counter will average over to calculate the CPM value
+// A shorter integration time gives more accurate values for high levels of radiation, a lower in integration time for lower levels
+// This will be adjusted automatically during runtime and can also be set manually through the user interface
+// These values should not be changed!
+#define INTEGRATION_TIME_AUTO_AVERAGE_SECONDS 30
+#define INTEGRATION_TIME_AUTO_MINIMUM_SECONDS 10
+#define INTEGRATION_TIME_AUTO_MAXIMUM_SECONDS 60
+#define INTEGRATION_TIME_AUTO_UPPER_BOUND     1.5
+#define INTEGRATION_TIME_AUTO_LOWER_BOUND     0.65
+#define INTEGRATION_TIME_STEP_SIZE_SECONDS    5
+
+// The number of minutes the radiation history screen displays
+// For a longer history graph increase the number of minutes
+// A very large history could lead to memory problems (be carefull)
+// Range: 5 - 250 minutes
+#define RADIATION_HISTORY_LENGTH_MINUTES 20
+
 // ================================================================================================
 // Wireless setting
 // ================================================================================================

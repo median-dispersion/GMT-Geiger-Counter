@@ -4,6 +4,7 @@
 #include "Arduino.h"
 #include "Configuration.h"
 #include "SDCard.h"
+#include "GeigerCounter.h"
 
 class Settings {
 
@@ -20,8 +21,10 @@ class Settings {
       
       struct Parameters {
 
-        // Logger parameters
-        struct Logger {
+        // --------------------------------------------
+        // Logger parameter
+
+        struct LoggerParameter {
 
           bool serial;
           bool sdCard;
@@ -30,9 +33,22 @@ class Settings {
           bool system;
 
         } logger;
+        
+        // --------------------------------------------
+        // Geiger counter parameter
 
-        // Wireless parameters
-        struct Wireless {
+        struct GeigerCounterParameter {
+
+          bool                           autoIntegrate;
+          bool                           autoRange;
+          GeigerCounter::MeasurementUnit measurementUnit;
+
+        } geigerCounter;
+
+        // --------------------------------------------
+        // Wireless parameter
+        
+        struct WirelessParameter {
 
           bool hotspot;
           bool wifi;

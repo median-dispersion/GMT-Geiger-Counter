@@ -4,6 +4,7 @@
 #include "SDCard.h"
 #include "Wireless.h"
 #include "Settings.h"
+#include "GeigerCounter.h"
 
 // ------------------------------------------------------------------------------------------------
 // Global
@@ -29,9 +30,13 @@ void setup() {
   sdCard.begin();
   wireless.begin();
   settings.begin();
+  geigerCounter.begin();
 
   // Load user settings
   loadSettings();
+
+  // Enable the Geiger counter
+  geigerCounter.enable();
 
 }
 
@@ -72,6 +77,13 @@ void loadSettings() {
   logger.setLogLevelState(Logger::SYSTEM, settings.data.parameters.logger.system);
 
   // --------------------------------------------
+  // Geiger counter settings
+
+  geigerCounter.setAutoIntegrateState(settings.data.parameters.geigerCounter.autoIntegrate);
+  geigerCounter.setAutoRangeState(settings.data.parameters.geigerCounter.autoRange);
+  geigerCounter.setMeasurementUnit(settings.data.parameters.geigerCounter.measurementUnit);
+
+  // --------------------------------------------
   // Wireless settings
 
   wireless.setHotspotState(settings.data.parameters.wireless.hotspot);
@@ -99,6 +111,7 @@ void dataFeedback() {
     // If system logging is enabled
     if (logger.getLogLevelState(Logger::SYSTEM)) {
 
+      // Get system data
       Logger::KeyValuePair systemData[10] = {
 
         {"upTime",   Logger::UINT64_T, {.uint64_v = millis()}                  },
@@ -114,8 +127,33 @@ void dataFeedback() {
 
       };
 
+      // Log system data
       logger.log(Logger::SYSTEM, "system", systemData, 10, message);
     
+    }
+
+    // --------------------------------------------
+    // System data
+
+    // If the Geiger counter is enabled
+    if (geigerCounter.getGeigerCounterState()) {
+
+      // Get Geiger counter data
+      Logger::KeyValuePair geigerCounterData[7] = {
+
+        {"counts",               Logger::UINT64_T, {.uint64_v = geigerCounter.getCounts()}                },
+        {"mainCounts",           Logger::UINT64_T, {.uint64_v = geigerCounter.getMainTubeCounts()}        },
+        {"followerCounts",       Logger::UINT64_T, {.uint64_v = geigerCounter.getFollowerTubeCounts()}    },
+        {"countsPerMinute",      Logger::DOUBLE_T, {.double_v = geigerCounter.getCountsPerMinute(60)}     },
+        {"microsievertsPerHour", Logger::DOUBLE_T, {.double_v = geigerCounter.getMicrosievertsPerHour(60)}},
+        {"tubes",                Logger::UINT8_T,  {.uint8_v  = TOTAL_NUMBER_OF_TUBES}                    },
+        {"tubeType",             Logger::STRING_T, {.string_v = TUBE_TYPE_NAME}                           }
+
+      };
+
+      // Log Geiger counter data
+      logger.log(Logger::DATA, "geigerCounter", geigerCounterData, 7, message);
+
     }
 
     logTimer = millis();
