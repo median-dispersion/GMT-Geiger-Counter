@@ -76,6 +76,61 @@
 #define BUZZER_ALARM_LEVEL_USVH   RADIATION_RATING_HIGH_USVH
 
 // ================================================================================================
+// Touchscreen / display setting
+// ================================================================================================
+
+// The touchscreen calibration matrix
+#define TOUCH_CALIBRATION {0.0893660,-0.0004446,-31.8194923,-0.0002766,0.0646709,-12.4398527,320,240,3}
+
+// The number of touch samples the touchscreen takes before returning a touch position
+// For more accurate touch readings, a higher value should be used
+// This value should not be changed!
+// Default: 20
+#define TOUCH_SAMPLE_COUNT 20
+
+// The time the touchscreen waits before accepting a new touch event
+// This can help mitigate erroneous double touch events when lifting from the touchscreen
+// This value should not be changed!
+// Default: 100
+#define TOUCH_DEBOUNCE_TIMEOUT_MILLISECONDS 100
+
+// The pressure threshold required before registering a touch event
+// A lower value means higher pressure needs to be applied before counting as a touch event
+// This value should not be changed!
+// Default: 3.5
+#define TOUCH_PRESSURE_THRESHOLD 3.5
+
+// Time until the display automatically turns off in seconds
+// If the auto timeout is enabled, the display will turn off after the specified time
+// For longer screen on time, increase this value
+// Default: 120 (2 min)
+#define DISPLAY_AUTO_TIMEOUT_SECONDS 120
+
+// The display width and height in pixels
+// These values should not be changed!
+// Default: 240 x 320
+#define DISPLAY_WIDTH  240
+#define DISPLAY_HEIGHT 320
+
+// Landscape screen rotation value
+// This is the rotation value for the landscape screen orientation
+// This value should not be changed!
+// Default: 3
+#define DISPLAY_SCREEN_ROTATION_LANDSCAPE 3
+
+// Portrait screen rotation value
+// This is the rotation value for the portrait screen orientation
+// This value should not be changed!
+// Default: 2
+#define DISPLAY_SCREEN_ROTATION_PORTRAIT 2
+
+// The displays refresh interval
+// This is the time in milliseconds the display waits before drawing a new frame
+// This value should not be changed!
+// Default: 500
+#define DISPLAY_REFRESH_INTERVAL_MILLISECONDS 500
+
+// ================================================================================================
 // Wireless setting
 // ================================================================================================
 

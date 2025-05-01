@@ -7,6 +7,7 @@
 #include "GeigerCounter.h"
 #include "CosmicRayDetector.h"
 #include "Buzzer.h"
+#include "Touchscreen.h"
 
 // ------------------------------------------------------------------------------------------------
 // Global
@@ -35,6 +36,7 @@ void setup() {
   geigerCounter.begin();
   cosmicRayDetector.begin();
   buzzer.begin();
+  touchscreen.begin();
 
   // Load user settings
   loadSettings();
@@ -59,6 +61,7 @@ void loop() {
   wireless.update();
   settings.update();
   buzzer.update();
+  touchscreen.update();
 
 }
 

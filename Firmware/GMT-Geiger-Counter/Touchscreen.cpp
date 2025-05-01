@@ -1,0 +1,231 @@
+#include "Touchscreen.h"
+
+// ------------------------------------------------------------------------------------------------
+// Public
+
+// Initialize global reference
+Touchscreen& touchscreen = Touchscreen::getInstance();
+
+// ================================================================================================
+// Get the single instance of the class
+// ================================================================================================
+Touchscreen& Touchscreen::getInstance() {
+
+  // Get the single instance
+  static Touchscreen instance;
+
+  // Return the instance
+  return instance;
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void Touchscreen::begin() {
+
+  // If not initialized
+  if (!_initialized) {
+
+    // Set initialization flag to true
+    _initialized = true;
+
+    // Setup pins for the touchscreen and display
+    pinMode(DISPLAY_CS_PIN, OUTPUT);
+    pinMode(TOUCH_CS_PIN, OUTPUT);
+    pinMode(DISPLAY_LED_PIN, OUTPUT);
+    digitalWrite(DISPLAY_CS_PIN, HIGH);
+    digitalWrite(TOUCH_CS_PIN, HIGH);
+    digitalWrite(DISPLAY_LED_PIN, LOW);
+
+    // Initialize logger
+    logger.begin();
+
+    // Setup display
+    _display.begin();
+    _display.fillScreen(ILI9341_BLACK);
+
+    // Set the frame buffer rotation
+    _canvas.setRotation(_rotation);
+
+    // Setup touch controller
+    _touch.begin();
+    _touch.setRotation(_rotation);
+    _touch.setCalibration(TOUCH_CALIBRATION);
+    _touch.setSampleCount(TOUCH_SAMPLE_COUNT);
+    _touch.setDebounceTimeout(TOUCH_DEBOUNCE_TIMEOUT_MILLISECONDS);
+    _touch.setTouchPressure(TOUCH_PRESSURE_THRESHOLD);
+
+    // Turn on the touchscreen
+    //enable();
+
+  }
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void Touchscreen::enable() {
+
+  // If not enabled
+  if (!_enabled) {
+
+    // Turn on the display LED
+    digitalWrite(DISPLAY_LED_PIN, HIGH);
+
+    // Set the enabled flag to true
+    _enabled = true;
+
+    // Create hardware event data
+    Logger::KeyValuePair event[2] = {
+
+      {"target", Logger::STRING_T, {.string_v = "touchscreen"}},
+      {"action", Logger::STRING_T, {.string_v = "enabled"}    }
+
+    };
+
+    // Event data log message
+    String message = "";
+
+    // Log hardware event data
+    logger.log(Logger::EVENT, "event", event, 2, message);
+
+  }
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void Touchscreen::disable() {
+
+  // If not disabled
+  if (_enabled) {
+
+    // Turn off the display LED
+    digitalWrite(DISPLAY_LED_PIN, LOW);
+
+    // Set the enabled flag to false
+    _enabled = false;
+
+    // Create hardware event data
+    Logger::KeyValuePair event[2] = {
+
+      {"target", Logger::STRING_T, {.string_v = "touchscreen"}},
+      {"action", Logger::STRING_T, {.string_v = "disabled"}   }
+
+    };
+
+    // Event data log message
+    String message = "";
+
+    // Log hardware event data
+    logger.log(Logger::EVENT, "event", event, 2, message);
+
+  }
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void Touchscreen::update() {
+
+  
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void Touchscreen::refresh() {
+
+  
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void Touchscreen::setTouchscreenState(const bool state) {
+
+  // Depending on the state either enable or disable the touchscreen
+  if (state) {
+
+    enable();
+
+  } else {
+
+    disable();
+
+  }
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void Touchscreen::setTimeoutState(const bool state) {
+
+  _timeout = state;
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void Touchscreen::setRotationLandscape() {
+
+  _rotation = DISPLAY_SCREEN_ROTATION_LANDSCAPE;
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void Touchscreen::setRotationPortrait() {
+
+  _rotation = DISPLAY_SCREEN_ROTATION_PORTRAIT;
+
+}
+
+
+// ================================================================================================
+// 
+// ================================================================================================
+bool Touchscreen::getTouchscreenState() {
+
+  return _enabled;
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+bool Touchscreen::getTimeoutState() {
+
+  return _timeout;
+
+}
+
+// ------------------------------------------------------------------------------------------------
+// Private
+
+// ================================================================================================
+// Constructor
+// ================================================================================================
+Touchscreen::Touchscreen():
+
+  // Initialize members
+  _initialized(false),
+  _display(DISPLAY_CS_PIN, DISPLAY_DC_PIN, DISPLAY_RST_PIN),
+  _canvas(DISPLAY_WIDTH, DISPLAY_HEIGHT),
+  _touch(TOUCH_CS_PIN, TOUCH_IRQ_PIN),
+  _enabled(false),
+  _rotation(DISPLAY_SCREEN_ROTATION_LANDSCAPE),
+  _timeout(true),
+  _lastTouchMilliseconds(0),
+  _lastRefreshMilliseconds(0)
+
+{}
