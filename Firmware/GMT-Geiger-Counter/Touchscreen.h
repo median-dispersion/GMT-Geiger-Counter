@@ -10,6 +10,16 @@
 #include "Screen.h"
 #include "ScreenSleep.h"
 #include "ScreenGeigerCounter.h"
+#include "ScreenGeigerCounterSettings1.h"
+#include "ScreenGeigerCounterSettings2.h"
+#include "ScreenAudioSettings.h"
+#include "ScreenDisplaySettings.h"
+#include "ScreenRotationConfirmation.h"
+#include "ScreenCosmicRayDetector.h"
+#include "ScreenTrueRNG.h"
+#include "ScreenHotspotSettings.h"
+#include "ScreenWiFiSettings.h"
+#include "ScreenSystemSettings.h"
 
 class Touchscreen {
 
@@ -19,7 +29,17 @@ class Touchscreen {
   public:
 
     // Screens
-    ScreenGeigerCounter geigerCounter; // Geiger counter screen
+    ScreenGeigerCounter          geigerCounter;         // Geiger counter screen
+    ScreenGeigerCounterSettings1 geigerCounterSetting1; // Geiger counter settings 1 screen
+    ScreenGeigerCounterSettings2 geigerCounterSetting2; // Geiger counter settings 2 screen
+    ScreenAudioSettings          audioSettings;         // Audio settings screen
+    ScreenDisplaySettings        displaySettings;       // Display settings screen
+    ScreenRotationConfirmation   rotationConfirmation;  // Rotation confirmation screen
+    ScreenCosmicRayDetector      cosmicRayDetector;     // Cosmic ray detector screen
+    ScreenTrueRNG                trueRNG;               // True RNG screen
+    ScreenHotspotSettings        hotspotSettings;       // Hotspot settings screen
+    ScreenWiFiSettings           wifiSettings;          // WiFi settings screen
+    ScreenSystemSettings         systemSettings;        // System settings screen
 
     // Get the single instance of the class
     static Touchscreen& getInstance();
