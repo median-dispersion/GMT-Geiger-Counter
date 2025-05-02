@@ -7,6 +7,9 @@
 #include "Adafruit_ILI9341.h"
 #include "Adafruit_GFX.h"
 #include "XPT2046.h"
+#include "Screen.h"
+#include "ScreenSleep.h"
+#include "ScreenGeigerCounter.h"
 
 class Touchscreen {
 
@@ -14,6 +17,9 @@ class Touchscreen {
   // Public
 
   public:
+
+    // Screens
+    ScreenGeigerCounter geigerCounter; // Geiger counter screen
 
     // Get the single instance of the class
     static Touchscreen& getInstance();
@@ -23,6 +29,10 @@ class Touchscreen {
     void disable();
     void update();
     void refresh();
+    void draw(Screen &screen);
+    void draw(Screen *screen);
+    void sleep();
+    void wakeup();
     void setTouchscreenState(const bool state);
     void setTimeoutState(const bool state);
     void setRotationLandscape();
@@ -40,6 +50,9 @@ class Touchscreen {
     Touchscreen(const Touchscreen&) = delete;
     Touchscreen& operator=(const Touchscreen&) = delete;
 
+    // Sleep screen
+    ScreenSleep _sleep;
+
     bool             _initialized;             // Flag for checking if touchscreen was initialized
     Adafruit_ILI9341 _display;                 // Display object
     GFXcanvas16      _canvas;                  // Frame buffer object
@@ -49,6 +62,8 @@ class Touchscreen {
     bool             _timeout;                 // Flag for checking if auto timeout is enabled
     uint64_t         _lastTouchMilliseconds;   // Variable for keeping track of when the last touch event occurred
     uint64_t         _lastRefreshMilliseconds; // Timer for refreshing the display
+    Screen           *_screen;                 // Pointer to the current screen
+    Screen           *_previousScreen;         // Pointer to the previous screen
 
 };
 

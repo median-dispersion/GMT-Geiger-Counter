@@ -1,7 +1,27 @@
 #ifndef _STRINGS_ENGLISH_H
 #define _STRINGS_ENGLISH_H
 
-#define STRING_CONNECTING    "Connecting..."
-#define STRING_NOT_CONNECTED "Not connected"
+#define STRING_GEIGER_COUNTER_SCREEN_TITLE          "Beta & Gamma - GMT Geiger Counter"
+#define STRING_RADIATION_RATING_NORMAL              "Normal"
+#define STRING_RADIATION_RATING_ELEVATED            "Elevated"
+#define STRING_RADIATION_RATING_MEDIUM              "Medium"
+#define STRING_RADIATION_RATING_HIGH                "High"
+#define STRING_RADIATION_RATING_EXTREME             "EXTREME"
+#define STRING_MICRO_SIEVERTS_PER_HOUR_ABBREVIATION "uSv/h"
+#define STRING_MILLI_SIEVERTS_PER_HOUR_ABBREVIATION "mSv/h"
+#define STRING_SIEVERTS_PER_HOUR_ABBREVIATION       "Sv/h"
+#define STRING_MICRO_REM_PER_HOUR_ABBREVIATION      "urem/h"
+#define STRING_MILLI_REM_PER_HOUR_ABBREVIATION      "mrem/h"
+#define STRING_REM_PER_HOUR_ABBREVIATION            "rem/h"
+#define STRING_MICRO_RONTGEN_PER_HOUR_ABBREVIATION  "uR/h"
+#define STRING_MILLI_RONTGEN_PER_HOUR_ABBREVIATION  "mR/h"
+#define STRING_RONTGEN_PER_HOUR_ABBREVIATION        "R/h"
+#define STRING_MICRO_GRAY_PER_HOUR_ABBREVIATION     "uGy/h"
+#define STRING_MILLI_GRAY_PER_HOUR_ABBREVIATION     "mGy/h"
+#define STRING_GRAY_PER_HOUR_ABBREVIATION           "Gy/h"
+#define STRING_COUNTS_PER_MINUTE_ABBREVIATION       "CPM"
+#define STRING_SECONDS_ABBREVIATION                 "s"
+#define STRING_CONNECTING                           "Connecting..."
+#define STRING_NOT_CONNECTED                        "Not connected"
 
 #endif
