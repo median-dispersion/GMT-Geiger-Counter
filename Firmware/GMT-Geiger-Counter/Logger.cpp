@@ -259,8 +259,8 @@ void Logger::getLogMessage(const char *type, const KeyValuePair *data, const uin
 
   }
 
-  // Add the trailing "}}," to the message
-  message += "}},";
+  // Add the trailing "}}" to the message
+  message += "}}";
 
 }
 
@@ -285,6 +285,9 @@ void Logger::log(const LogLevel level, const char *type, const KeyValuePair *dat
       Serial.println(message);
 
     }
+
+    // Add a "," to the end of the log message
+    message += ",";
 
     // If SD card logging is enabled
     if (_sdCardLogging) {

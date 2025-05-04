@@ -7,6 +7,7 @@
 #include "CosmicRayDetector.h"
 #include "Buzzer.h"
 #include "Touchscreen.h"
+#include "Wireless.h"
 
 // ------------------------------------------------------------------------------------------------
 // Global
@@ -80,12 +81,19 @@ void setup() {
   cosmicRayDetector.begin();
   buzzer.begin();
   touchscreen.begin();
+  wireless.begin();
 
   // Set touch actions
   setTouchActions();
 
   // Load and set the user settings
   setUserSettings();
+
+  // Assign web server endpoints
+  wireless.server.on("/data/geiger-counter",      sendGeigerCounterData    );
+  wireless.server.on("/data/cosmic-ray-detector", sendCosmicRayDetectorData);
+  wireless.server.on("/data/log",                 sendLogFileData          );
+  wireless.server.on("/data/system",              sendSystemInfoData       );
 
   // Enable geiger counter
   geigerCounter.enable();
@@ -111,6 +119,9 @@ void loop() {
 
   // Update user settings
   settings.update();
+
+  // Update wireless interface
+  wireless.update();
 
 }
 
@@ -230,6 +241,18 @@ void setTouchActions() {
   touchscreen.systemSettings.systemLogging.action = toggleSystemInfoLogging;
 
   // --------------------------------------------
+  // Hotspot settings touch actions
+
+  touchscreen.hotspotSettings.back.action   = displayGeigerCounter;
+  touchscreen.hotspotSettings.enable.action = toggleHotspotState;
+
+  // --------------------------------------------
+  // WiFi settings touch actions
+
+  touchscreen.wifiSettings.back.action   = displayGeigerCounter;
+  touchscreen.wifiSettings.enable.action = toggleWiFiSate;
+  
+  // --------------------------------------------
   // Sleep screen actions
 
   touchscreen.sleepScreen.wakeup.action = wakeFromSleep;
@@ -273,6 +296,12 @@ void setUserSettings() {
   // Display settings
 
   touchscreen.setTimeoutState(settings.data.parameters.display.timeout);
+
+  // --------------------------------------------
+  // Wireless settings
+
+  wireless.setHotspotState(settings.data.parameters.wireless.hotspot);
+  // wireless.setWiFiState(settings.data.parameters.wireless.wifi);
 
 }
 
@@ -344,9 +373,22 @@ void visualFeedback() {
   touchscreen.cosmicRayDetector.setFollowerTubeCounts(cosmicRayDetector.getFollowerTubeCounts());
 
   // --------------------------------------------
-  // Radiation history screen screen
+  // Radiation history screen
 
   touchscreen.radiationHistory.setRadiationHistory(geigerCounter.getHistory(), geigerCounter.getHistoryIndex());
+
+  // --------------------------------------------
+  // Hotspot screen
+
+  touchscreen.hotspotSettings.enable.setToggleState(wireless.getHotspotState());
+  touchscreen.hotspotSettings.setIPAddress(wireless.getHotspotIPAddress());
+
+  // --------------------------------------------
+  // WiFi screen
+
+  touchscreen.wifiSettings.enable.setToggleState(wireless.getWiFiState());
+  touchscreen.wifiSettings.setWiFiName(wireless.getWiFiName());
+  touchscreen.wifiSettings.setIPAddress(wireless.getWiFiIPAddress());
 
   // --------------------------------------------
   // System settings screen
@@ -1072,12 +1114,46 @@ void toggleDisplayAutoTimeout(const bool toggled) {
 // ================================================================================================
 // 
 // ================================================================================================
-void toggleHotspotState(const bool toggled) {}
+void toggleHotspotState(const bool toggled) {
+
+  // Set the new state
+  wireless.setHotspotState(toggled);
+
+  // Update settings
+  settings.data.parameters.wireless.hotspot = toggled;
+
+  // Change state
+  touchscreen.hotspotSettings.setIPAddress(wireless.getHotspotIPAddress());
+
+  // Update the touchscreen
+  touchscreen.refresh();
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
+
+}
 
 // ================================================================================================
 // 
 // ================================================================================================
-void toggleWiFiSate(const bool toggled) {}
+void toggleWiFiSate(const bool toggled) {
+
+  // Set the new state
+  wireless.setWiFiState(toggled);
+
+  // Update settings
+  settings.data.parameters.wireless.wifi = toggled;
+
+  // Change state
+  touchscreen.wifiSettings.setIPAddress(wireless.getWiFiIPAddress());
+
+  // Update the touchscreen
+  touchscreen.refresh();
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
+
+}
 
 // ================================================================================================
 // 
@@ -1169,5 +1245,157 @@ void toggleSystemInfoLogging(const bool toggled) {
 
   // Play a sound
   buzzer.play(buzzer.tap);
+
+}
+
+// ------------------------------------------------------------------------------------------------
+// Web server actions
+
+// ================================================================================================
+// 
+// ================================================================================================
+void sendGeigerCounterData() {
+
+  // Get data
+  Logger::KeyValuePair data[9] = {
+
+    {"enabled",               Logger::BOOL_T,   {.bool_v   = geigerCounter.getGeigerCounterState()}    },
+    {"counts",                Logger::UINT64_T, {.uint64_v = geigerCounter.getCounts()}                },
+    {"mainCounts",            Logger::UINT64_T, {.uint64_v = geigerCounter.getMainTubeCounts()}        },
+    {"followerCounts",        Logger::UINT64_T, {.uint64_v = geigerCounter.getFollowerTubeCounts()}    },
+    {"countsPerMinute",       Logger::DOUBLE_T, {.double_v = geigerCounter.getCountsPerMinute(60)}     },
+    {"microsievertsPerHour",  Logger::DOUBLE_T, {.double_v = geigerCounter.getMicrosievertsPerHour(60)}},
+    {"rating",                Logger::UINT8_T,  {.uint8_v  = geigerCounter.getRadiationRating()}       },
+    {"tubes",                 Logger::UINT8_T,  {.uint8_v  = TOTAL_NUMBER_OF_TUBES}                    },
+    {"tubeType",              Logger::STRING_T, {.string_v = TUBE_TYPE_NAME}                           }
+
+  };
+
+  // JSON data string
+  String json;
+
+  // Construct the data string
+  logger.getLogMessage("geigerCounter", data, 9, json);
+
+  // Send JSON data
+  wireless.server.send(200, "application/json", json);
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void sendCosmicRayDetectorData() {
+
+  // Get data
+  Logger::KeyValuePair data[6] = {
+
+    {"enabled",           Logger::BOOL_T,   {.bool_v   = cosmicRayDetector.getCosmicRayDetectorState()}  },
+    {"coincidenceEvents", Logger::UINT64_T, {.uint64_v = cosmicRayDetector.getCoincidenceEvents()}       },
+    {"eventsTotal",       Logger::UINT64_T, {.uint64_v = cosmicRayDetector.getCoincidenceEventsTotal()}  },
+    {"eventsPerHour",     Logger::UINT32_T, {.uint32_v = cosmicRayDetector.getCoincidenceEventsPerHour()}},
+    {"mainCounts",        Logger::UINT64_T, {.uint64_v = cosmicRayDetector.getMainTubeCounts()}          },
+    {"followerCounts",    Logger::UINT64_T, {.uint64_v = cosmicRayDetector.getFollowerTubeCounts()}      }
+    
+
+  };
+
+  // JSON data string
+  String json;
+
+  // Construct the data string
+  logger.getLogMessage("cosmicRayDetector", data, 6, json);
+
+  // Send JSON data
+  wireless.server.send(200, "application/json", json);
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void sendLogFileData() {
+
+  // If the SD card is mounted
+  if (sdCard.getMountState()) {
+
+    // Flag for checking if log file was found
+    bool found = false;
+
+    // Get the log file path
+    const char *logFilePath = logger.getLogFilePath();
+
+    // Check if log file exists
+    if (sdCard.exists(logFilePath)) {
+
+      // Open log file
+      File file = sdCard.open(logFilePath);
+
+      // If log file was successfully accessed
+      if (file) {
+
+        // Stream the log file data to the HTTP client
+        wireless.server.streamFile(file, "text/plain");
+
+        // Set the found flag to true
+        found = true;
+
+      }
+
+      // Close the log file
+      file.close();
+
+    }
+
+    // If the log file was not found
+    if (!found) {
+
+      // Return with a 404 - Not found!
+      wireless.server.send(404, "text/plain", "404 - Not found!");
+
+    }
+
+  } else {
+
+    // Return with a 500 - No SD Card Mounted!
+    wireless.server.send(500, "text/plain", "500 - No SD Card Mounted!");
+
+  }
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void sendSystemInfoData() {
+
+  // Get data
+  Logger::KeyValuePair data[14] = {
+
+    {"upTime",            Logger::UINT64_T, {.uint64_v = millis()}                                     },
+    {"heapSize",          Logger::UINT32_T, {.uint32_v = ESP.getHeapSize()}                            },
+    {"freeHeap",          Logger::UINT32_T, {.uint32_v = ESP.getFreeHeap()}                            },
+    {"minHeap",           Logger::UINT32_T, {.uint32_v = ESP.getMinFreeHeap()}                         },
+    {"maxBlock",          Logger::UINT32_T, {.uint32_v = ESP.getMaxAllocHeap()}                        },
+    {"sdCard",            Logger::BOOL_T,   {.bool_v   = sdCard.getMountState()}                       },
+    {"geigerCounter",     Logger::BOOL_T,   {.bool_v   = geigerCounter.getGeigerCounterState()}        },
+    {"cosmicRayDetector", Logger::BOOL_T,   {.bool_v   = cosmicRayDetector.getCosmicRayDetectorState()}},
+    {"buzzer",            Logger::BOOL_T,   {.bool_v   = !buzzer.getMuteState()}                       },
+    {"touchscreen",       Logger::BOOL_T,   {.bool_v   = touchscreen.getTouchscreenState()}            },
+    {"hotspot",           Logger::BOOL_T,   {.bool_v   = wireless.getHotspotState()}                   },
+    {"wifi",              Logger::BOOL_T,   {.bool_v   = wireless.getWiFiState()}                      },
+    {"server",            Logger::BOOL_T,   {.bool_v   = wireless.getServerState()}                    },
+    {"firmware",          Logger::STRING_T, {.string_v = FIRMWARE_VERSION}                             }
+
+  };
+
+  // JSON data string
+  String json;
+
+  // Construct the data string
+  logger.getLogMessage("system", data, 14, json);
+
+  // Send JSON data
+  wireless.server.send(200, "application/json", json);
 
 }
