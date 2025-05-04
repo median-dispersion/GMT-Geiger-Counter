@@ -69,5 +69,9 @@
 #define STRING_LOG_DATA                             "Log data"
 #define STRING_LOG_EVENT_MESSAGES                   "Log event messages"
 #define STRING_LOG_SYSTEM_INFO                      "Log system info"
+#define STRING_FIRMWARE_VERSION                     "Firmware version"
+#define STRING_SYSTEM_UPTIME                        "System uptime"
+#define STRING_MINUTES_ABBREVIATION                 "min"
+#define STRING_MEMORY_USAGE_BYTES                   "Memory usage (Bytes)"
 
 #endif

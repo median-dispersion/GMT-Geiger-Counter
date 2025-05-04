@@ -1,5 +1,5 @@
-#ifndef _SCREEN_SYSTEM_SETTINGS_H
-#define _SCREEN_SYSTEM_SETTINGS_H
+#ifndef _SCREEN_SYSTEM_SETTINGS_1_H
+#define _SCREEN_SYSTEM_SETTINGS_1_H
 
 #include "Arduino.h"
 #include "Configuration.h"
@@ -10,7 +10,7 @@
 #include "TouchToggle.h"
 #include "DisplayToastBox.h"
 
-class ScreenSystemSettings: public ScreenBasicLandscape {
+class ScreenSystemSettings1: public ScreenBasicLandscape {
 
   //-----------------------------------------------------------------------------------------------
   // Public
@@ -18,6 +18,8 @@ class ScreenSystemSettings: public ScreenBasicLandscape {
   public:
 
     // Screen elements
+    TouchIcon next;
+    TouchIcon previous;
     TouchToggle sdCardMounted;
     TouchToggle serialLogging;
     TouchToggle sdCardLogging;
@@ -26,18 +28,11 @@ class ScreenSystemSettings: public ScreenBasicLandscape {
     TouchToggle systemLogging;
 
     // Constructor
-    ScreenSystemSettings();
+    ScreenSystemSettings1();
 
     // Update and draw calls
     void update(const XPT2046::Point &position) override;
     void draw(GFXcanvas16 &canvas) override;
-
-  //-----------------------------------------------------------------------------------------------
-  // Private
-
-  private:
-
-    
 
 };
 

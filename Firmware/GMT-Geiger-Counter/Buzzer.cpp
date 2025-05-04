@@ -24,8 +24,19 @@ Buzzer& Buzzer::getInstance() {
 // ================================================================================================
 void Buzzer::begin() {
 
-  // Initialize melody
-  _audio.begin();
+  // If not initalized
+  if (!_initalized) {
+
+    // Set initialization flag to true
+    _initalized = true;
+
+    // Initialize logger
+    logger.begin();
+
+    // Initialize melody
+    _audio.begin();
+
+  }
 
 }
 
@@ -47,6 +58,17 @@ void Buzzer::mute() {
   // Mute the buzzer
   _muted = true;
 
+  // Create event data
+  Logger::KeyValuePair event[2] = {
+
+    {"source", Logger::STRING_T, {.string_v = "buzzer"}},
+    {"muted",  Logger::BOOL_T,   {.bool_v   = _muted}  }
+
+  };
+
+  // Log event message
+  logger.log(Logger::EVENT, "event", event, 2);
+
 }
 
 // ================================================================================================
@@ -56,6 +78,17 @@ void Buzzer::unmute() {
 
   // Unmute the buzzer
   _muted = false;
+
+  // Create event data
+  Logger::KeyValuePair event[2] = {
+
+    {"source", Logger::STRING_T, {.string_v = "buzzer"}},
+    {"muted",  Logger::BOOL_T,   {.bool_v   = _muted}  }
+
+  };
+
+  // Log event message
+  logger.log(Logger::EVENT, "event", event, 2);
 
 }
 

@@ -4,6 +4,7 @@
 #include "Arduino.h"
 #include "Configuration.h"
 #include "NonBlockingMelody.h"
+#include "Logger.h"
 #include "Channel.h"
 #include "Melody.h"
 
@@ -61,8 +62,9 @@ class Buzzer {
     Buzzer(const Buzzer&) = delete;
     Buzzer& operator=(const Buzzer&) = delete;
 
-    bool              _muted; // Flag for checking if the buzzer is muted
-    NonBlockingMelody _audio; // Audio player object
+    bool              _initalized; // Flag for checking if buzzer is initalized
+    bool              _muted;      // Flag for checking if the buzzer is muted
+    NonBlockingMelody _audio;      // Audio player object
 
 };
 

@@ -21,7 +21,8 @@
 #include "ScreenTrueRNG.h"
 #include "ScreenHotspotSettings.h"
 #include "ScreenWiFiSettings.h"
-#include "ScreenSystemSettings.h"
+#include "ScreenSystemSettings1.h"
+#include "ScreenSystemSettings2.h"
 
 class Touchscreen {
 
@@ -43,7 +44,8 @@ class Touchscreen {
     ScreenTrueRNG                  trueRNG;
     ScreenHotspotSettings          hotspotSettings;
     ScreenWiFiSettings             wifiSettings;
-    ScreenSystemSettings           systemSettings;
+    ScreenSystemSettings1          systemSettings1;
+    ScreenSystemSettings2          systemSettings2;
 
     // Get the single instance of the class
     static Touchscreen& getInstance();

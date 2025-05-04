@@ -17,6 +17,7 @@ bool     playedDoseWarning     = false;
 uint64_t lastCounts            = 0;
 uint64_t lastCoincidenceEvents = 0;
 bool     lastBuzzerMuteState   = false;
+uint64_t logTimer              = 0;
 
 // Function prototypes
 void setup();
@@ -25,6 +26,7 @@ void setTouchActions();
 void setUserSettings();
 void audioFeedback();
 void visualFeedback();
+void dataFeedback();
 void goToSleep();
 void wakeFromSleep();
 void geigerCounterDecreaseIntegrationTime();
@@ -45,7 +47,8 @@ void displayRadiationHistory();
 void displayTrueRNG();
 void displayHotspotSettings();
 void displayWiFiSettings();
-void displaySystemSettings();
+void displaySystemSettings1();
+void displaySystemSettings2();
 void selectGeigerCounterSieverts();
 void selectGeigerCounterRem();
 void selectGeigerCounterRontgen();
@@ -117,6 +120,9 @@ void loop() {
   // Visual feedback
   visualFeedback();
 
+  // Data feedback
+  dataFeedback();
+
   // Update user settings
   settings.update();
 
@@ -148,7 +154,7 @@ void setTouchActions() {
   touchscreen.geigerCounter.trueRNG.action                 = displayTrueRNG;
   touchscreen.geigerCounter.hotspotSettings.action         = displayHotspotSettings;
   touchscreen.geigerCounter.wifiSettings.action            = displayWiFiSettings;
-  touchscreen.geigerCounter.systemSettings.action          = displaySystemSettings;
+  touchscreen.geigerCounter.systemSettings.action          = displaySystemSettings1;
 
   // --------------------------------------------
   // Geiger counter settings 1 touch actions
@@ -230,15 +236,24 @@ void setTouchActions() {
   touchscreen.wifiSettings.enable.action = toggleWiFiSate;
 
   // --------------------------------------------
-  // System settings touch actions
+  // System settings 1 touch actions
 
-  touchscreen.systemSettings.back.action          = displayGeigerCounter;
-  touchscreen.systemSettings.sdCardMounted.action = toggleSystemSDCardMount;
-  touchscreen.systemSettings.serialLogging.action = toggleSystemSerialLogging;
-  touchscreen.systemSettings.sdCardLogging.action = toggleSystemSDCardLogging;
-  touchscreen.systemSettings.dataLogging.action   = toggleSystemDataLogging;
-  touchscreen.systemSettings.eventLogging.action  = toggleSystemEventLogging;
-  touchscreen.systemSettings.systemLogging.action = toggleSystemInfoLogging;
+  touchscreen.systemSettings1.back.action          = displayGeigerCounter;
+  touchscreen.systemSettings1.next.action          = displaySystemSettings2;
+  touchscreen.systemSettings1.previous.action      = displaySystemSettings2;
+  touchscreen.systemSettings1.sdCardMounted.action = toggleSystemSDCardMount;
+  touchscreen.systemSettings1.serialLogging.action = toggleSystemSerialLogging;
+  touchscreen.systemSettings1.sdCardLogging.action = toggleSystemSDCardLogging;
+  touchscreen.systemSettings1.dataLogging.action   = toggleSystemDataLogging;
+  touchscreen.systemSettings1.eventLogging.action  = toggleSystemEventLogging;
+  touchscreen.systemSettings1.systemLogging.action = toggleSystemInfoLogging;
+
+  // --------------------------------------------
+  // System settings 2 touch actions
+
+  touchscreen.systemSettings2.back.action          = displayGeigerCounter;
+  touchscreen.systemSettings2.next.action          = displaySystemSettings1;
+  touchscreen.systemSettings2.previous.action      = displaySystemSettings1;
 
   // --------------------------------------------
   // Hotspot settings touch actions
@@ -393,12 +408,12 @@ void visualFeedback() {
   // --------------------------------------------
   // System settings screen
 
-  touchscreen.systemSettings.sdCardMounted.setToggleState(sdCard.getMountState());
-  touchscreen.systemSettings.serialLogging.setToggleState(logger.getSerialLoggingState());
-  touchscreen.systemSettings.sdCardLogging.setToggleState(logger.getSDCardLoggingState());
-  touchscreen.systemSettings.dataLogging.setToggleState(logger.getLogLevelState(Logger::DATA));
-  touchscreen.systemSettings.eventLogging.setToggleState(logger.getLogLevelState(Logger::EVENT));
-  touchscreen.systemSettings.systemLogging.setToggleState(logger.getLogLevelState(Logger::SYSTEM));
+  touchscreen.systemSettings1.sdCardMounted.setToggleState(sdCard.getMountState());
+  touchscreen.systemSettings1.serialLogging.setToggleState(logger.getSerialLoggingState());
+  touchscreen.systemSettings1.sdCardLogging.setToggleState(logger.getSDCardLoggingState());
+  touchscreen.systemSettings1.dataLogging.setToggleState(logger.getLogLevelState(Logger::DATA));
+  touchscreen.systemSettings1.eventLogging.setToggleState(logger.getLogLevelState(Logger::EVENT));
+  touchscreen.systemSettings1.systemLogging.setToggleState(logger.getLogLevelState(Logger::SYSTEM));
 
   touchscreen.update();
 
@@ -482,6 +497,81 @@ void audioFeedback() {
 
   // Update the buzzer
   buzzer.update();
+
+}
+
+// ================================================================================================
+// Data feedback
+// ================================================================================================
+void dataFeedback() {
+
+  // If log interval has been reached
+  if (millis() - logTimer >= LOG_INTERVAL_SECONDS * 1000) {
+
+    // If system info logging is enabled
+    if (logger.getLogLevelState(Logger::SYSTEM)) {
+
+      // Get data
+      Logger::KeyValuePair systemData[6] = {
+
+        {"upTime",   Logger::UINT64_T, {.uint64_v = millis()}             },
+        {"heapSize", Logger::UINT32_T, {.uint32_v = ESP.getHeapSize()}    },
+        {"freeHeap", Logger::UINT32_T, {.uint32_v = ESP.getFreeHeap()}    },
+        {"minHeap",  Logger::UINT32_T, {.uint32_v = ESP.getMinFreeHeap()} },
+        {"maxBlock", Logger::UINT32_T, {.uint32_v = ESP.getMaxAllocHeap()}},
+        {"firmware", Logger::STRING_T, {.string_v = FIRMWARE_VERSION}     }
+
+      };
+
+      // Log data
+      logger.log(Logger::SYSTEM, "system", systemData, 6);
+
+    }
+
+    // If the Geiger counter is enabled
+    if (geigerCounter.getGeigerCounterState()) {
+
+      // Get data
+      Logger::KeyValuePair geigerCounterData[7] = {
+
+        {"counts",                Logger::UINT64_T, {.uint64_v = geigerCounter.getCounts()}                },
+        {"mainCounts",            Logger::UINT64_T, {.uint64_v = geigerCounter.getMainTubeCounts()}        },
+        {"followerCounts",        Logger::UINT64_T, {.uint64_v = geigerCounter.getFollowerTubeCounts()}    },
+        {"countsPerMinute",       Logger::DOUBLE_T, {.double_v = geigerCounter.getCountsPerMinute(60)}     },
+        {"microsievertsPerHour",  Logger::DOUBLE_T, {.double_v = geigerCounter.getMicrosievertsPerHour(60)}},
+        {"tubes",                 Logger::UINT8_T,  {.uint8_v  = TOTAL_NUMBER_OF_TUBES}                    },
+        {"tubeType",              Logger::STRING_T, {.string_v = TUBE_TYPE_NAME}                           }
+
+      };
+
+      // Log data
+      logger.log(Logger::DATA, "geigerCounter", geigerCounterData, 7);
+
+    }
+
+    // If cosmic ray detector is enabled
+    if (cosmicRayDetector.getCosmicRayDetectorState()) {
+
+      // Get data
+      Logger::KeyValuePair cosmicRayDetectorData[5] = {
+
+        {"coincidenceEvents", Logger::UINT64_T, {.uint64_v = cosmicRayDetector.getCoincidenceEvents()}       },
+        {"eventsTotal",       Logger::UINT64_T, {.uint64_v = cosmicRayDetector.getCoincidenceEventsTotal()}  },
+        {"eventsPerHour",     Logger::UINT32_T, {.uint32_v = cosmicRayDetector.getCoincidenceEventsPerHour()}},
+        {"mainCounts",        Logger::UINT64_T, {.uint64_v = cosmicRayDetector.getMainTubeCounts()}          },
+        {"followerCounts",    Logger::UINT64_T, {.uint64_v = cosmicRayDetector.getFollowerTubeCounts()}      }
+
+      };
+
+      // Log data
+      logger.log(Logger::DATA, "cosmicRayDetector", cosmicRayDetectorData, 5);
+
+    }
+
+    // Update log timer
+    logTimer = millis();
+
+  }
 
 }
 
@@ -866,13 +956,29 @@ void displayWiFiSettings() {
 // ================================================================================================
 // 
 // ================================================================================================
-void displaySystemSettings() {
+void displaySystemSettings1() {
 
   // Rotate to correct orientation
   touchscreen.setRotationLandscape();
 
   // Draw the screen
-  touchscreen.draw(touchscreen.systemSettings);
+  touchscreen.draw(touchscreen.systemSettings1);
+
+  // Play a sound
+  buzzer.play(buzzer.next);
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void displaySystemSettings2() {
+
+  // Rotate to correct orientation
+  touchscreen.setRotationLandscape();
+
+  // Draw the screen
+  touchscreen.draw(touchscreen.systemSettings2);
 
   // Play a sound
   buzzer.play(buzzer.next);
@@ -1297,7 +1403,6 @@ void sendCosmicRayDetectorData() {
     {"mainCounts",        Logger::UINT64_T, {.uint64_v = cosmicRayDetector.getMainTubeCounts()}          },
     {"followerCounts",    Logger::UINT64_T, {.uint64_v = cosmicRayDetector.getFollowerTubeCounts()}      }
     
-
   };
 
   // JSON data string
