@@ -116,14 +116,14 @@ const char* Logger::getLogFilePath() {
       // If accessing the log directory was successful
       if (directory && directory.isDirectory()) {
 
-        // Open first element in log directory
-        File element = directory.openNextFile();
+        // Element variable
+        File element;
 
         // Loop through all elements in the log directory
-        while (element) {
+        while ((element = directory.openNextFile())) {
 
           // If the element is not a directory
-          if (!element.isDirectory()) {
+          if (element && !element.isDirectory()) {
             
             // Get the element name
             String name = element.name();
@@ -141,13 +141,7 @@ const char* Logger::getLogFilePath() {
           // Close each element after use
           element.close();
 
-          // Open the next element
-          element = directory.openNextFile();
-
         }
-
-        // Close last element
-        element.close();
 
         // Increase the log file ID to the next log file
         _logFileID++;
@@ -159,6 +153,9 @@ const char* Logger::getLogFilePath() {
         _logFilePath += ".json";
       
       }
+
+      // Close the log directory
+      directory.close();
     
     // If a log file is already selected
     } else {
@@ -270,10 +267,16 @@ void Logger::getLogMessage(const char *type, const KeyValuePair *data, const uin
 // ================================================================================================
 // Log data
 // ================================================================================================
-void Logger::log(const LogLevel level, const String &message) {
+void Logger::log(const LogLevel level, const char *type, const KeyValuePair *data, const uint8_t size){
 
   // If selected log level is enabled
   if (_logLevels[level]) {
+
+    // Log message string
+    String message = "";
+
+    // Construct the log message
+    getLogMessage(type, data, size, message);
 
     // If serial logging is enabled
     if (_serialLogging) {
@@ -289,11 +292,8 @@ void Logger::log(const LogLevel level, const String &message) {
       // If SD card is mounted
       if (sdCard.getMountState()) {
 
-        // Get the log file path
-        const char *path = getLogFilePath();
-
         // Open the log file in append mode
-        File file = sdCard.open(path, FILE_APPEND);
+        File file = sdCard.open(getLogFilePath(), FILE_APPEND);
 
         // If opening the log file was successful
         if (file) {
@@ -311,19 +311,6 @@ void Logger::log(const LogLevel level, const String &message) {
     }
   
   }
-
-}
-
-// ================================================================================================
-// Directly log data without returning log message
-// ================================================================================================
-void Logger::log(const LogLevel level, const char *type, const KeyValuePair *data, const uint8_t size, String &message){
-
-  // Construct the log message
-  getLogMessage(type, data, size, message);
-
-  // Log the constructed message
-  log(level, message);
 
 }
 

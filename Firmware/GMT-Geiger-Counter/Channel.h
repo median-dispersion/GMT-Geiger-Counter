@@ -15,7 +15,7 @@ class Channel {
 
     void mute();                         // Mute the audio channel
     void unmute();                       // Unmute the audio channel
-    void setMuteState(const bool state); // Set the mute state
+    void setMuteState(const bool state); // Set a mute state
     bool getMuteState();                 // Check if audio channel is muted
 
   // ----------------------------------------------------------------------------------------------

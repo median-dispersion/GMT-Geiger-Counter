@@ -9,11 +9,11 @@
 ScreenHotspotSettings::ScreenHotspotSettings():
 
   // Initialize members
-  ScreenBasicLandscape(STRING_HOTSPOT_SETTINGS_TITLE),
+  ScreenBasicLandscape(STRING_HOTSPOT_SETTINGS),
   enable(0, STRING_ENABLE_HOTSPOT, false),
-  _hostpotName(2, 57, 316, STRING_HOTSPOT_NAME, HOTSPOT_NAME),
-  _hostpotPassword(2, 109, 316, STRING_HOTSPOT_PASSWORD, HOTSPOT_PASSWORD),
-  _hostpotIPAddress(2, 161, 316, STRING_IP_ADDRESS, STRING_NOT_CONNECTED)
+  _hotspotName(     2, 57,  316, STRING_HOTSPOT_NAME, HOTSPOT_NAME),
+  _hotspotPassword( 2, 109, 316, STRING_HOTSPOT_PASSWORD, HOTSPOT_PASSWORD),
+  _hotspotIPAddress(2, 161, 316, STRING_IP_ADDRESS, STRING_NOT_CONNECTED)
 
 {}
 
@@ -40,9 +40,9 @@ void ScreenHotspotSettings::draw(GFXcanvas16 &canvas) {
 
   // Draw screen elements
   enable.draw(canvas);
-  _hostpotName.draw(canvas);
-  _hostpotPassword.draw(canvas);
-  _hostpotIPAddress.draw(canvas);
+  _hotspotName.draw(canvas);
+  _hotspotPassword.draw(canvas);
+  _hotspotIPAddress.draw(canvas);
   
 }
 
@@ -51,6 +51,6 @@ void ScreenHotspotSettings::draw(GFXcanvas16 &canvas) {
 // ================================================================================================
 void ScreenHotspotSettings::setIPAddress(const char *ipAddress) {
 
-  _hostpotIPAddress.setValue(ipAddress);
+  _hotspotIPAddress.setValue(ipAddress);
 
 }

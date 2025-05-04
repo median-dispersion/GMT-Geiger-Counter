@@ -22,7 +22,7 @@ class TouchToggle {
     void toggleOn();                             // Toggle on
     void toggleOff();                            // Toggle off
     void toggle();                               // Toggle state
-    void setToggleState(const bool state);       // Set a specific state
+    void setToggleState(const bool toggled);     // Toggle a specific state
     bool getToggleState();                       // Return the toggle state
 
   //-----------------------------------------------------------------------------------------------

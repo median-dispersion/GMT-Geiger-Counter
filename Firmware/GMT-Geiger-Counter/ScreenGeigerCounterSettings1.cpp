@@ -9,11 +9,14 @@
 ScreenGeigerCounterSettings1::ScreenGeigerCounterSettings1():
 
   // Initialize members
-  ScreenBasicLandscape(STRING_GEIGER_COUNTER_SETTINGS_SCREEN_TITLE),
-  next(160, 213, 158, 25, IMAGE_NEXT),
-  previous(2, 213, 157, 25, IMAGE_BACK),
+  ScreenBasicLandscape(STRING_GEIGER_COUNTER_SETTINGS),
+  next(    160, 213, 158, 25, IMAGE_NEXT),
+  previous(2,   213, 157, 25, IMAGE_BACK),
+  _countsString("0"),
+  _mainTubeCountsString("0"),
+  _followerTubeCountsString("0"),
   _countsScreen(2, 31, 316, 77, COLOR_BLUE_MEDIUM, COLOR_BLUE_DARK, _countsString.c_str(), STRING_COUNTS),
-  _mainTubeCounts(160, 109, 158, STRING_COUNTS, _mainTubeCountsString.c_str()),
+  _mainTubeCounts(    160, 109, 158, STRING_COUNTS, _mainTubeCountsString.c_str()),
   _followerTubeCounts(160, 161, 158, STRING_COUNTS, _followerTubeCountsString.c_str())
 
 {}

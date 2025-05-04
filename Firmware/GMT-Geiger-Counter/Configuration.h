@@ -61,6 +61,11 @@
 // Range: 5 - 250 minutes
 #define RADIATION_HISTORY_LENGTH_MINUTES 20
 
+// The minimum scale of the counts per minutes axis on the radiation history screen
+// If a value larger than this is recorded, the axis will scale automatically to that new value
+// This is just for setting the minimum scale it can go down to
+#define RADIATION_HISTORY_MINIMUM_SCALE_CPM 32
+
 // ================================================================================================
 // Buzzer / audio settings
 // ================================================================================================

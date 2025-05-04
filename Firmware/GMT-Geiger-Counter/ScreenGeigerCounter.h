@@ -21,6 +21,7 @@ class ScreenGeigerCounter: public Screen {
   public:
     
     // Screen elements
+    TouchTarget geigerCounterSetting;
     TouchIcon   audioSettings;
     TouchIcon   displaySettings;
     TouchIcon   goToSleep;
@@ -33,7 +34,7 @@ class ScreenGeigerCounter: public Screen {
     TouchIcon   hotspotSettings;
     TouchIcon   wifiSettings;
     TouchIcon   systemSettings;
-    TouchTarget geigerCounterSetting;
+    
 
     // Constructor
     ScreenGeigerCounter();
@@ -43,11 +44,11 @@ class ScreenGeigerCounter: public Screen {
     void draw(GFXcanvas16 &canvas) override;
 
     // Set screen variables
-    void setEquivalentDose(const double &equivalentDose);                          // Set the equivalent dose
-    void setEquivalentDoseUnit(const GeigerCounter::DoseUnit equivalentDoseUnit);  // Set the equivalent dose unit
-    void setRadiationRating(const GeigerCounter::RadiationRating radiationRating); // Set the radiation rating
-    void setCountsPerMinute(const double &countsPerMinute);                        // Set the counts per minute
-    void setIntegrationTime(const uint8_t integrationTime);                        // Set the integration time
+    void setEquivalentDose(const double &equivalentDose);                                   // Set the equivalent dose
+    void setEquivalentDoseUnit(const GeigerCounter::EquivalentDoseUnit equivalentDoseUnit); // Set the equivalent dose unit
+    void setRadiationRating(const GeigerCounter::RadiationRating radiationRating);          // Set the radiation rating
+    void setCountsPerMinute(const double &countsPerMinute);                                 // Set the counts per minute
+    void setIntegrationTime(const uint8_t integrationTime);                                 // Set the integration time
 
   // ----------------------------------------------------------------------------------------------
   // Private

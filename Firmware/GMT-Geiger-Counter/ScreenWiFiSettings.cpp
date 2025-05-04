@@ -9,10 +9,10 @@
 ScreenWiFiSettings::ScreenWiFiSettings():
 
   // Initialize members
-  ScreenBasicLandscape(STRING_WIFI_SETTINGS_TITLE),
+  ScreenBasicLandscape(STRING_WIFI_SETTINGS),
   enable(0, STRING_ENABLE_WIFI, false),
-  _wifiName(2, 57, 316, STRING_WIFI_NAME, WIFI_NAME),
-  _wifiPassword(2, 109, 316, STRING_WIFI_PASSWORD, STRING_PASSWORD_HIDDEN),
+  _wifiName(     2, 57,  316, STRING_WIFI_NAME, WIFI_NAME),
+  _wifiPassword( 2, 109, 316, STRING_WIFI_PASSWORD, STRING_ASTERISKS),
   _wifiIPAddress(2, 161, 316, STRING_IP_ADDRESS, STRING_NOT_CONNECTED)
 
 {}

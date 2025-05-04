@@ -30,11 +30,11 @@ class ScreenCosmicRayDetector: public ScreenBasicPortrait {
     void draw(GFXcanvas16 &canvas) override;
 
     // Set screen variables
-    void setCoincidenceEvents(const uint64_t &coincidenceEvents);               // Calculate and set coincidence events
+    void setCoincidenceEvents(const uint64_t &coincidenceEvents);               // Set coincidence events
     void setCoincidenceEventsPerHour(const uint32_t &coincidenceEventsPerHour); // Set the coincidence events per hour value
     void setCoincidenceEventsTotal(const uint64_t &coincidenceEventsTotal);     // Set the total number of coincidence events
-    void setMainTubeCounts(const uint64_t &mainTubeCounts);                     // Calculate and set main tube counts
-    void setFollowerTubeCounts(const uint64_t &followerTubeCounts);             // Calculate and set follower tube counts
+    void setMainTubeCounts(const uint64_t &mainTubeCounts);                     // Set main tube counts
+    void setFollowerTubeCounts(const uint64_t &followerTubeCounts);             // Set follower tube counts
 
   // ----------------------------------------------------------------------------------------------
   // Private

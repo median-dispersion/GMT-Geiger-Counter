@@ -35,51 +35,51 @@ class GeigerCounter {
     };
 
     // Equivalent dose unit enumerator
-    enum DoseUnit {
+    enum EquivalentDoseUnit {
 
       MICRO_SIEVERTS_PER_HOUR,
       MILLI_SIEVERTS_PER_HOUR,
-      BASE_SIEVERTS_PER_HOUR,
+      SIEVERTS_PER_HOUR,
       MICRO_REM_PER_HOUR,
       MILLI_REM_PER_HOUR,
-      BASE_REM_PER_HOUR,
+      REM_PER_HOUR,
       MICRO_RONTGEN_PER_HOUR,
       MILLI_RONTGEN_PER_HOUR,
-      BASE_RONTGEN_PER_HOUR,
+      RONTGEN_PER_HOUR,
       MICRO_GRAY_PER_HOUR,
       MILLI_GRAY_PER_HOUR,
-      BASE_GRAY_PER_HOUR
+      GRAY_PER_HOUR
 
     };
 
     // Get the single instance of the class
     static GeigerCounter& getInstance();
 
-    void            begin();                                            // Initialize everything
-    void            enable();                                           // Enable the Geiger counter
-    void            disable();                                          // Disable the Geiger counter
-    void            setGeigerCounterState(const bool state);            // Set the Geiger counter state
-    void            setIntegrationTime(const uint8_t timeSeconds);      // Set the integration time
-    void            setAutoIntegrateState(const bool state);            // Set the state of the automatic integration time adjustment
-    void            setAutoRangeState(const bool state);                // Set if the equivalent dose should auto range
-    void            setMeasurementUnit(const MeasurementUnit unit);     // Set the measurement unit of the equivalent dose
-    bool            getGeigerCounterState();                            // Get the Geiger counter state
-    uint8_t         getIntegrationTime();                               // Get the set integration time
-    bool            getAutoIntegrateState();                            // Get the state of the automatic integration time adjustment
-    bool            getAutoRangeState();                                // Get the auto ranging state
-    MeasurementUnit getMeasurementUnit();                               // Get the measurement unit
-    uint64_t        getCounts();                                        // Get the total number of counts
-    uint64_t        getMainTubeCounts();                                // Get the number of counts the main tube has recorded
-    uint64_t        getFollowerTubeCounts();                            // Get the number of counts the follower tube has recorded
-    double          getCountsPerMinute(const uint8_t timeSeconds);      // Get the counts per minute for a fixed integration time
-    double          getCountsPerMinute();                               // Get the counts per minute
-    double          getMicrosievertsPerHour(const uint8_t timeSeconds); // Get microsieverts per hour for a fixed integration time
-    double          getMicrosievertsPerHour();                          // Get microsieverts per hour
-    double          getEquivalentDose();                                // Get the equivalent dose in the selected measurement unit
-    DoseUnit        getEquivalentDoseUnit();                            // Get the equivalent dose unit
-    RadiationRating getRadiationRating();                               // Get the radiation rating
-    uint32_t*       getHistory();                                       // Get a pointer to the radiation history array
-    uint8_t         getHistoryIndex();                                  // Get the index of the radiation history array
+    void               begin();                                            // Initialize everything
+    void               enable();                                           // Enable the Geiger counter
+    void               disable();                                          // Disable the Geiger counter
+    void               setGeigerCounterState(const bool state);            // Set the Geiger counter state
+    void               setIntegrationTime(const uint8_t timeSeconds);      // Set the integration time
+    void               setAutoIntegrateState(const bool state);            // Set the state of the automatic integration time adjustment
+    void               setAutoRangeState(const bool state);                // Set if the equivalent dose should auto range
+    void               setMeasurementUnit(const MeasurementUnit unit);     // Set the measurement unit of the equivalent dose
+    bool               getGeigerCounterState();                            // Get the Geiger counter state
+    uint8_t            getIntegrationTime();                               // Get the set integration time
+    bool               getAutoIntegrateState();                            // Get the state of the automatic integration time adjustment
+    bool               getAutoRangeState();                                // Get the auto ranging state
+    MeasurementUnit    getMeasurementUnit();                               // Get the measurement unit
+    uint64_t           getCounts();                                        // Get the total number of counts
+    uint64_t           getMainTubeCounts();                                // Get the number of counts the main tube has recorded
+    uint64_t           getFollowerTubeCounts();                            // Get the number of counts the follower tube has recorded
+    double             getCountsPerMinute(const uint8_t timeSeconds);      // Get the counts per minute for a fixed integration time
+    double             getCountsPerMinute();                               // Get the counts per minute
+    double             getMicrosievertsPerHour(const uint8_t timeSeconds); // Get microsieverts per hour for a fixed integration time
+    double             getMicrosievertsPerHour();                          // Get microsieverts per hour
+    double             getEquivalentDose();                                // Get the equivalent dose in the selected measurement unit
+    EquivalentDoseUnit getEquivalentDoseUnit();                            // Get the equivalent dose unit
+    RadiationRating    getRadiationRating();                               // Get the radiation rating
+    uint32_t*          getHistory();                                       // Get a pointer to the radiation history array
+    uint8_t            getHistoryIndex();                                  // Get the index of the radiation history array
 
   // ----------------------------------------------------------------------------------------------
   // Private
@@ -94,9 +94,9 @@ class GeigerCounter {
     // Metric prefix enumerator 
     enum MetricPrefix {
 
-      PREFIX_MICRO,
-      PREFIX_MILLI,
-      PREFIX_BASE
+      METRIC_MICRO,
+      METRIC_MILLI,
+      METRIC_BASE
 
     };
 
@@ -109,6 +109,7 @@ class GeigerCounter {
     bool              _enabled;                                   // Flag for checking if Geiger counter is enabled
     uint8_t           _integrationTimeSeconds;                    // Number of seconds to use from the moving average array to average over 
     bool              _autoIntegrate;                             // Flag for enabling automatic adjustment of the integration time
+    uint64_t          _autoIntegrationTimer;                      // Timer for adjusting the auto integration
     bool              _autoRange;                                 // Flag for enabling equivalent dose auto ranging
     MeasurementUnit   _measurementUnit;                           // Selected measurement unit
     MetricPrefix      _metricPrefix;                              // Current metric prefix

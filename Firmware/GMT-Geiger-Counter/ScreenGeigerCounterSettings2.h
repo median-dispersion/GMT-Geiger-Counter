@@ -21,7 +21,7 @@ class ScreenGeigerCounterSettings2: public ScreenBasicLandscape {
     // Screen elements
     TouchToggle autoIntegrate;
     TouchToggle autoRange;
-    TouchRadio  sievert;
+    TouchRadio  sieverts;
     TouchRadio  rem;
     TouchRadio  rontgen;
     TouchRadio  gray;

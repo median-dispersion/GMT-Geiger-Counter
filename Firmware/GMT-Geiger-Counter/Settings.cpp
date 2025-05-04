@@ -30,11 +30,11 @@ void Settings::begin() {
     // Set initialization flag to true
     _initialized = true;
 
+    // Initialize logger
+    logger.begin();
+
     // Initialize SD Card
     sdCard.begin();
-
-    // Load settings
-    load();
 
   }
 
@@ -60,8 +60,8 @@ void Settings::update() {
 // ================================================================================================
 void Settings::load() {
   
-  // Flag for checking if loaded settings are valid
-  bool valid = false;
+  // Flag for checking if loading settings was successful
+  bool success = false;
 
   // If the SD card is mounted
   if (sdCard.getMountState()) {
@@ -81,8 +81,8 @@ void Settings::load() {
         // Check if the CRC is valid
         if (data.crc == _getCRC(data.parameters)) {
 
-          // Set the valid flag to true
-          valid = true;
+          // Set the success flag to true
+          success = true;
 
         }
 
@@ -95,13 +95,26 @@ void Settings::load() {
 
   }
 
-  // If loaded setting were not valid
-  if (!valid) {
+  // If loading settings failed
+  if (!success) {
 
     // Reset settings to the default
     reset();
 
   }
+
+  // Log if settings where loaded
+
+  // Create event data
+  Logger::KeyValuePair event[2] = {
+
+    {"source",  Logger::STRING_T, {.string_v = "settings"}},
+    {"loaded", Logger::BOOL_T,    {.bool_v   = success}   }
+
+  };
+
+  // Log event message
+  logger.log(Logger::EVENT, "event", event, 2);
 
 }
 
@@ -160,11 +173,16 @@ void Settings::reset() {
   // --------------------------------------------
   // Buzzer parameter
 
-  data.parameters.buzzer.alerts        = true;
-  data.parameters.buzzer.detections    = true;
-  data.parameters.buzzer.interface     = true;
-  data.parameters.buzzer.notifications = true;
-  data.parameters.buzzer.muted         = false;
+  data.parameters.buzzer.detections     = false;
+  data.parameters.buzzer.notifications  = false;
+  data.parameters.buzzer.alerts         = false;
+  data.parameters.buzzer.interface      = false;
+  data.parameters.buzzer.muteEverything = false;
+
+  // --------------------------------------------
+  // Display parameter
+
+  data.parameters.display.timeout = true;
 
   // --------------------------------------------
   // Wireless parameter

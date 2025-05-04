@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "Configuration.h"
+#include "Logger.h"
 #include "SDCard.h"
 #include "GeigerCounter.h"
 
@@ -21,7 +22,7 @@ class Settings {
       
       struct Parameters {
 
-        // --------------------------------------------
+        // --------------------------------------
         // Logger parameter
 
         struct LoggerParameter {
@@ -33,34 +34,43 @@ class Settings {
           bool system;
 
         } logger;
-        
-        // --------------------------------------------
+
+        // --------------------------------------
         // Geiger counter parameter
 
         struct GeigerCounterParameter {
 
-          bool                           autoIntegrate;
-          bool                           autoRange;
+          bool autoIntegrate;
+          bool autoRange;
           GeigerCounter::MeasurementUnit measurementUnit;
 
         } geigerCounter;
 
-        // --------------------------------------------
+        // --------------------------------------
         // Buzzer parameter
 
         struct BuzzerParameter {
 
-          bool alerts;
           bool detections;
-          bool interface;
           bool notifications;
-          bool muted;
+          bool alerts;
+          bool interface;
+          bool muteEverything;
 
         } buzzer;
 
-        // --------------------------------------------
+        // --------------------------------------
+        // Display parameter
+
+        struct DisplayParameters {
+
+          bool timeout;
+
+        } display;
+
+        // --------------------------------------
         // Wireless parameter
-        
+
         struct WirelessParameter {
 
           bool hotspot;

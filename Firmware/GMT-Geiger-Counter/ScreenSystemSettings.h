@@ -18,8 +18,10 @@ class ScreenSystemSettings: public ScreenBasicLandscape {
   public:
 
     // Screen elements
+    TouchToggle sdCardMounted;
     TouchToggle serialLogging;
     TouchToggle sdCardLogging;
+    TouchToggle dataLogging;
     TouchToggle eventLogging;
     TouchToggle systemLogging;
 
@@ -35,7 +37,7 @@ class ScreenSystemSettings: public ScreenBasicLandscape {
 
   private:
 
-    DisplayToastBox _firmwareVersion; // Firmware version toast text box
+    
 
 };
 

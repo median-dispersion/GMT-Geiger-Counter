@@ -9,12 +9,12 @@
 ScreenAudioSettings::ScreenAudioSettings():
 
   // Initialize members
-  ScreenBasicLandscape(STRING_AUDIO_SETTINGS_TITLE),
-  detections(    0, STRING_TOGGLE_DETECTIONS,      true ),
-  notifications( 1, STRING_TOGGLE_NOTIFICATIONS,   true ),
-  alerts(        2, STRING_TOGGLE_ALERTS,          true ),
-  interface(     3, STRING_TOGGLE_INTERFACE,       true ),
-  muteEverything(4, STRING_TOGGLE_MUTE_EVERYTHING, false)
+  ScreenBasicLandscape(STRING_AUDIO_SETTINGS),
+  detections(    0, STRING_DETECTIONS,      true ),
+  notifications( 1, STRING_NOTIFICATIONS,   true ),
+  alerts(        2, STRING_ALERTS,          true ),
+  interface(     3, STRING_INTERFACE,       true ),
+  muteEverything(4, STRING_MUTE_EVERYTHING, false)
 
 {}
 

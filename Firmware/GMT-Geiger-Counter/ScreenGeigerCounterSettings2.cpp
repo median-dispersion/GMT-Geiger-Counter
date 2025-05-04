@@ -9,10 +9,10 @@
 ScreenGeigerCounterSettings2::ScreenGeigerCounterSettings2():
 
   // Initialize members
-  ScreenBasicLandscape(STRING_GEIGER_COUNTER_SETTINGS_SCREEN_TITLE),
+  ScreenBasicLandscape(STRING_GEIGER_COUNTER_SETTINGS),
   autoIntegrate(0, STRING_AUTO_INTEGRATE, true),
   autoRange(    1, STRING_AUTO_RANGE,     true),
-  sievert(      2, STRING_SIEVERTS,       true),
+  sieverts(     2, STRING_SIEVERTS,       true),
   rem(          3, STRING_REM,            false),
   rontgen(      4, STRING_RONTGEN,        false),
   gray(         5, STRING_GRAY,           false),
@@ -32,7 +32,7 @@ void ScreenGeigerCounterSettings2::update(const XPT2046::Point &position) {
   // Update screen elements
   autoIntegrate.update(position);
   autoRange.update(position);
-  sievert.update(position);
+  sieverts.update(position);
   rem.update(position);
   rontgen.update(position);
   gray.update(position);
@@ -52,7 +52,7 @@ void ScreenGeigerCounterSettings2::draw(GFXcanvas16 &canvas) {
   // Draw screen elements
   autoIntegrate.draw(canvas);
   autoRange.draw(canvas);
-  sievert.draw(canvas);
+  sieverts.draw(canvas);
   rem.draw(canvas);
   rontgen.draw(canvas);
   gray.draw(canvas);

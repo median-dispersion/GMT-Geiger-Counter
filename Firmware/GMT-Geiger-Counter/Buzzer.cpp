@@ -19,25 +19,13 @@ Buzzer& Buzzer::getInstance() {
 
 }
 
-
 // ================================================================================================
 // Initialize everything
 // ================================================================================================
 void Buzzer::begin() {
 
-  // If not initialized
-  if (!_initialized) {
-
-    // Set initialization flag to true
-    _initialized = true;
-
-    // Initialize logger
-    logger.begin();
-
-    // Initialize melody
-    _audio.begin();
-
-  }
+  // Initialize melody
+  _audio.begin();
 
 }
 
@@ -56,27 +44,8 @@ void Buzzer::update() {
 // ================================================================================================
 void Buzzer::mute() {
 
-  // If not muted
-  if (!_muted) {
-
-    // Mute the buzzer
-    _muted = true;
-
-    // Create hardware event data
-    Logger::KeyValuePair event[2] = {
-
-      {"target", Logger::STRING_T, {.string_v = "buzzer"}},
-      {"action", Logger::STRING_T, {.string_v = "muted"} }
-
-    };
-
-    // Event data log message
-    String message = "";
-
-    // Log hardware event data
-    logger.log(Logger::EVENT, "event", event, 2, message);
-  
-  }
+  // Mute the buzzer
+  _muted = true;
 
 }
 
@@ -85,55 +54,8 @@ void Buzzer::mute() {
 // ================================================================================================
 void Buzzer::unmute() {
 
-  // If muted
-  if (_muted) {
-
-    // Unmute the buzzer
-    _muted = false;
-
-    // Create hardware event data
-    Logger::KeyValuePair event[2] = {
-
-      {"target", Logger::STRING_T, {.string_v = "buzzer"} },
-      {"action", Logger::STRING_T, {.string_v = "unmuted"}}
-
-    };
-
-    // Event data log message
-    String message = "";
-
-    // Log hardware event data
-    logger.log(Logger::EVENT, "event", event, 2, message);
-
-  }
-
-}
-
-// ================================================================================================
-// Set the buzzer mute state
-// ================================================================================================
-void Buzzer::setMuteState(const bool state) {
-
-  // Depending on the state either mute or unmute the buzzer
-  if (state) {
-
-    mute();
-
-  } else {
-
-    unmute();
-
-  }
-
-}
-
-// ================================================================================================
-// Check if the buzzer is muted
-// ================================================================================================
-bool Buzzer::getMuteState() {
-
-  // Check and return if the buzzer is muted
-  return _muted;
+  // Unmute the buzzer
+  _muted = false;
 
 }
 
@@ -148,16 +70,11 @@ void Buzzer::play(const Sound &sound, const uint16_t repeats) {
     // If the audio channel of the sound is not muted
     if (!sound.channel.getMuteState()) {
 
-      // If not already playing this sound
-      if (!_audio.playing(sound.melody.notes)) {
+      // If the sound repeats at least once
+      if (repeats) {
 
-        // If the sound repeats at least once
-        if (repeats) {
-
-          // Play sound for the number of specified repeats
-          _audio.play(sound.melody.notes, sound.melody.length, sound.melody.repeats * repeats);
-
-        }
+        // Play sound for the number of specified repeats
+        _audio.play(sound.melody.notes, sound.melody.length, sound.melody.repeats * repeats);
 
       }
 
@@ -168,9 +85,28 @@ void Buzzer::play(const Sound &sound, const uint16_t repeats) {
 }
 
 // ================================================================================================
+// Set mute state
+// ================================================================================================
+void Buzzer::setMuteState(const bool state) {
+
+  _muted = state;
+
+}
+
+// ================================================================================================
+// Check if the buzzer is muted
+// ================================================================================================
+bool Buzzer::getMuteState() {
+
+  // Check and return if the buzzer is muted
+  return _muted;
+
+}
+
+// ================================================================================================
 // Check if anything is playing
 // ================================================================================================
-bool Buzzer::playing() {
+bool Buzzer::getPlaybackState() {
 
   // Check and return if anything is playing
   return _audio.playing();
@@ -180,7 +116,7 @@ bool Buzzer::playing() {
 // ================================================================================================
 // Check if a specific sound is playing
 // ================================================================================================
-bool Buzzer::playing(const Sound &sound) {
+bool Buzzer::getPlaybackState(const Sound &sound) {
 
   // Check and return if a specific sound is playing
   return _audio.playing(sound.melody.notes);
@@ -208,7 +144,6 @@ Buzzer::Buzzer():
   next({interface, MELODY_NEXT}),
   tap({interface, MELODY_TAP}),
   warning({notifications, MELODY_WARNING}),
-  _initialized(false),
   _muted(false),
   _audio(BUZZER_PIN)
 

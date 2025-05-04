@@ -3,7 +3,6 @@
 
 #include "Arduino.h"
 #include "Configuration.h"
-#include "Logger.h"
 #include "NonBlockingMelody.h"
 #include "Channel.h"
 #include "Melody.h"
@@ -46,11 +45,11 @@ class Buzzer {
     void update();                                             // Update the Buzzer
     void mute();                                               // Mute the buzzer
     void unmute();                                             // Unmute the buzzer
-    void setMuteState(const bool state);                       // Set the buzzer mute state
-    bool getMuteState();                                       // Check if the buzzer is muted
     void play(const Sound &sound, const uint16_t repeats = 1); // Play a sound effect
-    bool playing();                                            // Check if anything is playing
-    bool playing(const Sound &sound);                          // Check if a specific sound is playing
+    void setMuteState(const bool state);                       // Set mute state
+    bool getMuteState();                                       // Check if the buzzer is muted
+    bool getPlaybackState();                                   // Check if anything is playing
+    bool getPlaybackState(const Sound &sound);                 // Check if a specific sound is playing
 
   // ----------------------------------------------------------------------------------------------
   // Private
@@ -62,9 +61,8 @@ class Buzzer {
     Buzzer(const Buzzer&) = delete;
     Buzzer& operator=(const Buzzer&) = delete;
 
-    bool              _initialized; // Flag for checking if initalized
-    bool              _muted;       // Flag for checking if the buzzer is muted
-    NonBlockingMelody _audio;       // Audio player object
+    bool              _muted; // Flag for checking if the buzzer is muted
+    NonBlockingMelody _audio; // Audio player object
 
 };
 

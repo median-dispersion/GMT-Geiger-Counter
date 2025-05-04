@@ -94,11 +94,11 @@ void TouchToggle::toggle() {
 }
 
 // ================================================================================================
-// Set a specific state
+// Toggle a specific state
 // ================================================================================================
-void TouchToggle::setToggleState(const bool state) {
+void TouchToggle::setToggleState(const bool toggled) {
 
-  _toggled = state;
+  _toggled = toggled;
 
 }
 

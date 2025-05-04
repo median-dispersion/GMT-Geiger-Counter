@@ -83,20 +83,11 @@ void TouchRadio::deselect() {
 }
 
 // ================================================================================================
-// Set select state
+// Set a specific select state
 // ================================================================================================
-void TouchRadio::setSelectState(const bool state) {
+void TouchRadio::setSelectState(const bool selected) {
 
-  // Depending on the state either select radio or not
-  if (state) {
-
-    select();
-
-  } else {
-
-    deselect();
-
-  }
+  _selected = selected;
 
 }
 

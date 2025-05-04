@@ -1,5 +1,5 @@
-#ifndef _SCREEN_BASIC_LANDSCAPE_H
-#define _SCREEN_BASIC_LANDSCAPE_H
+#ifndef _SCREEN_BASIC_H
+#define _SCREEN_BASIC_H
 
 #include "Arduino.h"
 #include "Adafruit_GFX.h"

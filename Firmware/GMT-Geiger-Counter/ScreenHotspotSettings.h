@@ -34,9 +34,9 @@ class ScreenHotspotSettings: public ScreenBasicLandscape {
   private:
 
     // Screen elements
-    DisplayToastBox _hostpotName;
-    DisplayToastBox _hostpotPassword;
-    DisplayToastBox _hostpotIPAddress;
+    DisplayToastBox _hotspotName;
+    DisplayToastBox _hotspotPassword;
+    DisplayToastBox _hotspotIPAddress;
 
 };
 

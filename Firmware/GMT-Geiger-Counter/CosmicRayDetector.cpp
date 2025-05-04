@@ -58,8 +58,9 @@ void CosmicRayDetector::enable() {
     _movingAverageIndex = 0;
 
     // Set the tube offsets
-    _mainTubeOffset     = geigerCounter.getMainTubeCounts();
-    _followerTubeOffset = geigerCounter.getFollowerTubeCounts();
+    _coincidenceTubeOffset = _coincidenceTube.getCounts();
+    _mainTubeOffset        = geigerCounter.getMainTubeCounts();
+    _followerTubeOffset    = geigerCounter.getFollowerTubeCounts();
 
     // Enable the Geiger counter
     geigerCounter.enable();
@@ -79,19 +80,16 @@ void CosmicRayDetector::enable() {
     // Set the enabled flag to true
     _enabled = true;
 
-    // Create hardware event data
+    // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"target", Logger::STRING_T, {.string_v = "cosmicRayDetector"}},
-      {"action", Logger::STRING_T, {.string_v = "enabled"}          }
+      {"source",  Logger::STRING_T, {.string_v = "cosmicRayDetector"}},
+      {"enabled", Logger::BOOL_T,   {.bool_v   = _enabled}       }
 
     };
 
-    // Event data log message
-    String message = "";
-
-    // Log hardware event data
-    logger.log(Logger::EVENT, "event", event, 2, message);
+    // Log event message
+    logger.log(Logger::EVENT, "event", event, 2);
 
   }
 
@@ -120,19 +118,16 @@ void CosmicRayDetector::disable() {
     // Set the enabled flag to false
     _enabled = false;
 
-    // Create hardware event data
+    // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"target", Logger::STRING_T, {.string_v = "cosmicRayDetector"}},
-      {"action", Logger::STRING_T, {.string_v = "disabled"}         }
+      {"source",  Logger::STRING_T, {.string_v = "cosmicRayDetector"}},
+      {"enabled", Logger::BOOL_T,   {.bool_v   = _enabled}       }
 
     };
 
-    // Event data log message
-    String message = "";
-
-    // Log hardware event data
-    logger.log(Logger::EVENT, "event", event, 2, message);
+    // Log event message
+    logger.log(Logger::EVENT, "event", event, 2);
 
   }
 
@@ -159,16 +154,27 @@ void CosmicRayDetector::setCosmicRayDetectorState(const bool state) {
 // ================================================================================================
 // Returns if the cosmic ray detector is enabled
 // ================================================================================================
-bool CosmicRayDetector::getCosmicRayDetectorSate() {
+bool CosmicRayDetector::getCosmicRayDetectorState() {
 
   return _enabled;
 
 }
 
 // ================================================================================================
-// Get the total number of coincidence events
+// Get the number of coincidence events since the last time the cosmic ray detector was enabled
 // ================================================================================================
 uint64_t CosmicRayDetector::getCoincidenceEvents() {
+
+  // Subtract the coincidence tube offset from the total number of coincidence events and return that
+  return _coincidenceTube.getCounts() - _coincidenceTubeOffset;
+
+}
+
+
+// ================================================================================================
+// Get the total number of coincidence events
+// ================================================================================================
+uint64_t CosmicRayDetector::getCoincidenceEventsTotal() {
 
   // Get and return the total number of coincidence events
   return _coincidenceTube.getCounts();
@@ -212,7 +218,7 @@ uint64_t CosmicRayDetector::getMainTubeCounts() {
 uint64_t CosmicRayDetector::getFollowerTubeCounts() {
 
   // Return the number of counts the follower tube has recorded minus the set offset
-  return geigerCounter.getFollowerTubeCounts() - _mainTubeOffset;
+  return geigerCounter.getFollowerTubeCounts() - _followerTubeOffset;
 
 }
 
@@ -230,6 +236,7 @@ CosmicRayDetector::CosmicRayDetector():
   _movingAverageTimer(NULL),
   _coincidenceTube(COINCIDENCE_TRG_PIN, _movingAverage, _movingAverageIndex),
   _enabled(false),
+  _coincidenceTubeOffset(0),
   _mainTubeOffset(0),
   _followerTubeOffset(0)
 

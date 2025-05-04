@@ -80,19 +80,16 @@ void GeigerCounter::enable() {
     // Set the enabled flag to true
     _enabled = true;
 
-    // Create hardware event data
+    // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"target", Logger::STRING_T, {.string_v = "geigerCounter"}},
-      {"action", Logger::STRING_T, {.string_v = "enabled"}      }
+      {"source",  Logger::STRING_T, {.string_v = "geigerCounter"}},
+      {"enabled", Logger::BOOL_T,   {.bool_v   = _enabled}       }
 
     };
 
-    // Event data log message
-    String message = "";
-
-    // Log hardware event data
-    logger.log(Logger::EVENT, "event", event, 2, message);
+    // Log event message
+    logger.log(Logger::EVENT, "event", event, 2);
 
   }
 
@@ -128,19 +125,16 @@ void GeigerCounter::disable() {
     // Set the enabled flag to false
     _enabled = false;
 
-    // Create hardware event data
+    // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"target", Logger::STRING_T, {.string_v = "geigerCounter"}},
-      {"action", Logger::STRING_T, {.string_v = "disabled"}     }
+      {"source",  Logger::STRING_T, {.string_v = "geigerCounter"}},
+      {"enabled", Logger::BOOL_T,   {.bool_v   = _enabled}       }
 
     };
 
-    // Event data log message
-    String message = "";
-
-    // Log hardware event data
-    logger.log(Logger::EVENT, "event", event, 2, message);
+    // Log event message
+    logger.log(Logger::EVENT, "event", event, 2);
 
   }
 
@@ -328,31 +322,39 @@ double GeigerCounter::getCountsPerMinute() {
   // If automatically adjusting the integration time is enabled
   if (_autoIntegrate) {
 
-    // Get the ratio between a shortterm and longterm counts per minute reading
-    float ratio = getCountsPerMinute(10) / getCountsPerMinute(60);
+    // If at least one second has passed since the last adjustment
+    if (millis() - _autoIntegrationTimer >= 1000) {
 
-    // Set the default integration time as a target
-    uint8_t target = INTEGRATION_TIME_AUTO_AVERAGE_SECONDS;
+      // Get the ratio between a shortterm and longterm counts per minute readings
+      float ratio = getCountsPerMinute(10) / getCountsPerMinute(60);
 
-    // Depending on the ration between the short and longterm counts per minute value
-    // Set the target integration time to its minimum or its maximum
-    if      (ratio > INTEGRATION_TIME_AUTO_UPPER_BOUND) { target = INTEGRATION_TIME_AUTO_MINIMUM_SECONDS; }
-    else if (ratio < INTEGRATION_TIME_AUTO_LOWER_BOUND) { target = INTEGRATION_TIME_AUTO_MAXIMUM_SECONDS; }
-    else                                                { target = INTEGRATION_TIME_AUTO_AVERAGE_SECONDS; }
+      // Set the default integration time as a target
+      uint8_t target = INTEGRATION_TIME_AUTO_AVERAGE_SECONDS;
 
-    // Get the current integration time
-    uint8_t integrationTime = getIntegrationTime();
+      // Depending on the ration between the short and longterm counts per minute value
+      // Set the target integration time to its minimum or its maximum
+      if      (ratio > INTEGRATION_TIME_AUTO_UPPER_BOUND) { target = INTEGRATION_TIME_AUTO_MINIMUM_SECONDS; }
+      else if (ratio < INTEGRATION_TIME_AUTO_LOWER_BOUND) { target = INTEGRATION_TIME_AUTO_MAXIMUM_SECONDS; }
+      else                                                { target = INTEGRATION_TIME_AUTO_AVERAGE_SECONDS; }
 
-    // Increase or decrease the current integration time by the step size to reach the target
-    if      (integrationTime < target) { integrationTime += INTEGRATION_TIME_STEP_SIZE_SECONDS; }
-    else if (integrationTime > target) { integrationTime -= INTEGRATION_TIME_STEP_SIZE_SECONDS; }
+      // Get the current integration time
+      uint8_t integrationTime = getIntegrationTime();
 
-    // Clip the integration time to the minimum or maximum if necessary
-    if      (integrationTime < INTEGRATION_TIME_AUTO_MINIMUM_SECONDS) { integrationTime = INTEGRATION_TIME_AUTO_MINIMUM_SECONDS; }
-    else if (integrationTime > INTEGRATION_TIME_AUTO_MAXIMUM_SECONDS) { integrationTime = INTEGRATION_TIME_AUTO_MAXIMUM_SECONDS; }
+      // Increase or decrease the current integration time by the step size to reach the target
+      if      (integrationTime < target) { integrationTime += INTEGRATION_TIME_STEP_SIZE_SECONDS; }
+      else if (integrationTime > target) { integrationTime -= INTEGRATION_TIME_STEP_SIZE_SECONDS; }
 
-    // Set the new integration time
-    setIntegrationTime(integrationTime);
+      // Clip the integration time to the minimum or maximum if necessary
+      if      (integrationTime < INTEGRATION_TIME_AUTO_MINIMUM_SECONDS) { integrationTime = INTEGRATION_TIME_AUTO_MINIMUM_SECONDS; }
+      else if (integrationTime > INTEGRATION_TIME_AUTO_MAXIMUM_SECONDS) { integrationTime = INTEGRATION_TIME_AUTO_MAXIMUM_SECONDS; }
+
+      // Set the new integration time
+      setIntegrationTime(integrationTime);
+
+      // Update the timer
+      _autoIntegrationTimer = millis();
+
+    }
 
   }
 
@@ -409,14 +411,14 @@ double GeigerCounter::getEquivalentDose() {
     if (equivalentDose >= 500000) {
 
       equivalentDose /= 1000000.0;
-      _metricPrefix   = PREFIX_BASE;
+      _metricPrefix   = METRIC_BASE;
     
     // If equivalent dose is >= 500 micro
     // Divide value to convert to milli unit and set metric prefix
     } else if (equivalentDose >= 500) {
 
       equivalentDose /= 1000.0;
-      _metricPrefix   = PREFIX_MILLI;
+      _metricPrefix   = METRIC_MILLI;
 
     }
 
@@ -430,10 +432,10 @@ double GeigerCounter::getEquivalentDose() {
 // ================================================================================================
 // Get the equivalent dose unit
 // ================================================================================================
-GeigerCounter::DoseUnit GeigerCounter::getEquivalentDoseUnit() {
+GeigerCounter::EquivalentDoseUnit GeigerCounter::getEquivalentDoseUnit() {
 
   // Selected unit
-  DoseUnit unit = MICRO_SIEVERTS_PER_HOUR;
+  EquivalentDoseUnit unit = MICRO_SIEVERTS_PER_HOUR;
 
   // Depending on the measurement unit and the metric prefix
   // Select a dose unit
@@ -444,9 +446,9 @@ GeigerCounter::DoseUnit GeigerCounter::getEquivalentDoseUnit() {
 
       switch (_metricPrefix) {
 
-        case PREFIX_MICRO: unit = MICRO_SIEVERTS_PER_HOUR; break;
-        case PREFIX_MILLI: unit = MILLI_SIEVERTS_PER_HOUR; break;
-        case PREFIX_BASE:  unit = BASE_SIEVERTS_PER_HOUR;  break;
+        case METRIC_MICRO: unit = MICRO_SIEVERTS_PER_HOUR; break;
+        case METRIC_MILLI: unit = MILLI_SIEVERTS_PER_HOUR; break;
+        case METRIC_BASE:  unit = SIEVERTS_PER_HOUR;       break;
 
       }
 
@@ -456,9 +458,9 @@ GeigerCounter::DoseUnit GeigerCounter::getEquivalentDoseUnit() {
 
       switch (_metricPrefix) {
 
-        case PREFIX_MICRO: unit = MICRO_REM_PER_HOUR; break;
-        case PREFIX_MILLI: unit = MILLI_REM_PER_HOUR; break;
-        case PREFIX_BASE:  unit = BASE_REM_PER_HOUR;  break;
+        case METRIC_MICRO: unit = MICRO_REM_PER_HOUR; break;
+        case METRIC_MILLI: unit = MILLI_REM_PER_HOUR; break;
+        case METRIC_BASE:  unit = REM_PER_HOUR;       break;
 
       }
 
@@ -468,9 +470,9 @@ GeigerCounter::DoseUnit GeigerCounter::getEquivalentDoseUnit() {
 
       switch (_metricPrefix) {
 
-        case PREFIX_MICRO: unit = MICRO_RONTGEN_PER_HOUR; break;
-        case PREFIX_MILLI: unit = MILLI_RONTGEN_PER_HOUR; break;
-        case PREFIX_BASE:  unit = BASE_RONTGEN_PER_HOUR;  break;
+        case METRIC_MICRO: unit = MICRO_RONTGEN_PER_HOUR; break;
+        case METRIC_MILLI: unit = MILLI_RONTGEN_PER_HOUR; break;
+        case METRIC_BASE:  unit = RONTGEN_PER_HOUR;       break;
 
       }
 
@@ -480,9 +482,9 @@ GeigerCounter::DoseUnit GeigerCounter::getEquivalentDoseUnit() {
 
       switch (_metricPrefix) {
 
-        case PREFIX_MICRO: unit = MICRO_GRAY_PER_HOUR; break;
-        case PREFIX_MILLI: unit = MILLI_GRAY_PER_HOUR; break;
-        case PREFIX_BASE:  unit = BASE_GRAY_PER_HOUR;  break;
+        case METRIC_MICRO: unit = MICRO_GRAY_PER_HOUR; break;
+        case METRIC_MILLI: unit = MILLI_GRAY_PER_HOUR; break;
+        case METRIC_BASE:  unit = GRAY_PER_HOUR;       break;
 
       }
 
@@ -571,9 +573,10 @@ GeigerCounter::GeigerCounter():
   _enabled(false),
   _integrationTimeSeconds(INTEGRATION_TIME_AUTO_AVERAGE_SECONDS),
   _autoIntegrate(true),
+  _autoIntegrationTimer(0),
   _autoRange(true),
   _measurementUnit(SIEVERTS),
-  _metricPrefix(PREFIX_MICRO),
+  _metricPrefix(METRIC_MICRO),
   _historyIndex(0),
   _historyTimerSeconds(0)
 

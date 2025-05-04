@@ -21,7 +21,7 @@ class TouchRadio {
     void (*action)();                            // Function pointer to execute a function on touchdown
     void select();                               // Select radio
     void deselect();                             // Deselect radio
-    void setSelectState(const bool state);       // Set select state
+    void setSelectState(const bool selected);    // Set a specific select state
     bool getSelectState();                       // Return the radio state
 
   //-----------------------------------------------------------------------------------------------

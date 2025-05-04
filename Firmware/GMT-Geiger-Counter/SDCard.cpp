@@ -63,25 +63,25 @@ void SDCard::mount() {
       // Set mounted flag to true
       _mounted = true;
 
-      // Create hardware event data
+      // Create event data
       Logger::KeyValuePair event[2] = {
 
-        {"target", Logger::STRING_T, {.string_v = "sdCard"} },
-        {"action", Logger::STRING_T, {.string_v = "mounted"}}
+        {"source",  Logger::STRING_T, {.string_v = "sdCard"}},
+        {"mounted", Logger::BOOL_T,   {.bool_v   = _mounted}}
 
       };
 
-      // Event data log message
-      String message = "";
-
-      // Log hardware event data
-      logger.log(Logger::EVENT, "event", event, 2, message);
+      // Log event message
+      logger.log(Logger::EVENT, "event", event, 2);
     
     // If mounting SD card failed
     } else {
 
       // Manually deselect SD card
       digitalWrite(SD_CS_PIN, HIGH);
+
+      // Set mounted flag to false
+      _mounted = false;
 
     }
 
@@ -103,19 +103,16 @@ void SDCard::unmount() {
     // Set mounted flag to false
     _mounted = false;
 
-    // Create hardware event data
+    // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"target", Logger::STRING_T, {.string_v = "sdCard"}   },
-      {"action", Logger::STRING_T, {.string_v = "unmounted"}}
+      {"source",  Logger::STRING_T, {.string_v = "sdCard"}},
+      {"mounted", Logger::BOOL_T,   {.bool_v   = _mounted}}
 
     };
 
-    // Event data log message
-    String message = "";
-
-    // Log hardware event data
-    logger.log(Logger::EVENT, "event", event, 2, message);
+    // Log event message
+    logger.log(Logger::EVENT, "event", event, 2);
 
   }
 

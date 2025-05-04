@@ -9,7 +9,7 @@
 ScreenTrueRNG::ScreenTrueRNG():
 
   // Initialize members
-  ScreenBasicLandscape(STRING_TRUE_RNG_TITLE),
+  ScreenBasicLandscape(STRING_TRUE_RNG),
   placeholder(2, 31, 316, STRING_INFO, STRING_NOT_YET_AVAILABLE)
 
 {}

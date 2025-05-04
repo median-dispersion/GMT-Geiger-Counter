@@ -9,9 +9,9 @@
 ScreenDisplaySettings::ScreenDisplaySettings():
 
   // Initialize members
-  ScreenBasicLandscape(STRING_DISPLAY_SETTINGS_TITLE),
-  display(0, STRING_TOGGLE_DISPLAY, true),
-  timeout(1, STRING_AUTO_TIMEOUT,   true)
+  ScreenBasicLandscape(STRING_DISPLAY_SETTINGS),
+  display(0, STRING_DISPLAY,      true),
+  timeout(1, STRING_AUTO_TIMEOUT, true)
 
 {}
 
