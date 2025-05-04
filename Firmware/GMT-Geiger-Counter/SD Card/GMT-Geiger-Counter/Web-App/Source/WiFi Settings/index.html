@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi settings | GMT Geiger Counter</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m374.35 68.461a16.002 16.002 0 0 0-14.682 7.9785l-56.344 97.592a16.002 16.002 0 0 0 3.6562 20.326c14.788 12.24 24.675 29.378 27.871 48.307a16.002 16.002 0 0 0 15.777 13.336h112.69a16.002 16.002 0 0 0 15.953-17.232c-5.2189-67.588-40.787-129.2-96.705-167.53a16.002 16.002 0 0 0-8.2207-2.7812zm-236.56 0.26562a16.002 16.002 0 0 0-8.2266 2.7949c-55.715 38.332-91.144 99.816-96.367 167.24a16.002 16.002 0 0 0 15.953 17.236h112.34a16.002 16.002 0 0 0 15.775-13.324c3.2053-18.89 13.077-35.992 27.83-48.217a16.002 16.002 0 0 0 3.6465-20.32l-56.254-97.436a16.002 16.002 0 0 0-14.697-7.9766zm118.21 139.27c-26.32 0-48 21.68-48 48s21.68 48 48 48 48-21.68 48-48-21.68-48-48-48zm-33.186 121.76a16.002 16.002 0 0 0-5.5332 0.92773 16.002 16.002 0 0 0-8.4844 7.0723l-56.369 97.635a16.002 16.002 0 0 0 6.9121 22.414c30.144 14.52 63.158 22.103 96.617 22.191a16.002 16.002 0 0 0 0.0859 0c33.459-0.088 66.473-7.6716 96.617-22.191a16.002 16.002 0 0 0 6.9121-22.414l-56.369-97.635a16.002 16.002 0 0 0-19.531-6.959c-8.8445 3.3556-18.213 5.1099-27.672 5.1934-9.4587-0.0835-18.827-1.8378-27.672-5.1934a16.002 16.002 0 0 0-5.5137-1.041z'/%3E%3C/svg%3E">
+
+    <link rel="stylesheet" href="./style.css">
+
+    <script src="./main.js"></script>
+    <script src="./strings.js"></script>
+
+</head>
+
+<body>
+
+    <div id="header">
+
+        <button id="header-button" class="icon-back-arrow" onclick="window.history.back()"></button>
+        <div id="header-title">WiFi settings</div>
+
+    </div>
+
+    <div id="main">
+
+        <div id="toast-message-warning" class="toast-message toast-message-warning">
+
+            <div class="toast-message-icon icon-warning"></div>
+            <div id="toast-message-encryption-info" class="toast-message-text">The WiFi credentials will be transmitted over an <b>unencrypted</b> connection! Only update them in a <b>trusted</b> network or via the wireless hotspot feature.</div>
+
+        </div>
+
+        <div id="toast-message-info" class="toast-message toast-message-info">
+
+            <div class="toast-message-icon icon-info"></div>
+            <div id="toast-mesaage-update-info" class="toast-message-text">After updating the credentials, the WiFi has to be toggled off and on again to make them take effect. To fix an incorrectly updated WiFi name or password, use the wireless hotspot feature to access this page again.</div>
+
+        </div>
+
+        <div id="wifi-credentials-title" class="main-section-title">Update WiFi credentials</div>
+
+        <form id="wifi-credentials">
+
+            <input id="wifi-credentials-name" class="wifi-credentials-input" type="text" placeholder="WiFi name" required>
+            <input id="wifi-credentials-password" class="wifi-credentials-input" type="password" placeholder="WiFi password" required>
+            <button id="wifi-credentials-button" type="submit">Update</button>
+
+        </form>
+
+        <div id="update-info-title" class="main-section-title">Update info</div>
+
+        <div id="update-info"></div>
+
+    </div>
+    
+</body>
+
+</html>

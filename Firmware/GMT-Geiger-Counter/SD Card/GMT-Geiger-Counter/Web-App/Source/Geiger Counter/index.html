@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m374.35 68.461a16.002 16.002 0 0 0-14.682 7.9785l-56.344 97.592a16.002 16.002 0 0 0 3.6562 20.326c14.788 12.24 24.675 29.378 27.871 48.307a16.002 16.002 0 0 0 15.777 13.336h112.69a16.002 16.002 0 0 0 15.953-17.232c-5.2189-67.588-40.787-129.2-96.705-167.53a16.002 16.002 0 0 0-8.2207-2.7812zm-236.56 0.26562a16.002 16.002 0 0 0-8.2266 2.7949c-55.715 38.332-91.144 99.816-96.367 167.24a16.002 16.002 0 0 0 15.953 17.236h112.34a16.002 16.002 0 0 0 15.775-13.324c3.2053-18.89 13.077-35.992 27.83-48.217a16.002 16.002 0 0 0 3.6465-20.32l-56.254-97.436a16.002 16.002 0 0 0-14.697-7.9766zm118.21 139.27c-26.32 0-48 21.68-48 48s21.68 48 48 48 48-21.68 48-48-21.68-48-48-48zm-33.186 121.76a16.002 16.002 0 0 0-5.5332 0.92773 16.002 16.002 0 0 0-8.4844 7.0723l-56.369 97.635a16.002 16.002 0 0 0 6.9121 22.414c30.144 14.52 63.158 22.103 96.617 22.191a16.002 16.002 0 0 0 0.0859 0c33.459-0.088 66.473-7.6716 96.617-22.191a16.002 16.002 0 0 0 6.9121-22.414l-56.369-97.635a16.002 16.002 0 0 0-19.531-6.959c-8.8445 3.3556-18.213 5.1099-27.672 5.1934-9.4587-0.0835-18.827-1.8378-27.672-5.1934a16.002 16.002 0 0 0-5.5137-1.041z'/%3E%3C/svg%3E">
+    <title>Geiger counter | GMT Geiger Counter</title>
+
+    <link rel="stylesheet" href="./style.css">
+
+    <script src="./main.js"></script>
+
+</head>
+
+<body>
+
+    <div id="error">
+
+        <div id="error-message">
+
+            <div id="error-message-title">Error</div>
+            <div id="error-message-description">An unknown error occurred! Please refresh the page.</div>
+
+            <div id="error-message-actions">
+
+                <button id="error-message-actions-button-go-back" class="error-message-actions-button" onclick="window.location.href='./index.html';">Go back</button>
+                <button id="error-message-actions-button-refresh" class="error-message-actions-button" onclick="getData();">Refresh</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="settings">
+
+        <div id="settings-background" onclick="hideSettings();"></div>
+
+        <div id="settings-panel">
+
+            <div id="settings-panel-header">
+
+                <button class="header-button icon-close" onclick="hideSettings();"></button>
+                <div id="settings-panel-header-title" class="header-title">Settings</div>
+
+            </div>
+
+            <div id="settings-panel-content">
+
+                <div id="settings-panel-content-separator-unit-settings" class="settings-panel-content-separator">Unit settings</div>
+
+                <div class="settings-panel-content-section">
+
+                    <label class="settings-panel-content-section-toggle">
+
+                        <input id="settings-panel-content-section-toggle-input-auto-range-units" class="settings-panel-content-section-toggle-input" type="checkbox" checked="checked">
+                        <div id="settings-panel-content-section-toggle-title-auto-range-units" class="settings-panel-content-section-toggle-title">Auto range units</div>
+                        <div class="settings-panel-content-section-toggle-checkmark"></div>
+
+                    </label>
+
+                </div>
+
+                <div id="settings-panel-content-separator-main-screen-unit" class="settings-panel-content-separator">Main screen unit</div>
+
+                <div class="settings-panel-content-section">
+
+                    <label class="settings-panel-content-section-radio">
+
+                        <input id="settings-panel-content-section-radio-input-sievert" class="settings-panel-content-section-radio-input" type="radio" name="screen-unit" value="sievert" checked="checked">
+                        <div class="settings-panel-content-section-radio-title">Sievert</div>
+                        <div class="settings-panel-content-section-radio-checkmark"></div>
+
+                    </label>
+
+                    <label class="settings-panel-content-section-radio">
+
+                        <input id="settings-panel-content-section-radio-input-rem" class="settings-panel-content-section-radio-input" type="radio" name="screen-unit" value="rem">
+                        <div class="settings-panel-content-section-radio-title">Rem</div>
+                        <div class="settings-panel-content-section-radio-checkmark"></div>
+
+                    </label>
+
+                    <label class="settings-panel-content-section-radio">
+
+                        <input id="settings-panel-content-section-radio-input-rontgen" class="settings-panel-content-section-radio-input" type="radio" name="screen-unit" value="rontgen">
+                        <div class="settings-panel-content-section-radio-title">Röntgen</div>
+                        <div class="settings-panel-content-section-radio-checkmark"></div>
+
+                    </label>
+
+                    <label class="settings-panel-content-section-radio">
+
+                        <input id="settings-panel-content-section-radio-input-gray" class="settings-panel-content-section-radio-input" type="radio" name="screen-unit" value="gray">
+                        <div class="settings-panel-content-section-radio-title">Gray</div>
+                        <div class="settings-panel-content-section-radio-checkmark"></div>
+
+                    </label>
+
+                </div>
+
+                <div id="settings-panel-content-separator-update-interval" class="settings-panel-content-separator">Update interval</div>
+
+                <div class="settings-panel-content-section">
+
+                    <div class="settings-panel-content-section-range">
+
+                        <div id="settings-panel-content-section-range-title-refresh-data" class="settings-panel-content-section-range-title">Refresh data</div>
+
+                        <div class="settings-panel-content-section-range-container">
+                            
+                            <div class="settings-panel-content-section-range-container-slider">
+
+                                <div class="settings-panel-content-section-range-container-slider-thumb"></div>
+
+                            </div>
+                            
+                            <input id="settings-panel-content-section-range-container-input-update-interval" class="settings-panel-content-section-range-container-input" type="range" min="1" max="60" step="1" value="10" unit="s">
+
+                        </div>
+
+                        <div class="settings-panel-content-section-range-info"><b class="settings-panel-content-section-range-info-value">5</b> s</div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="header">
+
+        <button class="header-button icon-back" onclick="window.location.href='./index.html';"></button>
+        <div id="header-title" class="header-title">Geiger counter</div>
+        <button class="header-button icon-settings" onclick="showSettings();"></button>
+
+    </div>
+
+    <div id="main">
+
+        <div id="main-screen" class="main-screen-normal">
+
+            <div id="main-screen-pulse"></div>
+            <div id="main-screen-dose">0</div>
+            <div id="main-screen-unit">µSv/h</div>
+
+        </div>
+
+        <div class="main-readings">
+
+            <div id="main-readings-value-cps" class="main-readings-value"><b>0</b> CPS</div>
+            <div id="main-readings-value-cpm" class="main-readings-value"><b>0</b> CPM</div>
+
+        </div>
+
+        <div id="main-separator-equivalent-doses" class="main-separator">Equivalent doses</div>
+
+        <div class="main-readings">
+
+            <div id="main-readings-value-sievert" class="main-readings-value"><b>0</b> µSv/h</div>
+            <div id="main-readings-value-rem" class="main-readings-value"><b>0</b> µrem/h</div>
+            <div id="main-readings-value-rontgen" class="main-readings-value"><b>0</b> µR/h</div>
+            <div id="main-readings-value-gray" class="main-readings-value"><b>0</b> µGy/h</div>
+
+        </div>
+
+        <div id="main-separator-radiation-rating" class="main-separator">Radiation rating</div>
+
+        <div id="main-radiation-rating">
+
+            <div id="main-radiation-rating-icon" class="icon-radiation"></div>
+
+            <div id="main-radiation-rating-content">
+
+                <div id="main-radiation-rating-content-value">UNKNOWN</div>
+                <div id="main-radiation-rating-content-description">Unknown radiation rating, which is indicative of a communication error.</div>
+
+            </div>
+
+        </div>
+
+        <div id="main-separator-tube-statistics" class="main-separator">Tube statistics</div>
+
+        <div class="main-tube">
+
+            <div id="main-tube-header-tube-info" class="main-tube-header">Tube info</div>
+
+            <div class="main-tube-content">
+
+                <div class="main-tube-content-row">
+
+                    <div id="main-tube-content-title-total-counts" class="main-tube-content-title">Total counts</div>
+                    <div id="main-tube-content-value-total-counts" class="main-tube-content-value">0</div>
+
+                </div>
+
+                <div class="main-tube-content-row">
+
+                    <div id="main-tube-content-title-number-of-tubes" class="main-tube-content-title">Number of tubes</div>
+                    <div id="main-tube-content-value-number-of-tubes" class="main-tube-content-value">0</div>
+
+                </div>
+
+                <div class="main-tube-content-row">
+
+                    <div id="main-tube-content-title-tube-type" class="main-tube-content-title">Tube type</div>
+                    <div id="main-tube-content-value-tube-type" class="main-tube-content-value">Unknown</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="main-tube">
+
+            <div id="main-tube-header-main-tube" class="main-tube-header">Main tube</div>
+
+            <div class="main-tube-content">
+
+                <div class="main-tube-content-row">
+
+                    <div id="main-tube-content-title-main-counts" class="main-tube-content-title">Counts</div>
+                    <div id="main-tube-content-value-main-counts" class="main-tube-content-value">0</div>
+
+                </div>
+
+                <div class="main-tube-content-row">
+
+                    <div id="main-tube-content-title-main-relative" class="main-tube-content-title">Relative</div>
+                    <div id="main-tube-content-value-main-relative" class="main-tube-content-value">0 %</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="main-tube">
+
+            <div id="main-tube-header-follower-tube" class="main-tube-header">Follower tube</div>
+
+            <div class="main-tube-content">
+
+                <div class="main-tube-content-row">
+
+                    <div id="main-tube-content-title-follower-counts" class="main-tube-content-title">Counts</div>
+                    <div id="main-tube-content-value-follower-counts" class="main-tube-content-value">0</div>
+
+                </div>
+
+                <div class="main-tube-content-row">
+
+                    <div id="main-tube-content-title-follower-relative" class="main-tube-content-title">Relative</div>
+                    <div id="main-tube-content-value-follower-relative" class="main-tube-content-value">0 %</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    
+</body>
+
+</html>
