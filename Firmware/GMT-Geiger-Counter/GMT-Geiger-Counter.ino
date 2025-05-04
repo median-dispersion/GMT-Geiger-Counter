@@ -836,14 +836,24 @@ void displayDisplaySettings() {
 // ================================================================================================
 void displayRotationConfirmation() {
 
-  // Rotate to correct orientation
-  touchscreen.setRotationPortrait();
+  // Show cosmic ray detector screen if cosmic ray detector is already enabled
+  if (cosmicRayDetector.getCosmicRayDetectorState()) {
 
-  // Draw the screen
-  touchscreen.draw(touchscreen.rotationConfirmation);
+    displayCosmicRayDetector();
 
-  // Play a sound
-  buzzer.play(buzzer.next);
+  // If cosmic ray detector is disabled show rotation confirmation screen
+  } else {
+
+    // Rotate to correct orientation
+    touchscreen.setRotationPortrait();
+
+    // Draw the screen
+    touchscreen.draw(touchscreen.rotationConfirmation);
+
+    // Play a sound
+    buzzer.play(buzzer.next);
+
+  }
 
 }
 

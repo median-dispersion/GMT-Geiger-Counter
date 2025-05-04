@@ -12,9 +12,9 @@ ScreenSystemSettings2::ScreenSystemSettings2():
   ScreenBasicLandscape(STRING_SYSTEM_SETTINGS),
   next(    160, 213, 158, 25, IMAGE_NEXT),
   previous(2,   213, 157, 25, IMAGE_BACK),
-  firmware(2, 31,  316, STRING_FIRMWARE_VERSION,   FIRMWARE_VERSION),
-  upTime(  2, 83,  316, STRING_SYSTEM_UPTIME,      _upTimeString.c_str()),
-  memory(  2, 135, 316, STRING_MEMORY_USAGE_BYTES, _memoryString.c_str()),
+  firmware(2, 31,  316, STRING_FIRMWARE_VERSION,  FIRMWARE_VERSION),
+  upTime(  2, 83,  316, STRING_SYSTEM_UPTIME,     _upTimeString.c_str()),
+  memory(  2, 135, 316, STRING_FREE_MEMORY_BYTES, _memoryString.c_str()),
   _upTimeString("0 min"),
   _memoryString("0 / 0")
 

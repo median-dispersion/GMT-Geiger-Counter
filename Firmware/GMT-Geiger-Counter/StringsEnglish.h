@@ -43,7 +43,8 @@
 #define STRING_TAP_TO_CONTINUE                      "Tap to continue..."
 #define STRING_COINCIDENCE_EVENTS                   "Coincidence Events"
 #define STRING_COUNTS_PER_HOUR_ABBREVIATION         "CPH"
-#define STRING_DISABLE_COSMIC_RAY_DETECTOR          "Disable cosmic ray detector?"
+#define STRING_DISABLE_THE                          "Disable the"
+#define STRING_COSMIC_RAY_DETECTOR_QUESTION_MARK    "cosmic ray detector?"
 #define STRING_YES                                  "Yes"
 #define STRING_NO                                   "No"
 #define STRING_RADIATION_HISTORY_CPM                "Radiation history (CPM)"
@@ -72,6 +73,6 @@
 #define STRING_FIRMWARE_VERSION                     "Firmware version"
 #define STRING_SYSTEM_UPTIME                        "System uptime"
 #define STRING_MINUTES_ABBREVIATION                 "min"
-#define STRING_MEMORY_USAGE_BYTES                   "Memory usage (Bytes)"
+#define STRING_FREE_MEMORY_BYTES                    "Free memory (Bytes)"
 
 #endif

@@ -52,15 +52,26 @@ void ScreenDisableCosmicRayDetector::draw(GFXcanvas16 &canvas) {
   uint16_t textWidth, textHeight;
 
   // Get the bounding box
-  canvas.getTextBounds(STRING_DISABLE_COSMIC_RAY_DETECTOR, 0, 0, &textX, &textY, &textWidth, &textHeight);
+  canvas.getTextBounds(STRING_DISABLE_THE, 0, 0, &textX, &textY, &textWidth, &textHeight);
 
   // Calculate the X and Y cursor position
   cursorX = ((236 - textWidth)  / 2) + 2;
-  cursorY = ((287 - textHeight) / 2) + 31;
+  cursorY = ((287 - textHeight) / 2) + 5;
 
   // Set the cursor and draw text to the frame buffer
   canvas.setCursor(cursorX, cursorY);
-  canvas.print(STRING_DISABLE_COSMIC_RAY_DETECTOR);
+  canvas.print(STRING_DISABLE_THE);
+
+  // Get the bounding box
+  canvas.getTextBounds(STRING_COSMIC_RAY_DETECTOR_QUESTION_MARK, 0, 0, &textX, &textY, &textWidth, &textHeight);
+
+  // Calculate the X and Y cursor position
+  cursorX = ((236 - textWidth)  / 2) + 2;
+  cursorY += 25;
+
+  // Set the cursor and draw text to the frame buffer
+  canvas.setCursor(cursorX, cursorY);
+  canvas.print(STRING_COSMIC_RAY_DETECTOR_QUESTION_MARK);
 
   // Draw bottom lines
   canvas.drawFastHLine(12, 301, 215, COLOR_GRAY_LIGHT);
