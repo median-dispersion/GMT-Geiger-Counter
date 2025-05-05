@@ -8,7 +8,7 @@
 // If only one tube is connected, disable the follower tube pin header
 // If two or more tubes are connected, split them evenly and enable both pin headers
 #define ENABLE_MAIN_TUBE     1
-#define ENABLE_FOLLOWER_TUBE 1
+#define ENABLE_FOLLOWER_TUBE 0
 
 // The total number of tubes connected to the motherboard (both main and follower)
 // This will be used to divide the equivalent dose by the number of tubes to get an accurate reading
@@ -199,6 +199,24 @@
 // This can be set to any arbitrary string
 // This value should not be changed!
 #define FIRMWARE_VERSION "GMTGC-REWRITE"
+
+// The minimum threshold of free heap the system is allowed to have
+// If the free heap falls below this value, the system will reboot to prevent software instability or lock-ups
+// This value should not be changed!
+// Default: 16384 (16 KiB)
+#define WATCHDOG_MINIMUM_HEAP_BYTES 16384
+
+// The minimum threshold of the largest allocatable block of heap the system is allowed to have
+// If the block size falls below this value, the system will reboot to prevent software instability or lock-ups
+// This value should not be changed!
+// Default: 4096 (4 KiB)
+#define WATCHDOG_MINIMUM_HEAP_BLOCK_BYTES 4096
+
+// The minimum threshold of free PSRAM the system is allowed to have
+// If the free PSRAM falls below this value, the system will reboot to prevent software instability or lock-ups
+// This value should not be changed!
+// Default: 524288 (512 KiB)
+#define WATCHDOG_MINIMUM_PSRAM_BYTES 524288
 
 // ================================================================================================
 // Pin assignments

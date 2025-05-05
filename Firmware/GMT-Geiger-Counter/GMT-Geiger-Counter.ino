@@ -8,6 +8,7 @@
 #include "Buzzer.h"
 #include "Touchscreen.h"
 #include "Wireless.h"
+#include "Watchdog.h"
 
 // ------------------------------------------------------------------------------------------------
 // Global
@@ -85,6 +86,7 @@ void setup() {
   buzzer.begin();
   touchscreen.begin();
   wireless.begin();
+  watchdog.begin();
 
   // Set touch actions
   setTouchActions();
@@ -128,6 +130,9 @@ void loop() {
 
   // Update wireless interface
   wireless.update();
+
+  // Update the watchdog
+  watchdog.update();
 
 }
 
