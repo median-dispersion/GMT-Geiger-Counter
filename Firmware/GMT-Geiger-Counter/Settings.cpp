@@ -183,6 +183,7 @@ void Settings::reset() {
   // Display parameter
 
   data.parameters.display.timeout = true;
+  data.parameters.display.rgbLED  = true;
 
   // --------------------------------------------
   // Wireless parameter

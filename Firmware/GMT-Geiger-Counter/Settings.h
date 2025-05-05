@@ -65,6 +65,7 @@ class Settings {
         struct DisplayParameters {
 
           bool timeout;
+          bool rgbLED;
 
         } display;
 

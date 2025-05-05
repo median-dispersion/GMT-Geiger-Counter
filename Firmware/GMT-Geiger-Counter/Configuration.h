@@ -59,6 +59,7 @@
 // For a longer history graph increase the number of minutes
 // A very large history could lead to memory problems (be carefull)
 // Range: 5 - 250 minutes
+// Default: 20 minutes
 #define RADIATION_HISTORY_LENGTH_MINUTES 20
 
 // The minimum scale of the counts per minutes axis on the radiation history screen
@@ -135,6 +136,11 @@
 // Default: 500
 #define DISPLAY_REFRESH_INTERVAL_MILLISECONDS 500
 
+// The maximum brightness the RGB LED can reach
+// Range: 0 - 255
+// Default: 128
+#define RGB_LED_MAXIMUM_BRIGHTNESS 128
+
 // ================================================================================================
 // Wireless setting
 // ================================================================================================
@@ -198,7 +204,7 @@
 // Firmware version
 // This can be set to any arbitrary string
 // This value should not be changed!
-#define FIRMWARE_VERSION "GMTGC-REWRITE"
+#define FIRMWARE_VERSION "GMTGC-2025-05-05"
 
 // The minimum threshold of free heap the system is allowed to have
 // If the free heap falls below this value, the system will reboot to prevent software instability or lock-ups
@@ -237,3 +243,4 @@
 #define MAIN_TRG_PIN        42
 #define FOLLOWER_TRG_PIN    41
 #define COINCIDENCE_TRG_PIN 40
+#define RGB_LED_PIN         RGB_BUILTIN

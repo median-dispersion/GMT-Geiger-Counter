@@ -7,6 +7,7 @@
 #include "CosmicRayDetector.h"
 #include "Buzzer.h"
 #include "Touchscreen.h"
+#include "RGBLED.h"
 #include "Wireless.h"
 #include "Watchdog.h"
 
@@ -14,11 +15,12 @@
 // Global
 
 // Global variables
-bool     playedDoseWarning     = false;
-uint64_t lastCounts            = 0;
-uint64_t lastCoincidenceEvents = 0;
-bool     lastBuzzerMuteState   = false;
-uint64_t logTimer              = 0;
+bool     PLAYED_DOSE_WARNING           = false;
+uint64_t LAST_COUNTS_VALUE             = 0;
+uint64_t LAST_COINCIDENCE_EVENTS_VALUE = 0;
+bool     LAST_BUZZER_MUTER_STATE       = false;
+bool     LAST_RGB_LED_STATE            = true;
+uint64_t LOG_TIMER                     = 0;
 
 // Function prototypes
 void setup();
@@ -61,8 +63,9 @@ void toggleAudioNotifications(const bool toggled);
 void toggleAudioAlerts(const bool toggled);
 void toggleAudioInterface(const bool toggled);
 void toggleAudioMuteEverything(const bool toggled);
-void toggleDisplayPower(const bool toggled);
+void toggleDisplayState(const bool toggled);
 void toggleDisplayAutoTimeout(const bool toggled);
+void toggleDisplayLEDState(const bool toggled);
 void toggleHotspotState(const bool toggled);
 void toggleWiFiSate(const bool toggled);
 void toggleSystemSDCardMount(const bool toggled);
@@ -85,6 +88,7 @@ void setup() {
   cosmicRayDetector.begin();
   buzzer.begin();
   touchscreen.begin();
+  rgbLED.begin();
   wireless.begin();
   watchdog.begin();
 
@@ -195,8 +199,9 @@ void setTouchActions() {
   // Display settings touch actions
 
   touchscreen.displaySettings.back.action    = displayGeigerCounter;
-  touchscreen.displaySettings.display.action = toggleDisplayPower;
+  touchscreen.displaySettings.display.action = toggleDisplayState;
   touchscreen.displaySettings.timeout.action = toggleDisplayAutoTimeout;
+  touchscreen.displaySettings.rgbLED.action  = toggleDisplayLEDState;
 
   // --------------------------------------------
   // Rotation confirmation touch actions
@@ -316,6 +321,7 @@ void setUserSettings() {
   // Display settings
 
   touchscreen.setTimeoutState(settings.data.parameters.display.timeout);
+  rgbLED.setLEDState(settings.data.parameters.display.rgbLED);
 
   // --------------------------------------------
   // Wireless settings
@@ -382,6 +388,7 @@ void visualFeedback() {
 
   touchscreen.displaySettings.display.setToggleState(touchscreen.getTouchscreenState());
   touchscreen.displaySettings.timeout.setToggleState(touchscreen.getTimeoutState());
+  touchscreen.displaySettings.rgbLED.setToggleState(rgbLED.getLEDState());
 
   // --------------------------------------------
   // Cosmic ray detector settings screen
@@ -420,7 +427,16 @@ void visualFeedback() {
   touchscreen.systemSettings1.eventLogging.setToggleState(logger.getLogLevelState(Logger::EVENT));
   touchscreen.systemSettings1.systemLogging.setToggleState(logger.getLogLevelState(Logger::SYSTEM));
 
+  // --------------------------------------------
+  // RGB LED
+  
+  rgbLED.setRadiationRating(geigerCounter.getRadiationRating());
+
+  // Update the touchscreen
   touchscreen.update();
+
+  // Update the RGB LED
+  rgbLED.update();
 
 }
 
@@ -446,13 +462,13 @@ void audioFeedback() {
     if (microsievertsPerHour >= BUZZER_WARNING_LEVEL_USVH) {
 
       // If warning has not been played
-      if (!playedDoseWarning) {
+      if (!PLAYED_DOSE_WARNING) {
 
         // Play the warning sound
         buzzer.play(buzzer.warning);
 
         // Set the played warning flag to true
-        playedDoseWarning = true;
+        PLAYED_DOSE_WARNING = true;
 
       }
 
@@ -460,7 +476,7 @@ void audioFeedback() {
     } else {
 
       // Reset the played warning flag
-      playedDoseWarning = false;
+      PLAYED_DOSE_WARNING = false;
 
     }
 
@@ -468,7 +484,7 @@ void audioFeedback() {
     if (!buzzer.getPlaybackState()) {
 
       // Calculate the coincidence events since the last update
-      uint16_t newCoincidenceEvents = coincidenceEvents - lastCoincidenceEvents;
+      uint16_t newCoincidenceEvents = coincidenceEvents - LAST_COINCIDENCE_EVENTS_VALUE;
 
       // If there are any new coincidence events
       if (newCoincidenceEvents) {
@@ -480,7 +496,7 @@ void audioFeedback() {
       } else {
 
         // Calculate the counts since the last update
-        uint16_t newCounts = counts - lastCounts;
+        uint16_t newCounts = counts - LAST_COUNTS_VALUE;
 
         // If there are any new counts
         if (newCounts) {
@@ -497,8 +513,8 @@ void audioFeedback() {
   }
   
   // Update the last known values
-  lastCounts            = counts;
-  lastCoincidenceEvents = coincidenceEvents;
+  LAST_COUNTS_VALUE             = counts;
+  LAST_COINCIDENCE_EVENTS_VALUE = coincidenceEvents;
 
   // Update the buzzer
   buzzer.update();
@@ -511,7 +527,7 @@ void audioFeedback() {
 void dataFeedback() {
 
   // If log interval has been reached
-  if (millis() - logTimer >= LOG_INTERVAL_SECONDS * 1000) {
+  if (millis() - LOG_TIMER >= LOG_INTERVAL_SECONDS * 1000) {
 
     // If system info logging is enabled
     if (logger.getLogLevelState(Logger::SYSTEM)) {
@@ -574,7 +590,7 @@ void dataFeedback() {
     }
 
     // Update log timer
-    logTimer = millis();
+    LOG_TIMER = millis();
 
   }
 
@@ -589,7 +605,16 @@ void dataFeedback() {
 void goToSleep() {
 
   // Get the buzzer mute state
-  lastBuzzerMuteState = buzzer.getMuteState();
+  LAST_BUZZER_MUTER_STATE = buzzer.getMuteState();
+
+  // Mute the buzzer
+  buzzer.mute();
+
+  // Get the last LED state
+  LAST_RGB_LED_STATE = rgbLED.getLEDState();
+
+  // Disable the RGB LED
+  rgbLED.disable();
 
   // Turn off display
   touchscreen.sleep();
@@ -605,7 +630,11 @@ void goToSleep() {
 void wakeFromSleep() {
 
   // Set the buzzer to its last state
-  buzzer.setMuteState(lastBuzzerMuteState);
+  buzzer.setMuteState(LAST_BUZZER_MUTER_STATE);
+
+  // Set the last LED state and update LED
+  rgbLED.setLEDState(LAST_RGB_LED_STATE);
+  rgbLED.update();
 
   // Toggle on the display toggle
   touchscreen.displaySettings.display.toggleOn();
@@ -1203,7 +1232,7 @@ void toggleAudioMuteEverything(const bool toggled) {
 // ================================================================================================
 // 
 // ================================================================================================
-void toggleDisplayPower(const bool toggled) {
+void toggleDisplayState(const bool toggled) {
 
   // If toggled off make the touchscreen go to sleep
   if (!toggled) { touchscreen.sleep(); }
@@ -1226,6 +1255,22 @@ void toggleDisplayAutoTimeout(const bool toggled) {
 
   // Update settings
   settings.data.parameters.display.timeout = toggled;
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void toggleDisplayLEDState(const bool toggled) {
+
+  // Set the new state
+  rgbLED.setLEDState(toggled);
+
+  // Update settings
+  settings.data.parameters.display.rgbLED = toggled;
 
   // Play a sound
   buzzer.play(buzzer.tap);

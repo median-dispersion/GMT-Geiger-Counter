@@ -11,7 +11,8 @@ ScreenDisplaySettings::ScreenDisplaySettings():
   // Initialize members
   ScreenBasicLandscape(STRING_DISPLAY_SETTINGS),
   display(0, STRING_DISPLAY,      true),
-  timeout(1, STRING_AUTO_TIMEOUT, true)
+  timeout(1, STRING_AUTO_TIMEOUT, true),
+  rgbLED( 2, STRING_RGB_LED,      true)
 
 {}
 
@@ -26,6 +27,7 @@ void ScreenDisplaySettings::update(const XPT2046::Point &position) {
   // Update screen elements
   display.update(position);
   timeout.update(position);
+  rgbLED.update(position);
 
 }
 
@@ -40,5 +42,6 @@ void ScreenDisplaySettings::draw(GFXcanvas16 &canvas) {
   // Draw screen elements
   display.draw(canvas);
   timeout.draw(canvas);
+  rgbLED.draw(canvas);
 
 }

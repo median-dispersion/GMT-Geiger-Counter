@@ -38,6 +38,7 @@
 #define STRING_DISPLAY_SETTINGS                     "Display settings"
 #define STRING_DISPLAY                              "Display"
 #define STRING_AUTO_TIMEOUT                         "Auto timeout"
+#define STRING_RGB_LED                              "RGB LED"
 #define STRING_COSMIC_RAY_DETECTOR                  "Cosmic ray detector"
 #define STRING_ROTATE_BY_90_DEGREES                 "Rotate by 90 degrees"
 #define STRING_TAP_TO_CONTINUE                      "Tap to continue..."

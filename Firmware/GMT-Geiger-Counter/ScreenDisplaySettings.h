@@ -18,6 +18,7 @@ class ScreenDisplaySettings: public ScreenBasicLandscape {
     // Screen elements
     TouchToggle display;
     TouchToggle timeout;
+    TouchToggle rgbLED;
 
     // Constructor
     ScreenDisplaySettings();
