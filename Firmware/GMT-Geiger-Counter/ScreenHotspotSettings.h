@@ -5,11 +5,11 @@
 #include "Adafruit_GFX.h"
 #include "XPT2046.h"
 #include "Strings.h"
-#include "ScreenBasic.h"
+#include "ScreenBasicLandscape.h"
 #include "TouchToggle.h"
 #include "DisplayToastBox.h"
 
-class ScreenHotspotSettings: public ScreenBasic {
+class ScreenHotspotSettings: public ScreenBasicLandscape {
 
   //-----------------------------------------------------------------------------------------------
   // Public
@@ -34,9 +34,9 @@ class ScreenHotspotSettings: public ScreenBasic {
   private:
 
     // Screen elements
-    DisplayToastBox _hostpotName;
-    DisplayToastBox _hostpotPassword;
-    DisplayToastBox _hostpotIPAddress;
+    DisplayToastBox _hotspotName;
+    DisplayToastBox _hotspotPassword;
+    DisplayToastBox _hotspotIPAddress;
 
 };
 

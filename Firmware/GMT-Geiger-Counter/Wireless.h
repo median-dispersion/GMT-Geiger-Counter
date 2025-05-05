@@ -3,12 +3,12 @@
 
 #include "Arduino.h"
 #include "Configuration.h"
-#include "Logger.h"
-#include "Preferences.h"
-#include "WiFi.h"
-#include "SD.h"
-#include "WebServer.h"
 #include "Strings.h"
+#include "Logger.h"
+#include "SDCard.h"
+#include "WiFi.h"
+#include "WebServer.h"
+#include "Preferences.h"
 
 class Wireless {
 
@@ -17,49 +17,56 @@ class Wireless {
 
   public:
 
-    // HTTP webserver for data logging and web app interface
+    // HTTP webserver for data logging and web-app interface
     WebServer server;
 
-    // Constructor
-    Wireless();
+    // Get the single instance of the class
+    static Wireless& getInstance();
 
-    void        begin();                               // Initialize everything
-    void        update();                              // Update the wireless interfaces
-    void        enableHotspot();                       // Enable the hotspot
-    void        disableHotspot();                      // Disable the hotspot
-    bool        hotspotEnabled();                      // Returns if the hostpot is enabled
-    void        enableWiFi();                          // Enable the WiFi
-    void        disableWiFi();                         // Disable the WiFi
-    bool        wifiEnabled();                         // Returns if the WiFi is enabled
-    bool        serverRunning();                       // Returns if the webserver is running
-    void        setWiFiName(const char *name);         // Set the WiFi name / SSID
-    void        setWiFiPassword(const char *password); // Set the WiFi password
-    const char* getWiFiName();                         // Get the current WiFi name
-    const char* getWiFiIPAddress();                    // Get the WiFi IP address
-    const char* getHotspotIPAddress();                 // Get the hotspot IP address
+    void        begin();                                       // Initialize everything
+    void        update();                                      // Update the wireless interfaces
+    void        enableWiFi();                                  // Enable the WiFi
+    void        disableWiFi();                                 // Disable the WiFi
+    void        enableHotspot();                               // Enable the wireless hotspot
+    void        disableHotspot();                              // Disable the wireless hotspot
+    void        setWiFiState(const bool state);                // Set the WiFi state
+    void        setHotspotState(const bool state);             // Set the wireless hotspot state
+    void        setWiFiName(const char *name);                 // Set the WiFi name / SSID
+    void        setWiFiPassword(const char *password);         // Set the WiFi password
+    bool        getWiFiState();                                // Get the WiFi state
+    bool        getHotspotState();                             // Get the wireless hotspot state
+    bool        getServerState();                              // Get the HTTP server state
+    const char* getWiFiName();                                 // Get the WiFi name / SSID
+    const char* getWiFiIPAddress();                            // Get the WiFi IP address
+    const char* getHotspotIPAddress();                         // Get the wireless hotspot IP address
 
   // ----------------------------------------------------------------------------------------------
-  // Public
-  
+  // Private
+
   private:
 
-    // Static instance pointer to itself
-    static Wireless *_instance;
+    // Prevent direct instantiation
+    Wireless();
+    Wireless(const Wireless&) = delete;
+    Wireless& operator=(const Wireless&) = delete;
 
-    bool        _serverRunning;           // Flag for checking if the webserver is running
-    bool        _hotspotEnabled;          // Flag for checking if the hotspot is enabled
-    bool        _wifiEnabled;             // Flag for checking if the WiFi is enabled
-    String      _wifiName;                // WiFi Name
-    String      _wifiPassword;            // WiFi password
-    String      _ipAddress;               // WiFi IP address
-    Preferences _preferences;             // WiFi preferences stored in non-volatile memory
+    bool        _initialized;    // Flag for checking if the wireless interface was initialized
+    bool        _wifiEnabled;    // Flag for checking if the WiFi is enabled
+    bool        _hotspotEnabled; // Flag for checking if the hotspot is enabled
+    bool        _serverEnabled;  // Flag for checking if the webserver is enabled
+    String      _wifiName;       // WiFi Name string
+    String      _wifiPassword;   // WiFi password string
+    String      _ipAddress;      // WiFi IP address string
+    Preferences _preferences;    // WiFi preferences stored in non-volatile memory
 
-    void        _startServer();           // Start the webserver
-    void        _stopServer();            // Stop the webserver
-    bool        _sdCardMounted();         // Check if the SD card is mounted
+    void        _enableServer();          // Enable the HTTP server
+    void        _disableServer();         // Disable the HTTP server
+    static void _handleRequest();         // Handle all HTTP requests not previously defined
     static void _handleWiFiCredentials(); // Handle updates of the WiFi credentials via the web interface
-    static void _handleRequest();         // Handle all HTTP request not previously defined
-
+    
 };
+
+// Global reference to the wireless instance for easy access
+extern Wireless& wireless;
 
 #endif

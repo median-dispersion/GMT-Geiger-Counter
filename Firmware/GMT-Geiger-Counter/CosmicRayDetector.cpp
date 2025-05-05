@@ -3,29 +3,43 @@
 // ------------------------------------------------------------------------------------------------
 // Public
 
-// ================================================================================================
-// Constructor
-// ================================================================================================
-CosmicRayDetector::CosmicRayDetector():
+// Initialize global reference
+CosmicRayDetector& cosmicRayDetector = CosmicRayDetector::getInstance();
 
-  // Initialize members
-  _enabled(false),
-  _movingAverageIndex(0),
-  _movingAverageTimer(NULL),
-  _coincidenceTube(COINCIDENCE_TRG_PIN, _movingAverage, _movingAverageIndex)
+// ================================================================================================
+// Get the single instance of the class
+// ================================================================================================
+CosmicRayDetector& CosmicRayDetector::getInstance() {
 
-{}
+  // Get the single instance
+  static CosmicRayDetector instance;
+
+  // Return the instance
+  return instance;
+
+}
 
 // ================================================================================================
 // Initialize everything
 // ================================================================================================
 void CosmicRayDetector::begin() {
 
-  // Initialize logger if not already
-  logger.begin();
+  // If not initialized
+  if (!_initialized) {
 
-  // Initialize the coincidence tube
-  _coincidenceTube.begin();
+    // Set initialized flag to true
+    _initialized = true;
+
+    // Initialize logger if not already
+    logger.begin();
+
+    // Initialize the Geiger counter
+    geigerCounter.begin();
+
+    // Initialize the coincidence tube
+    _coincidenceTube.begin();
+
+  }
 
 }
 
@@ -43,6 +57,14 @@ void CosmicRayDetector::enable() {
     // Reset the position of the moving average index
     _movingAverageIndex = 0;
 
+    // Set the tube offsets
+    _coincidenceTubeOffset = _coincidenceTube.getCounts();
+    _mainTubeOffset        = geigerCounter.getMainTubeCounts();
+    _followerTubeOffset    = geigerCounter.getFollowerTubeCounts();
+
+    // Enable the Geiger counter
+    geigerCounter.enable();
+
     // Enable the coincidence tube
     _coincidenceTube.enable();
 
@@ -55,19 +77,19 @@ void CosmicRayDetector::enable() {
     // Set alarm to call the ISR function, every minute, repeat, forever
     timerAlarm(_movingAverageTimer, 60000000, true, 0);
 
-    // Get logger event data
+    // Set the enabled flag to true
+    _enabled = true;
+
+    // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"event",   Logger::STRING, {.string_value = "cosmicRayDetector"}},
-      {"enabled", Logger::BOOL,   {.bool_value   = true }              }
+      {"source",  Logger::STRING_T, {.string_v = "cosmicRayDetector"}},
+      {"enabled", Logger::BOOL_T,   {.bool_v   = _enabled}       }
 
     };
 
-    // Log cosmic ray detector enable event
-    logger.event(event, 2);
-
-    // Set the enabled flag to true
-    _enabled = true;
+    // Log event message
+    logger.log(Logger::EVENT, "event", event, 2);
 
   }
 
@@ -93,19 +115,37 @@ void CosmicRayDetector::disable() {
     // Clear the hardware timer
     _movingAverageTimer = NULL;
 
-    // Get logger event data
+    // Set the enabled flag to false
+    _enabled = false;
+
+    // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"event",   Logger::STRING, {.string_value = "cosmicRayDetector"}},
-      {"enabled", Logger::BOOL,   {.bool_value   = false }             }
+      {"source",  Logger::STRING_T, {.string_v = "cosmicRayDetector"}},
+      {"enabled", Logger::BOOL_T,   {.bool_v   = _enabled}       }
 
     };
 
-    // Log cosmic ray detector disable event
-    logger.event(event, 2);
+    // Log event message
+    logger.log(Logger::EVENT, "event", event, 2);
 
-    // Set the enabled flag to false
-    _enabled = false;
+  }
+
+}
+
+// ================================================================================================
+// Set the state of the cosmic ray detector
+// ================================================================================================
+void CosmicRayDetector::setCosmicRayDetectorState(const bool state) {
+
+  // Depending on the state either enable or disable the cosmic ray detector
+  if (state) {
+
+    enable();
+
+  } else {
+
+    disable();
 
   }
 
@@ -114,16 +154,27 @@ void CosmicRayDetector::disable() {
 // ================================================================================================
 // Returns if the cosmic ray detector is enabled
 // ================================================================================================
-bool CosmicRayDetector::enabled() {
+bool CosmicRayDetector::getCosmicRayDetectorState() {
 
   return _enabled;
 
 }
 
 // ================================================================================================
-// Get the total number of coincidence events
+// Get the number of coincidence events since the last time the cosmic ray detector was enabled
 // ================================================================================================
 uint64_t CosmicRayDetector::getCoincidenceEvents() {
+
+  // Subtract the coincidence tube offset from the total number of coincidence events and return that
+  return _coincidenceTube.getCounts() - _coincidenceTubeOffset;
+
+}
+
+
+// ================================================================================================
+// Get the total number of coincidence events
+// ================================================================================================
+uint64_t CosmicRayDetector::getCoincidenceEventsTotal() {
 
   // Get and return the total number of coincidence events
   return _coincidenceTube.getCounts();
@@ -151,15 +202,52 @@ uint32_t CosmicRayDetector::getCoincidenceEventsPerHour() {
 
 }
 
+// ================================================================================================
+// Get the number of counts from the main tube since enabling the cosmic ray detector
+// ================================================================================================
+uint64_t CosmicRayDetector::getMainTubeCounts() {
+
+  // Return the number of counts the main tube has recorded minus the set offset
+  return geigerCounter.getMainTubeCounts() - _mainTubeOffset;
+
+}
+
+// ================================================================================================
+// Get the number of counts from the follower tube since enabling the cosmic ray detector 
+// ================================================================================================
+uint64_t CosmicRayDetector::getFollowerTubeCounts() {
+
+  // Return the number of counts the follower tube has recorded minus the set offset
+  return geigerCounter.getFollowerTubeCounts() - _followerTubeOffset;
+
+}
+
 // ------------------------------------------------------------------------------------------------
 // Private
 
 // ================================================================================================
-// Advance the moving average
+// Constructor
+// ================================================================================================
+CosmicRayDetector::CosmicRayDetector():
+
+  // Initialize members
+  _initialized(false),
+  _movingAverageIndex(0),
+  _movingAverageTimer(NULL),
+  _coincidenceTube(COINCIDENCE_TRG_PIN, _movingAverage, _movingAverageIndex),
+  _enabled(false),
+  _coincidenceTubeOffset(0),
+  _mainTubeOffset(0),
+  _followerTubeOffset(0)
+
+{}
+
+// ================================================================================================
+// Interrupt service routine for advancing the moving average
 // ================================================================================================
 void IRAM_ATTR CosmicRayDetector::_advanceMovingAverage(void *instancePointer) {
 
-  // Cast the generic instancePointer back to a instance pointe of type CosmicRayDetector 
+  // Cast the generic instancePointer back to a instance pointer of type CosmicRayDetector 
   CosmicRayDetector *instance = (CosmicRayDetector*)instancePointer;
 
   // Calculate a wrapped index by using the current index + 1, if it overflows wrapped to the start of the array

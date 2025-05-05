@@ -9,7 +9,7 @@
 ScreenTrueRNG::ScreenTrueRNG():
 
   // Initialize members
-  ScreenBasic(STRING_TRUE_RNG_TITLE),
+  ScreenBasicLandscape(STRING_TRUE_RNG),
   placeholder(2, 31, 316, STRING_INFO, STRING_NOT_YET_AVAILABLE)
 
 {}
@@ -20,7 +20,7 @@ ScreenTrueRNG::ScreenTrueRNG():
 void ScreenTrueRNG::update(const XPT2046::Point &position) {
 
   // Update the basic screen
-  ScreenBasic::update(position);
+  ScreenBasicLandscape::update(position);
 
 }
 
@@ -30,7 +30,7 @@ void ScreenTrueRNG::update(const XPT2046::Point &position) {
 void ScreenTrueRNG::draw(GFXcanvas16 &canvas) {
 
   // Draw the basic screen
-  ScreenBasic::draw(canvas);
+  ScreenBasicLandscape::draw(canvas);
 
   // Draw screen elements
   placeholder.draw(canvas);

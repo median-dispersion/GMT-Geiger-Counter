@@ -6,12 +6,12 @@
 #include "XPT2046.h"
 #include "Strings.h"
 #include "Graphics.h"
-#include "ScreenBasic.h"
+#include "ScreenBasicLandscape.h"
 #include "TouchIcon.h"
 #include "DisplayDoseScreen.h"
 #include "DisplayToastBox.h"
 
-class ScreenGeigerCounterSettings1: public ScreenBasic {
+class ScreenGeigerCounterSettings1: public ScreenBasicLandscape {
 
   //-----------------------------------------------------------------------------------------------
   // Public

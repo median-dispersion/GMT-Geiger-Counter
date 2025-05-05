@@ -9,6 +9,9 @@
 ScreenGeigerCounter::ScreenGeigerCounter():
 
   // Initialize members
+
+  geigerCounterSetting(2, 31, 160, 129),
+
   audioSettings(          163, 31,  51, 51, IMAGE_VOLUME  ),
   displaySettings(        215, 31,  51, 51, IMAGE_DISPLAY ),
   goToSleep(              267, 31,  51, 51, IMAGE_SLEEP   ),
@@ -21,15 +24,13 @@ ScreenGeigerCounter::ScreenGeigerCounter():
   hotspotSettings(        163, 187, 51, 51, IMAGE_HOTSPOT ),
   wifiSettings(           215, 187, 51, 51, IMAGE_WIFI    ),
   systemSettings(         267, 187, 51, 51, IMAGE_SETTINGS),
-
-  geigerCounterSetting(2, 31, 160, 129),
   
   _equivalentDoseString("0.00"),
   _countsPerMinuteString("0 CPM"),
   _integrationTimeString("30 s"),
 
   _equivalentDoseScreen(2, 31, 160, 129, COLOR_GREEN_MEDIUM, COLOR_GREEN_DARK, _equivalentDoseString.c_str(), STRING_MICRO_SIEVERTS_PER_HOUR_ABBREVIATION),
-  _radiationRating(2, 161, 160, IMAGE_RADIATION, STRING_RADIATION_RATING_NORMAL),
+  _radiationRating(2, 161, 160, IMAGE_RADIATION, STRING_NORMAL                 ),
   _countsPerMinute(2, 187, 160, IMAGE_PARTICLE,  _countsPerMinuteString.c_str()),
   _integrationTime(2, 213, 160, IMAGE_CLOCK,     _integrationTimeString.c_str())
 
@@ -76,7 +77,7 @@ void ScreenGeigerCounter::draw(GFXcanvas16 &canvas) {
   canvas.setFont(&FreeSans9pt7b);
   canvas.setTextColor(COLOR_WHITE);
   canvas.setCursor(5, 20);
-  canvas.print(STRING_GEIGER_COUNTER_SCREEN_TITLE);
+  canvas.print(STRING_BETA_GAMMA_GMT_GEIGER_COUNTER);
 
   // Draw screen elements
   audioSettings.draw(canvas);
@@ -122,9 +123,30 @@ void ScreenGeigerCounter::setEquivalentDose(const double &equivalentDose) {
 // ================================================================================================
 // Set the equivalent dose unit
 // ================================================================================================
-void ScreenGeigerCounter::setEquivalentDoseUnit(const char *equivalentDoseUnit) {
+void ScreenGeigerCounter::setEquivalentDoseUnit(GeigerCounter::EquivalentDoseUnit equivalentDoseUnit) {
 
-  _equivalentDoseScreen.setUnit(equivalentDoseUnit);
+  // Depending on the equivalent dose unit selected
+  // Set the equivalent dose unit string
+
+  switch (equivalentDoseUnit) {
+
+    case GeigerCounter::MICRO_SIEVERTS_PER_HOUR: _equivalentDoseScreen.setUnit(STRING_MICRO_SIEVERTS_PER_HOUR_ABBREVIATION); break;
+    case GeigerCounter::MILLI_SIEVERTS_PER_HOUR: _equivalentDoseScreen.setUnit(STRING_MILLI_SIEVERTS_PER_HOUR_ABBREVIATION); break;
+    case GeigerCounter::SIEVERTS_PER_HOUR:       _equivalentDoseScreen.setUnit(STRING_SIEVERTS_PER_HOUR_ABBREVIATION);       break;
+
+    case GeigerCounter::MICRO_REM_PER_HOUR: _equivalentDoseScreen.setUnit(STRING_MICRO_REM_PER_HOUR_ABBREVIATION); break;
+    case GeigerCounter::MILLI_REM_PER_HOUR: _equivalentDoseScreen.setUnit(STRING_MILLI_REM_PER_HOUR_ABBREVIATION); break;
+    case GeigerCounter::REM_PER_HOUR:       _equivalentDoseScreen.setUnit(STRING_REM_PER_HOUR_ABBREVIATION);       break;
+
+    case GeigerCounter::MICRO_RONTGEN_PER_HOUR: _equivalentDoseScreen.setUnit(STRING_MICRO_RONTGEN_PER_HOUR_ABBREVIATION); break;
+    case GeigerCounter::MILLI_RONTGEN_PER_HOUR: _equivalentDoseScreen.setUnit(STRING_MILLI_RONTGEN_PER_HOUR_ABBREVIATION); break;
+    case GeigerCounter::RONTGEN_PER_HOUR:       _equivalentDoseScreen.setUnit(STRING_RONTGEN_PER_HOUR_ABBREVIATION);       break;
+
+    case GeigerCounter::MICRO_GRAY_PER_HOUR: _equivalentDoseScreen.setUnit(STRING_MICRO_GRAY_PER_HOUR_ABBREVIATION); break;
+    case GeigerCounter::MILLI_GRAY_PER_HOUR: _equivalentDoseScreen.setUnit(STRING_MILLI_GRAY_PER_HOUR_ABBREVIATION); break;
+    case GeigerCounter::GRAY_PER_HOUR:       _equivalentDoseScreen.setUnit(STRING_GRAY_PER_HOUR_ABBREVIATION);       break;
+
+  }
 
 }
 
@@ -139,34 +161,34 @@ void ScreenGeigerCounter::setRadiationRating(const GeigerCounter::RadiationRatin
   
   switch (radiationRating) {
 
-    case GeigerCounter::RADIATION_RATING_NORMAL:
+    case GeigerCounter::RATING_NORMAL:
       _equivalentDoseScreen.setBorderColor(COLOR_GREEN_MEDIUM);
       _equivalentDoseScreen.setBackgroundColor(COLOR_GREEN_DARK);
-      _radiationRating.setValue(STRING_RADIATION_RATING_NORMAL);
+      _radiationRating.setValue(STRING_NORMAL);
     break;
 
-    case GeigerCounter::RADIATION_RATING_ELEVATED:
+    case GeigerCounter::RATING_ELEVATED:
       _equivalentDoseScreen.setBorderColor(COLOR_LIME_MEDIUM);
       _equivalentDoseScreen.setBackgroundColor(COLOR_LIME_DARK);
-      _radiationRating.setValue(STRING_RADIATION_RATING_ELEVATED);
+      _radiationRating.setValue(STRING_ELEVATED);
     break;
 
-    case GeigerCounter::RADIATION_RATING_MEDIUM:
+    case GeigerCounter::RATING_MEDIUM:
       _equivalentDoseScreen.setBorderColor(COLOR_YELLOW_MEDIUM);
       _equivalentDoseScreen.setBackgroundColor(COLOR_YELLOW_DARK);
-      _radiationRating.setValue(STRING_RADIATION_RATING_MEDIUM);
+      _radiationRating.setValue(STRING_MEDIUM);
     break;
 
-    case GeigerCounter::RADIATION_RATING_HIGH:
+    case GeigerCounter::RATING_HIGH:
       _equivalentDoseScreen.setBorderColor(COLOR_RED_MEDIUM);
       _equivalentDoseScreen.setBackgroundColor(COLOR_RED_DARK);
-      _radiationRating.setValue(STRING_RADIATION_RATING_HIGH);
+      _radiationRating.setValue(STRING_HIGH);
     break;
 
-    case GeigerCounter::RADIATION_RATING_EXTREME:
+    case GeigerCounter::RATING_EXTREME:
       _equivalentDoseScreen.setBorderColor(COLOR_RED_MEDIUM);
       _equivalentDoseScreen.setBackgroundColor(COLOR_RED_DARK);
-      _radiationRating.setValue(STRING_RADIATION_RATING_EXTREME);
+      _radiationRating.setValue(STRING_EXTREME);
     break;
 
   }

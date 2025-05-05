@@ -56,6 +56,7 @@ extern Image IMAGE_MUON_SMALL;
 extern Image IMAGE_MUTE;
 extern Image IMAGE_NEXT;
 extern Image IMAGE_PARTICLE;
+extern Image IMAGE_QUESTION;
 extern Image IMAGE_RADIATION;
 extern Image IMAGE_RESET;
 extern Image IMAGE_ROTATE;

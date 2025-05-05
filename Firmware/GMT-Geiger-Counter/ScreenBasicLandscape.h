@@ -8,7 +8,7 @@
 #include "Screen.h"
 #include "TouchIcon.h"
 
-class ScreenBasic: public Screen {
+class ScreenBasicLandscape: public Screen {
 
   //-----------------------------------------------------------------------------------------------
   // Public
@@ -19,7 +19,7 @@ class ScreenBasic: public Screen {
     TouchIcon back;
 
     // Constructor
-    ScreenBasic(const char *title);
+    ScreenBasicLandscape(const char *title);
 
     // Update and draw calls
     void update(const XPT2046::Point &position) override;

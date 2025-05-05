@@ -65,9 +65,27 @@ void Tube::disable() {
 }
 
 // ================================================================================================
+// Set the tube state
+// ================================================================================================
+void Tube::setTubeState(const bool state) {
+
+  // Depending on the state either enable or disable the tube
+  if (state) {
+
+    enable();
+
+  } else {
+
+    disable();
+
+  }
+
+}
+
+// ================================================================================================
 // Returns if the tube is enabled
 // ================================================================================================
-bool Tube::enabled() {
+bool Tube::getTubeState() {
 
   return _enabled;
 
@@ -107,7 +125,7 @@ void IRAM_ATTR Tube::_countPulse(void *instancePointer) {
     uint64_t pulseLengthMicroseconds = micros() - instance->_pulseStartTimeMicroseconds;
 
     // Check if the pulse length is longer than the noise threshold
-    if (pulseLengthMicroseconds > TUBE_CONVERSION_FACTOR_CPM_TO_USVH) {
+    if (pulseLengthMicroseconds > TUBE_NOISE_THRESHOLD_MICROSECONDS) {
       
       // Add one count to the moving average
       instance->_movingAverage[instance->_movingAverageIndex]++;

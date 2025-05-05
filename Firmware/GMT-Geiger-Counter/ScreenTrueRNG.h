@@ -5,10 +5,10 @@
 #include "Adafruit_GFX.h"
 #include "XPT2046.h"
 #include "Strings.h"
-#include "ScreenBasic.h"
+#include "ScreenBasicLandscape.h"
 #include "DisplayToastBox.h"
 
-class ScreenTrueRNG: public ScreenBasic {
+class ScreenTrueRNG: public ScreenBasicLandscape {
 
   //-----------------------------------------------------------------------------------------------
   // Public

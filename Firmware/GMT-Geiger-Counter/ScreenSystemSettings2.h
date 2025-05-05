@@ -1,43 +1,42 @@
-#ifndef _SCREEN_WIFI_SETTINGS_H
-#define _SCREEN_WIFI_SETTINGS_H
+#ifndef _SCREEN_SYSTEM_SETTINGS_2_H
+#define _SCREEN_SYSTEM_SETTINGS_2_H
 
 #include "Arduino.h"
 #include "Adafruit_GFX.h"
 #include "XPT2046.h"
 #include "Strings.h"
 #include "ScreenBasicLandscape.h"
-#include "TouchToggle.h"
+#include "TouchIcon.h"
 #include "DisplayToastBox.h"
 
-class ScreenWiFiSettings: public ScreenBasicLandscape {
+class ScreenSystemSettings2: public ScreenBasicLandscape {
 
   //-----------------------------------------------------------------------------------------------
   // Public
-  
+
   public:
 
     // Screen elements
-    TouchToggle enable;
+    TouchIcon next;
+    TouchIcon previous;
+    DisplayToastBox firmware;
+    DisplayToastBox upTime;
+    DisplayToastBox memory;
 
     // Constructor
-    ScreenWiFiSettings();
+    ScreenSystemSettings2();
 
     // Update and draw calls
     void update(const XPT2046::Point &position) override;
     void draw(GFXcanvas16 &canvas) override;
-
-    void setWiFiName(const char *wifiName);   // Set the WiFi name / SSID
-    void setIPAddress(const char *ipAddress); // Set the WiFi IP address
 
   //-----------------------------------------------------------------------------------------------
   // Private
 
   private:
 
-    // Screen elements
-    DisplayToastBox _wifiName;
-    DisplayToastBox _wifiPassword;
-    DisplayToastBox _wifiIPAddress;
+    String _upTimeString;
+    String _memoryString;
 
 };
 

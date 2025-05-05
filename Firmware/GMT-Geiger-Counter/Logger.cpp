@@ -3,223 +3,200 @@
 // ------------------------------------------------------------------------------------------------
 // Public
 
-// Define the global reference
-Logger &logger = Logger::getInstance();
+// Initialize global reference
+Logger& logger = Logger::getInstance();
 
 // ================================================================================================
-// Constructor
+// Get the single instance of the class
 // ================================================================================================
-Logger::Logger():
+Logger& Logger::getInstance() {
 
-  // Initialize members
-  _initialized(false),
-  _logFileSelected(false),
-  _logFilePath(""),
-  _logFileID(0),
-  _logFilePart(0),
-  _serialLogging(false),
-  _sdCardLogging(false),
-  _eventLogging(false)
+  // Get the single instance
+  static Logger instance;
 
-{}
+  // Return the instance
+  return instance;
+
+}
 
 // ================================================================================================
 // Initialize everything
 // ================================================================================================
 void Logger::begin() {
 
-  // If logger is not already initialized
+  // If logger was not already initialized
   if (!_initialized) {
 
-    // Begin Serial communication if not already established
+    // Set the initialization flag to true
+    _initialized = true;
+
+    // Setup log levels
+    _logLevels[DATA]   = true;
+    _logLevels[EVENT]  = true;
+    _logLevels[SYSTEM] = true;
+
+    // Initialize serial communication
     Serial.begin(SERIAL_BAUD_RATE);
 
-    // Enable Serial logging
-    enableSerialLogging();
-
-    // Check if SD card is mounted
-    if (_sdCardMounted()) {
-
-      // Get the log file path
-      _getLogFilePath();
-
-      // Enable SD card logging
-      enableSDCardLogging();
-
-    }
-
-    // Enable event logging
-    enableEventLogging();
-
-    // Set initialized flag to true
-    _initialized = true;
+    // Initialize SD card
+    sdCard.begin();
 
   }
 
 }
 
 // ================================================================================================
-// Enable serial logging
+// Set serial logging state
 // ================================================================================================
-void Logger::enableSerialLogging() {
+void Logger::setSerialLoggingState(const bool state) {
 
-  _serialLogging = true;
+  _serialLogging = state;
 
 }
 
 // ================================================================================================
-// Disable serial logging
+// Set SD card logging state
 // ================================================================================================
-void Logger::disableSerialLogging() {
+void Logger::setSDCardLoggingState(const bool state) {
 
-  _serialLogging = false;
+  _sdCardLogging = state;
 
 }
 
 // ================================================================================================
-// Enable SD card logging
+// Set a log level state
 // ================================================================================================
-void Logger::enableSDCardLogging() {
+void Logger::setLogLevelState(const LogLevel level, const bool state) {
 
-  _sdCardLogging = true;
+  _logLevels[level] = state;
 
 }
 
 // ================================================================================================
-// Disable SD card logging
+// Get state of serial logging
 // ================================================================================================
-void Logger::disableSDCardLogging() {
-
-  _sdCardLogging = false;
-
-}
-
-// ================================================================================================
-// Enable event logging
-// ================================================================================================
-void Logger::enableEventLogging() {
-
-  _eventLogging = true;
-
-}
-
-// ================================================================================================
-// Disable event logging
-// ================================================================================================
-void Logger::disableEventLogging() {
-
-  _eventLogging = false;
-
-}
-
-// ================================================================================================
-// Retruns if serial logging is enabled
-// ================================================================================================
-bool Logger::serialLogging() {
+bool Logger::getSerialLoggingState() {
 
   return _serialLogging;
 
 }
 
 // ================================================================================================
-// Retruns if SD card logging is enabled
+// Get state of SD card logging
 // ================================================================================================
-bool Logger::sdCardLogging() {
+bool Logger::getSDCardLoggingState() {
 
   return _sdCardLogging;
 
 }
 
 // ================================================================================================
-// Returns if event logging is enabled
+// Get the state of a log level
 // ================================================================================================
-bool Logger::eventLogging() {
+bool Logger::getLogLevelState(const LogLevel level) {
 
-  return _eventLogging;
+  return _logLevels[level];
 
 }
 
 // ================================================================================================
-// 
+// Get path to log file
 // ================================================================================================
-void Logger::log(const String &message) {
+const char* Logger::getLogFilePath() {
 
-  // If serial logging is enabled print log message to the serial console
-  if (serialLogging()) { Serial.println(message); }
+  // Check if the SD card is mounted
+  if (sdCard.getMountState()) {
 
-  // If SD card logging is enabled
-  if (sdCardLogging()) {
+    // Check if the log file path is unset
+    if (_logFilePath.isEmpty()) {
+
+      // Open log directory
+      File directory = sdCard.open(SD_CARD_LOG_DIRECTORY);
+
+      // If accessing the log directory was successful
+      if (directory && directory.isDirectory()) {
+
+        // Element variable
+        File element;
+
+        // Loop through all elements in the log directory
+        while ((element = directory.openNextFile())) {
+
+          // If the element is not a directory
+          if (element && !element.isDirectory()) {
+            
+            // Get the element name
+            String name = element.name();
+
+            // Check if it is a JSON file
+            if (name.endsWith(".json")) {
+
+              // Increase the log file ID
+              _logFileID++;
+
+            }
+
+          }
+          
+          // Close each element after use
+          element.close();
+
+        }
+
+        // Increase the log file ID to the next log file
+        _logFileID++;
+
+        // Construct the full log file path with the new log file ID
+        _logFilePath  = SD_CARD_LOG_DIRECTORY;
+        _logFilePath += "/Log";
+        _logFilePath += _logFileID;
+        _logFilePath += ".json";
+      
+      }
+
+      // Close the log directory
+      directory.close();
     
-    // Check if the SD card is mounted
-    if (_sdCardMounted()) {
+    // If a log file is already selected
+    } else {
 
-      // Get log file path
-      const char *path = _getLogFilePath();
+      // Open the selected log file
+      File file = sdCard.open(_logFilePath.c_str());
 
-      // Open log file
-      File file = SD.open(path, FILE_APPEND);
+      // If log file size is larger than the maximum allowed size
+      if (file && file.size() >= LOG_FILE_MAXIMUM_SIZE_BYTES) {
 
-      // If successfully opend log file
-      if (file) {
+        // Increase log file part
+        _logFilePart++;
 
-        // Write log message to file
-        file.print(message);
+        // Construct new file path to the next log file part
+        _logFilePath  = SD_CARD_LOG_DIRECTORY;
+        _logFilePath += "/Log";
+        _logFilePath += _logFileID;
+        _logFilePath += ".json.part";
+        _logFilePath += _logFilePart;
 
       }
 
       // Close log file
       file.close();
-    
-    // If the SD card is not or no longer mounted
-    } else {
-
-      // Disable SD card logging
-      disableSDCardLogging();
 
     }
 
   }
 
-}
-
-// ================================================================================================
-// Log event message
-// ================================================================================================
-void Logger::event(const KeyValuePair *data, const uint8_t size) {
-
-  // If event logging is enabled
-  if (eventLogging()) {
-
-    // Event message string
-    String eventMessage;
-
-    // Construct the event message
-    getLogMessage("event", data, size, eventMessage);
-
-    // Log the event message
-    log(eventMessage);
-
-  }
+  // Return the log file path
+  return _logFilePath.c_str();
 
 }
 
 // ================================================================================================
-// Get the single instance of the logger class
-// ================================================================================================
-Logger& Logger::getInstance() {
-
-  // Ensures only one instance
-  static Logger instance;  
-  
-  // Return instance
-  return instance;
-
-}
-
-// ================================================================================================
-// Construct and append a JSON log message
+// Construct and return a log message
 // ================================================================================================
 void Logger::getLogMessage(const char *type, const KeyValuePair *data, const uint8_t size, String &message) {
+
+  // Clear the log message
+  message = "";
 
   // Add log message type
   message += "{\"type\":\"";
@@ -240,65 +217,103 @@ void Logger::getLogMessage(const char *type, const KeyValuePair *data, const uin
     message += data[pair].key;
     message += "\":";
 
-    // Depending on the type add the value
+    // Add the value depending on the type
     switch (data[pair].type) {
 
-      case UINT8_T:  message += data[pair].value.uint8_t_value;  break;
-      case UINT16_T: message += data[pair].value.uint16_t_value; break;
-      case UINT32_T: message += data[pair].value.uint32_t_value; break;
-      case UINT64_T: message += data[pair].value.uint64_t_value; break;
+      // If value is an unsigned integer simply add it to the message
+      case UINT8_T:  message += data[pair].value.uint8_v;  break;
+      case UINT32_T: message += data[pair].value.uint32_v; break;
+      case UINT64_T: message += data[pair].value.uint64_v; break;
 
-      // If value is a double
-      case DOUBLE: 
-
-        // Format the double to have 5 decimal places
-        message += String(data[pair].value.double_value, 5);
-      
-      break;
+      // If value is a floating point number format it to have 5 decimal places
+      case DOUBLE_T: message += String(data[pair].value.double_v, 5); break;
 
       // If value is a sting
-      case STRING:
+      case STRING_T:
 
-        // Escape value with '"'
+        // Escape the value with '"'
         message += "\"";
-        message += data[pair].value.string_value;
+        message += data[pair].value.string_v;
         message += "\"";
 
       break;
 
-      // If value is a boolean
-      case BOOL:
+      // If the value is a boolean
+      case BOOL_T:
 
-        // If boolean is true
-        if (data[pair].value.bool_value) {
-
-          // Add true as the value
-          message += "true";
-        
-        // If boolean is false
-        } else {
-
-          // Add false as the value
-          message += "false";
-
-        }
+        // Add a "true" or "false" depending on the boolean value
+        if (data[pair].value.bool_v) { message += "true";  }
+        else                         { message += "false"; }
 
       break;
 
     }
 
-    // If not the last key value pair
+    // If not the last the key value pair
     if (pair < size - 1) {
 
-      // Add trailing ","
+      // Add a trailing ","
       message += ",";
 
     }
 
   }
 
-  // Add trailing "}}"
+  // Add the trailing "}}" to the message
   message += "}}";
+
+}
+
+// ================================================================================================
+// Log data
+// ================================================================================================
+void Logger::log(const LogLevel level, const char *type, const KeyValuePair *data, const uint8_t size){
+
+  // If selected log level is enabled
+  if (_logLevels[level]) {
+
+    // Log message string
+    String message = "";
+
+    // Construct the log message
+    getLogMessage(type, data, size, message);
+
+    // If serial logging is enabled
+    if (_serialLogging) {
+
+      // Print log message to serial console
+      Serial.println(message);
+
+    }
+
+    // Add a "," to the end of the log message
+    message += ",";
+
+    // If SD card logging is enabled
+    if (_sdCardLogging) {
+
+      // If SD card is mounted
+      if (sdCard.getMountState()) {
+
+        // Open the log file in append mode
+        File file = sdCard.open(getLogFilePath(), FILE_APPEND);
+
+        // If opening the log file was successful
+        if (file) {
+
+          // Write log message to log file
+          file.print(message);
+
+        }
+
+        // Close the log file
+        file.close();
+
+      }
+
+    }
+  
+  }
 
 }
 
@@ -306,145 +321,16 @@ void Logger::getLogMessage(const char *type, const KeyValuePair *data, const uin
 // Private
 
 // ================================================================================================
-// Check if the SD card is mounted and the Log directory exists
+// Constructor
 // ================================================================================================
-bool Logger::_sdCardMounted() {
-  
-  // Check if the log directory exists
-  if (!SD.exists(SD_CARD_LOG_DIRECTORY)) {
+Logger::Logger():
 
-    // If it doesn't exists, try creating it
-    if (!SD.mkdir(SD_CARD_ROOT_DIRECTORY) || !SD.mkdir(SD_CARD_LOG_DIRECTORY)) {
+  // Initialize members
+  _initialized(false),
+  _serialLogging(true),
+  _sdCardLogging(true),
+  _logFilePath(""),
+  _logFileID(0),
+  _logFilePart(0)
 
-      // If creating the log directory failed, unmount the SD card
-      SD.end();
-
-      // Try remounting the SD card
-      if (!SD.begin(SD_CS_PIN)) {
-        
-        // If remounting fails return false
-        return false;
-
-      // If remounting was successful
-      } else {
-
-        // Again check if the log directory exists
-        if (!SD.exists(SD_CARD_LOG_DIRECTORY)) {
-
-          // If it doesn't exists, try creating it
-          if (!SD.mkdir(SD_CARD_ROOT_DIRECTORY) || !SD.mkdir(SD_CARD_LOG_DIRECTORY)) {
-
-            // If something went wrong while trying to create the log directory for a second time return false
-            return false;
-
-          }
-
-        }
-
-      }
-
-    }
-
-  }
-
-  // If mounting was successful and the main directory exists return true
-  return true;
-
-}
-
-// ================================================================================================
-// Get the log file path
-// ================================================================================================
-const char* Logger::_getLogFilePath() {
-
-  // If log file has not been selected
-  if (!_logFileSelected) {
-
-    // Set the path to the log directory
-    _logFilePath = SD_CARD_LOG_DIRECTORY;
-
-    // Open log directory
-    File root = SD.open(_logFilePath);
-
-    // If successfully opend the log directory
-    if (root && root.isDirectory()) { 
-
-      // Open first element in log directory
-      File file = root.openNextFile();
-
-      // Loop through all elements in the log directory
-      while (file) {
-
-        // If the element is not a directory
-        if (!file.isDirectory()) {
-          
-          // Get the file name
-          String name = file.name();
-
-          // Check if it is a JSON file
-          if (name.endsWith(".json")) {
-
-            // Increase the log file ID
-            _logFileID++;
-
-          }
-
-        }
-        
-        // Close each element after use
-        file.close();
-
-        // Open next element
-        file = root.openNextFile();
-
-      }
-
-      // Close element
-      file.close();
-
-      // Increase the log file ID to create the next log file
-      _logFileID++;
-
-      // Construct log file path
-      _logFilePath += "/Log";
-      _logFilePath += _logFileID;
-      _logFilePath += ".json";
-
-      // Set the log file selected flag to true
-      _logFileSelected = true;
-
-    }
-
-    // Close log directory
-    root.close();
-  
-  // If a log file has been selected
-  } else {
-
-    // Open log file
-    File file = SD.open(_logFilePath);
-
-    // If log file size is larger than the maximum allowed size
-    if (file && file.size() >= LOG_FILE_MAXIMUM_SIZE_BYTES) {
-
-      // Increase log file part
-      _logFilePart++;
-
-      // Construct new file path to the next log file part
-      _logFilePath  = SD_CARD_LOG_DIRECTORY;
-      _logFilePath += "/Log";
-      _logFilePath += _logFileID;
-      _logFilePath += ".part";
-      _logFilePath += _logFilePart;
-
-    }
-
-    // Close log file
-    file.close();
-
-  }
-
-  // Return path to log file
-  return _logFilePath.c_str();
-
-}
+{}

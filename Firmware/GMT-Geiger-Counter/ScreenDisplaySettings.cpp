@@ -9,9 +9,9 @@
 ScreenDisplaySettings::ScreenDisplaySettings():
 
   // Initialize members
-  ScreenBasic(STRING_DISPLAY_SETTINGS_TITLE),
-  display(0, STRING_TOGGLE_DISPLAY, true),
-  timeout(1, STRING_AUTO_TIMEOUT,   true)
+  ScreenBasicLandscape(STRING_DISPLAY_SETTINGS),
+  display(0, STRING_DISPLAY,      true),
+  timeout(1, STRING_AUTO_TIMEOUT, true)
 
 {}
 
@@ -21,7 +21,7 @@ ScreenDisplaySettings::ScreenDisplaySettings():
 void ScreenDisplaySettings::update(const XPT2046::Point &position) {
 
   // Update the basic screen
-  ScreenBasic::update(position);
+  ScreenBasicLandscape::update(position);
 
   // Update screen elements
   display.update(position);
@@ -35,7 +35,7 @@ void ScreenDisplaySettings::update(const XPT2046::Point &position) {
 void ScreenDisplaySettings::draw(GFXcanvas16 &canvas) {
 
   // Draw the basic screen
-  ScreenBasic::draw(canvas);
+  ScreenBasicLandscape::draw(canvas);
 
   // Draw screen elements
   display.draw(canvas);

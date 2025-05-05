@@ -13,9 +13,10 @@ class Channel {
     // Constructor
     Channel(const bool muted = false);
 
-    void mute();   // Mute the audio channel
-    void unmute(); // Unmute the audio channel
-    bool muted();  // Check if audio channel is muted
+    void mute();                         // Mute the audio channel
+    void unmute();                       // Unmute the audio channel
+    void setMuteState(const bool state); // Set a mute state
+    bool getMuteState();                 // Check if audio channel is muted
 
   // ----------------------------------------------------------------------------------------------
   // Private

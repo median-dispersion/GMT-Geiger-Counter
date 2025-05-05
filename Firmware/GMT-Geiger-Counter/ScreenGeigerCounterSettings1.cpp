@@ -9,11 +9,14 @@
 ScreenGeigerCounterSettings1::ScreenGeigerCounterSettings1():
 
   // Initialize members
-  ScreenBasic(STRING_GEIGER_COUNTER_SETTINGS_SCREEN_TITLE),
-  next(160, 213, 158, 25, IMAGE_NEXT),
-  previous(2, 213, 157, 25, IMAGE_BACK),
+  ScreenBasicLandscape(STRING_GEIGER_COUNTER_SETTINGS),
+  next(    160, 213, 158, 25, IMAGE_NEXT),
+  previous(2,   213, 157, 25, IMAGE_BACK),
+  _countsString("0"),
+  _mainTubeCountsString("0"),
+  _followerTubeCountsString("0"),
   _countsScreen(2, 31, 316, 77, COLOR_BLUE_MEDIUM, COLOR_BLUE_DARK, _countsString.c_str(), STRING_COUNTS),
-  _mainTubeCounts(160, 109, 158, STRING_COUNTS, _mainTubeCountsString.c_str()),
+  _mainTubeCounts(    160, 109, 158, STRING_COUNTS, _mainTubeCountsString.c_str()),
   _followerTubeCounts(160, 161, 158, STRING_COUNTS, _followerTubeCountsString.c_str())
 
 {}
@@ -24,7 +27,7 @@ ScreenGeigerCounterSettings1::ScreenGeigerCounterSettings1():
 void ScreenGeigerCounterSettings1::update(const XPT2046::Point &position) {
 
   // Update the basic screen
-  ScreenBasic::update(position);
+  ScreenBasicLandscape::update(position);
 
   // Update screen elements
   next.update(position);
@@ -38,7 +41,7 @@ void ScreenGeigerCounterSettings1::update(const XPT2046::Point &position) {
 void ScreenGeigerCounterSettings1::draw(GFXcanvas16 &canvas) {
 
   // Draw the basic screen
-  ScreenBasic::draw(canvas);
+  ScreenBasicLandscape::draw(canvas);
 
   // Draw the diagram background and diagram
   canvas.fillRect(2, 109, 157, 51, COLOR_GRAY_DARK);

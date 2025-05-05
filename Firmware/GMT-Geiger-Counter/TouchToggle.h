@@ -19,11 +19,11 @@ class TouchToggle {
     void update(const XPT2046::Point &position); // Update the touch toggle with the touch position
     void draw(GFXcanvas16 &canvas);              // Draw the touch toggle to the frame buffer
     void (*action)(const bool toggled);          // Function pointer to execute a function on touchdown
-    void toggle();                               // Toggle state
-    void toggle(const bool toggled);             // Toggle a specific state
     void toggleOn();                             // Toggle on
     void toggleOff();                            // Toggle off
-    bool toggled();                              // Return the toggle state
+    void toggle();                               // Toggle state
+    void setToggleState(const bool toggled);     // Toggle a specific state
+    bool getToggleState();                       // Return the toggle state
 
   //-----------------------------------------------------------------------------------------------
   // Private

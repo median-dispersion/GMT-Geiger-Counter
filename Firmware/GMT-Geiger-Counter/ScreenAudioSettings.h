@@ -5,10 +5,10 @@
 #include "Adafruit_GFX.h"
 #include "XPT2046.h"
 #include "Strings.h"
-#include "ScreenBasic.h"
+#include "ScreenBasicLandscape.h"
 #include "TouchToggle.h"
 
-class ScreenAudioSettings: public ScreenBasic {
+class ScreenAudioSettings: public ScreenBasicLandscape {
 
   //-----------------------------------------------------------------------------------------------
   // Public

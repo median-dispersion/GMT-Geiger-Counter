@@ -9,20 +9,17 @@
 ScreenCosmicRayDetector::ScreenCosmicRayDetector():
 
   // Initialize members
-  ScreenBasicPortrait(STRING_COSMIC_RAY_DETECTOR_TITLE),
-  mute( 213, 163, 25, 25, IMAGE_MUTE       ),
-  sleep(213, 189, 25, 25, IMAGE_SLEEP_SMALL),
-  _coincidenceEventsOffset(0),
-  _mainTubeCountsOffset(0),
-  _followerTubeCountsOffset(0),
+  ScreenBasicPortrait(STRING_COSMIC_RAY_DETECTOR),
+  mute( 187, 163, 51, 25, IMAGE_MUTE       ),
+  sleep(187, 189, 51, 25, IMAGE_SLEEP_SMALL),
   _coincidenceEventsString("0"),
   _coincidenceEventsPerHourString("0.00 CPH"),
   _coincidenceEventsTotalString("0"),
   _mainTubeCountsString("0"),
   _followerTubeCountsString("0"),
   _coincidenceEventsScreen(2, 31, 236, 131, COLOR_PURPLE_MEDIUM, COLOR_PURPLE_DARK, _coincidenceEventsString.c_str(), STRING_COINCIDENCE_EVENTS),
-  _coincidenceEventsPerHour(2, 163, 210, IMAGE_MUON_SMALL, _coincidenceEventsPerHourString.c_str()),
-  _coincidenceEventsTotal(2, 189, 210, IMAGE_SUM, _coincidenceEventsTotalString.c_str()),
+  _coincidenceEventsPerHour(2, 163, 184, IMAGE_MUON_SMALL, _coincidenceEventsPerHourString.c_str()),
+  _coincidenceEventsTotal(2, 189, 184, IMAGE_SUM, _coincidenceEventsTotalString.c_str()),
   _mainTubeCounts(120, 215, 118, STRING_COUNTS, _mainTubeCountsString.c_str()),
   _followerTubeCounts(120, 267, 118, STRING_COUNTS, _followerTubeCountsString.c_str())
 
@@ -67,38 +64,11 @@ void ScreenCosmicRayDetector::draw(GFXcanvas16 &canvas) {
 }
 
 // ================================================================================================
-// Set the coincidence events offset
-// ================================================================================================
-void ScreenCosmicRayDetector::setCoincidenceEventsOffset(const uint64_t &coincidenceEventsOffset) {
-
-  _coincidenceEventsOffset = coincidenceEventsOffset;
-
-}
-
-// ================================================================================================
-// Set the main tube offset
-// ================================================================================================
-void ScreenCosmicRayDetector::setMainTubeCountsOffset(const uint64_t &mainTubeCountsOffset) {
-
-  _mainTubeCountsOffset = mainTubeCountsOffset;
-
-}
-
-// ================================================================================================
-// Set the follower tube offset
-// ================================================================================================
-void ScreenCosmicRayDetector::setFollowerTubeCountsOffset(const uint64_t &followerTubeCountsOffset) {
-
-  _followerTubeCountsOffset = followerTubeCountsOffset;
-
-}
-
-// ================================================================================================
-// Calculate and set coincidence events
+// Set coincidence events
 // ================================================================================================
 void ScreenCosmicRayDetector::setCoincidenceEvents(const uint64_t &coincidenceEvents) {
 
-  _coincidenceEventsString = coincidenceEvents - _coincidenceEventsOffset;
+  _coincidenceEventsString = coincidenceEvents;
 
 }
 
@@ -123,19 +93,19 @@ void ScreenCosmicRayDetector::setCoincidenceEventsTotal(const uint64_t &coincide
 }
 
 // ================================================================================================
-// Calculate and set main tube counts
+// Set main tube counts
 // ================================================================================================
 void ScreenCosmicRayDetector::setMainTubeCounts(const uint64_t &mainTubeCounts) {
 
-  _mainTubeCountsString = mainTubeCounts - _mainTubeCountsOffset;
+  _mainTubeCountsString = mainTubeCounts;
 
 }
 
 // ================================================================================================
-// Calculate and set follower tube counts
+// Set follower tube counts
 // ================================================================================================
 void ScreenCosmicRayDetector::setFollowerTubeCounts(const uint64_t &followerTubeCounts) {
 
-  _followerTubeCountsString = followerTubeCounts - _followerTubeCountsOffset;
+  _followerTubeCountsString = followerTubeCounts;
 
 }

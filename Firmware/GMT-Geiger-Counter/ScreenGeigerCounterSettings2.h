@@ -6,12 +6,12 @@
 #include "XPT2046.h"
 #include "Strings.h"
 #include "Graphics.h"
-#include "ScreenBasic.h"
+#include "ScreenBasicLandscape.h"
 #include "TouchToggle.h"
 #include "TouchRadio.h"
 #include "TouchIcon.h"
 
-class ScreenGeigerCounterSettings2: public ScreenBasic {
+class ScreenGeigerCounterSettings2: public ScreenBasicLandscape {
 
   //-----------------------------------------------------------------------------------------------
   // Public
@@ -19,8 +19,9 @@ class ScreenGeigerCounterSettings2: public ScreenBasic {
   public:
 
     // Screen elements
+    TouchToggle autoIntegrate;
     TouchToggle autoRange;
-    TouchRadio  sievert;
+    TouchRadio  sieverts;
     TouchRadio  rem;
     TouchRadio  rontgen;
     TouchRadio  gray;

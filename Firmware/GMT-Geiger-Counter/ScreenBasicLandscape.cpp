@@ -1,4 +1,4 @@
-#include "ScreenBasic.h"
+#include "ScreenBasicLandscape.h"
 
 //-------------------------------------------------------------------------------------------------
 // Public
@@ -6,7 +6,7 @@
 // ================================================================================================
 // Constructor
 // ================================================================================================
-ScreenBasic::ScreenBasic(const char *title):
+ScreenBasicLandscape::ScreenBasicLandscape(const char *title):
 
   // Initialize members
   back(2, 2, 51, 26, IMAGE_BACK),
@@ -17,7 +17,7 @@ ScreenBasic::ScreenBasic(const char *title):
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenBasic::update(const XPT2046::Point &position) {
+void ScreenBasicLandscape::update(const XPT2046::Point &position) {
 
   // Update back button
   back.update(position);
@@ -27,7 +27,7 @@ void ScreenBasic::update(const XPT2046::Point &position) {
 // ================================================================================================
 // Draw
 // ================================================================================================
-void ScreenBasic::draw(GFXcanvas16 &canvas) {
+void ScreenBasicLandscape::draw(GFXcanvas16 &canvas) {
 
   // Clear framebuffer
   canvas.fillScreen(COLOR_BLACK);

@@ -14,11 +14,12 @@ class Tube {
     // Constructor
     Tube(const uint8_t pin, volatile uint16_t *movingAverage, volatile uint8_t &movingAverageIndex);
 
-    void begin();         // Initialize everything
-    void enable();        // Enable the tube
-    void disable();       // Disable the tube
-    bool enabled();       // Returns if the tube is enabled
-    uint64_t getCounts(); // Get the total number of counts
+    void begin();                        // Initialize everything
+    void enable();                       // Enable the tube
+    void disable();                      // Disable the tube
+    void setTubeState(const bool state); // Set the tube state
+    bool getTubeState();                 // Returns if the tube is enabled
+    uint64_t getCounts();                // Get the total number of counts
 
   // ----------------------------------------------------------------------------------------------
   // Private

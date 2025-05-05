@@ -4,6 +4,7 @@
 #include "Arduino.h"
 #include "Configuration.h"
 #include "NonBlockingMelody.h"
+#include "Logger.h"
 #include "Channel.h"
 #include "Melody.h"
 
@@ -38,26 +39,36 @@ class Buzzer {
     Sound tap;              // UI touch press sound effect
     Sound warning;          // Radiation warning sound effect
 
-    // Constructor
-    Buzzer();
+    // Get the single instance of the class
+    static Buzzer& getInstance();
 
     void begin();                                              // Initialize everything
     void update();                                             // Update the Buzzer
     void mute();                                               // Mute the buzzer
     void unmute();                                             // Unmute the buzzer
-    bool muted();                                              // Check if the buzzer is muted
     void play(const Sound &sound, const uint16_t repeats = 1); // Play a sound effect
-    bool playing();                                            // Check if anything is playing
-    bool playing(const Sound &sound);                          // Check if a specific sound is playing
+    void setMuteState(const bool state);                       // Set mute state
+    bool getMuteState();                                       // Check if the buzzer is muted
+    bool getPlaybackState();                                   // Check if anything is playing
+    bool getPlaybackState(const Sound &sound);                 // Check if a specific sound is playing
 
   // ----------------------------------------------------------------------------------------------
   // Private
 
   private:
 
-    bool              _muted; // Flag for checking if the buzzer is muted
-    NonBlockingMelody _audio; // Audio player object
+    // Prevent direct instantiation
+    Buzzer();
+    Buzzer(const Buzzer&) = delete;
+    Buzzer& operator=(const Buzzer&) = delete;
+
+    bool              _initalized; // Flag for checking if buzzer is initalized
+    bool              _muted;      // Flag for checking if the buzzer is muted
+    NonBlockingMelody _audio;      // Audio player object
 
 };
+
+// Global reference to the buzzer instance for easy access
+extern Buzzer& buzzer;
 
 #endif

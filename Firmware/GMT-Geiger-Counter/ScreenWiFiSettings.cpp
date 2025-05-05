@@ -9,11 +9,11 @@
 ScreenWiFiSettings::ScreenWiFiSettings():
 
   // Initialize members
-  ScreenBasic(STRING_WIFI_SETTINGS_TITLE),
+  ScreenBasicLandscape(STRING_WIFI_SETTINGS),
   enable(0, STRING_ENABLE_WIFI, false),
-  _wifiName(2, 57, 316, STRING_WIFI_NAME, WIFI_NAME),
-  _wifiPassword(2, 109, 316, STRING_WIFI_PASSWORD, STRING_PASSWORD_HIDDEN),
-  _wifiIPAddress(2, 161, 316, STRING_IP_ADDRESS, STRING_NON_APPLICABLE_ABBREVIATION)
+  _wifiName(     2, 57,  316, STRING_WIFI_NAME, WIFI_NAME),
+  _wifiPassword( 2, 109, 316, STRING_WIFI_PASSWORD, STRING_ASTERISKS),
+  _wifiIPAddress(2, 161, 316, STRING_IP_ADDRESS, STRING_NOT_CONNECTED)
 
 {}
 
@@ -23,7 +23,7 @@ ScreenWiFiSettings::ScreenWiFiSettings():
 void ScreenWiFiSettings::update(const XPT2046::Point &position) {
 
   // Update the basic screen
-  ScreenBasic::update(position);
+  ScreenBasicLandscape::update(position);
 
   // Update screen elements
   enable.update(position);
@@ -36,7 +36,7 @@ void ScreenWiFiSettings::update(const XPT2046::Point &position) {
 void ScreenWiFiSettings::draw(GFXcanvas16 &canvas) {
 
   // Draw the basic screen
-  ScreenBasic::draw(canvas);
+  ScreenBasicLandscape::draw(canvas);
 
   // Draw screen elements
   enable.draw(canvas);

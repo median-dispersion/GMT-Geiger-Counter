@@ -30,23 +30,17 @@ class ScreenCosmicRayDetector: public ScreenBasicPortrait {
     void draw(GFXcanvas16 &canvas) override;
 
     // Set screen variables
-    void setCoincidenceEventsOffset(const uint64_t &coincidenceEventsOffset);   // Set the coincidence events offset
-    void setMainTubeCountsOffset(const uint64_t &mainTubeCountsOffset);         // Set the main tube offset
-    void setFollowerTubeCountsOffset(const uint64_t &followerTubeCountsOffset); // Set the follower tube offset 
-    void setCoincidenceEvents(const uint64_t &coincidenceEvents);               // Calculate and set coincidence events
+    void setCoincidenceEvents(const uint64_t &coincidenceEvents);               // Set coincidence events
     void setCoincidenceEventsPerHour(const uint32_t &coincidenceEventsPerHour); // Set the coincidence events per hour value
     void setCoincidenceEventsTotal(const uint64_t &coincidenceEventsTotal);     // Set the total number of coincidence events
-    void setMainTubeCounts(const uint64_t &mainTubeCounts);                     // Calculate and set main tube counts
-    void setFollowerTubeCounts(const uint64_t &followerTubeCounts);             // Calculate and set follower tube counts
+    void setMainTubeCounts(const uint64_t &mainTubeCounts);                     // Set main tube counts
+    void setFollowerTubeCounts(const uint64_t &followerTubeCounts);             // Set follower tube counts
 
   // ----------------------------------------------------------------------------------------------
   // Private
 
   private:
 
-    uint64_t          _coincidenceEventsOffset;        // Coincidence events offset
-    uint64_t          _mainTubeCountsOffset;           // Main tube offset
-    uint64_t          _followerTubeCountsOffset;       // Follower tube offset
     String            _coincidenceEventsString;        // Coincidence events string
     String            _coincidenceEventsPerHourString; // Coincidence events per hour string
     String            _coincidenceEventsTotalString;   // Total Coincidence events string

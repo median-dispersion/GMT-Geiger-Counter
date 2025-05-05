@@ -1,26 +1,27 @@
-#ifndef _SCREEN_DISPLAY_SETTING_H
-#define _SCREEN_DISPLAY_SETTING_H
+#ifndef _SCREEN_DISABLE_COSMIC_RAY_DETECTOR_H
+#define _SCREEN_DISABLE_COSMIC_RAY_DETECTOR_H
 
 #include "Arduino.h"
 #include "Adafruit_GFX.h"
 #include "XPT2046.h"
 #include "Strings.h"
-#include "ScreenBasicLandscape.h"
-#include "TouchToggle.h"
+#include "Graphics.h"
+#include "ScreenBasicPortrait.h"
+#include "TouchButton.h"
 
-class ScreenDisplaySettings: public ScreenBasicLandscape {
+class ScreenDisableCosmicRayDetector: public ScreenBasicPortrait {
 
   //-----------------------------------------------------------------------------------------------
   // Public
-  
+
   public:
 
-    // Screen elements
-    TouchToggle display;
-    TouchToggle timeout;
-
     // Constructor
-    ScreenDisplaySettings();
+    ScreenDisableCosmicRayDetector();
+
+    // Screen elements
+    TouchButton confirm;
+    TouchButton dismiss;
 
     // Update and draw calls
     void update(const XPT2046::Point &position) override;
