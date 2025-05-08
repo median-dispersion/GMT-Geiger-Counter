@@ -122,7 +122,16 @@ void Buzzer::play(const Sound &sound, const uint16_t repeats) {
 // ================================================================================================
 void Buzzer::setMuteState(const bool state) {
 
-  _muted = state;
+  // Depending on the state either mute or unmute the buzzer
+  if (state) {
+
+    mute();
+    
+  } else {
+
+    unmute();
+
+  }
 
 }
 

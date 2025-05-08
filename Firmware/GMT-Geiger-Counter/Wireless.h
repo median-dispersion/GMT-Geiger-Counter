@@ -58,6 +58,7 @@ class Wireless {
     String      _wifiPassword;   // WiFi password string
     String      _ipAddress;      // WiFi IP address string
     Preferences _preferences;    // WiFi preferences stored in non-volatile memory
+    uint8_t     _hotspotClients; // Number of connected hotspot clients
 
     void        _enableServer();          // Enable the HTTP server
     void        _disableServer();         // Disable the HTTP server

@@ -74,6 +74,34 @@ void Wireless::update() {
   // Update HTTP clients
   server.handleClient();
 
+  // Get the current number of hotspot clients
+  uint8_t currentHotspotClients = WiFi.softAPgetStationNum();
+
+  // If the last known and current number of hotspot clients dont match
+  if (_hotspotClients != currentHotspotClients) {
+
+    // Set the connected flag to false
+    bool connected = false;
+
+    // If the number of clients increased set connected flag to true
+    if (_hotspotClients < currentHotspotClients) { connected = true; }
+
+    // Update the number of connected clients
+    _hotspotClients = currentHotspotClients;
+
+    // Create event data
+    Logger::KeyValuePair event[2] = {
+
+      {"source",    Logger::STRING_T, {.string_v = "hotspotClient"}},
+      {"connected", Logger::BOOL_T,   {.bool_v   = connected}      }
+
+    };
+
+    // Log event message
+    logger.log(Logger::EVENT, "event", event, 2);
+
+  }
+
 }
 
 // ================================================================================================
@@ -405,7 +433,8 @@ Wireless::Wireless():
   _serverEnabled(false),
   _wifiName(""),
   _wifiPassword(""),
-  _ipAddress("")
+  _ipAddress(""),
+  _hotspotClients(0)
 
 {}
 
