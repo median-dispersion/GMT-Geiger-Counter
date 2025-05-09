@@ -8,5 +8,7 @@
 # Ignore Blenders .blend1 backup files
 *.blend1
 
-# Ignore all JSON Log files
-Log*.json
+# Ignore all log related files
+Log*.json*
+/Tools/**/*.json
+/Tools/**/*.csv
