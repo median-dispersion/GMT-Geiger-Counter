@@ -77,8 +77,8 @@ void Touchscreen::enable() {
     // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"source",  Logger::STRING_T, {.string_v = "touchscreen"}},
-      {"enabled", Logger::BOOL_T,   {.bool_v   = _enabled}     }
+      {"source", Logger::STRING_T, {.string_v = "touchscreen"}},
+      {"action", Logger::STRING_T, {.string_v = "enabled"}    }
 
     };
 
@@ -106,8 +106,8 @@ void Touchscreen::disable() {
     // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"source",  Logger::STRING_T, {.string_v = "touchscreen"}},
-      {"enabled", Logger::BOOL_T,   {.bool_v   = _enabled}     }
+      {"source", Logger::STRING_T, {.string_v = "touchscreen"}},
+      {"action", Logger::STRING_T, {.string_v = "disabled"}   }
 
     };
 

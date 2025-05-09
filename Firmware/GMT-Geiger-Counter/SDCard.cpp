@@ -66,8 +66,8 @@ void SDCard::mount() {
       // Create event data
       Logger::KeyValuePair event[2] = {
 
-        {"source",  Logger::STRING_T, {.string_v = "sdCard"}},
-        {"mounted", Logger::BOOL_T,   {.bool_v   = _mounted}}
+        {"source", Logger::STRING_T, {.string_v = "sdCard"} },
+        {"action", Logger::STRING_T, {.string_v = "mounted"}}
 
       };
 
@@ -106,8 +106,8 @@ void SDCard::unmount() {
     // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"source",  Logger::STRING_T, {.string_v = "sdCard"}},
-      {"mounted", Logger::BOOL_T,   {.bool_v   = _mounted}}
+      {"source", Logger::STRING_T, {.string_v = "sdCard"}   },
+      {"action", Logger::STRING_T, {.string_v = "unmounted"}}
 
     };
 

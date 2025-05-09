@@ -80,25 +80,37 @@ void Wireless::update() {
   // If the last known and current number of hotspot clients dont match
   if (_hotspotClients != currentHotspotClients) {
 
-    // Set the connected flag to false
-    bool connected = false;
+    // If the number of clients increased
+    if (_hotspotClients < currentHotspotClients) { 
+    
+      // Create event data
+      Logger::KeyValuePair event[2] = {
 
-    // If the number of clients increased set connected flag to true
-    if (_hotspotClients < currentHotspotClients) { connected = true; }
+        {"source", Logger::STRING_T, {.string_v = "hotspotClient"}},
+        {"action", Logger::STRING_T, {.string_v = "connected"}    }
+
+      };
+
+      // Log event message
+      logger.log(Logger::EVENT, "event", event, 2);
+
+    } else {
+
+      // Create event data
+      Logger::KeyValuePair event[2] = {
+
+        {"source", Logger::STRING_T, {.string_v = "hotspotClient"}},
+        {"action", Logger::STRING_T, {.string_v = "disconnected"} }
+
+      };
+
+      // Log event message
+      logger.log(Logger::EVENT, "event", event, 2);
+
+    }
 
     // Update the number of connected clients
     _hotspotClients = currentHotspotClients;
-
-    // Create event data
-    Logger::KeyValuePair event[2] = {
-
-      {"source",    Logger::STRING_T, {.string_v = "hotspotClient"}},
-      {"connected", Logger::BOOL_T,   {.bool_v   = connected}      }
-
-    };
-
-    // Log event message
-    logger.log(Logger::EVENT, "event", event, 2);
 
   }
 
@@ -132,8 +144,8 @@ void Wireless::enableWiFi() {
     // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"source",  Logger::STRING_T, {.string_v = "wifi"}      },
-      {"enabled", Logger::BOOL_T,   {.bool_v   = _wifiEnabled}}
+      {"source", Logger::STRING_T, {.string_v = "wifi"}   },
+      {"action", Logger::STRING_T, {.string_v = "enabled"}}
 
     };
 
@@ -169,8 +181,8 @@ void Wireless::disableWiFi() {
     // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"source",  Logger::STRING_T, {.string_v = "wifi"}      },
-      {"enabled", Logger::BOOL_T,   {.bool_v   = _wifiEnabled}}
+      {"source", Logger::STRING_T, {.string_v = "wifi"}    },
+      {"action", Logger::STRING_T, {.string_v = "disabled"}}
 
     };
 
@@ -204,8 +216,8 @@ void Wireless::enableHotspot() {
     // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"source",  Logger::STRING_T, {.string_v = "hotspot"}      },
-      {"enabled", Logger::BOOL_T,   {.bool_v   = _hotspotEnabled}}
+      {"source", Logger::STRING_T, {.string_v = "hotspot"}},
+      {"action", Logger::STRING_T, {.string_v = "enabled"}}
 
     };
 
@@ -236,8 +248,8 @@ void Wireless::disableHotspot() {
     // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"source",  Logger::STRING_T, {.string_v = "hotspot"}      },
-      {"enabled", Logger::BOOL_T,   {.bool_v   = _hotspotEnabled}}
+      {"source", Logger::STRING_T, {.string_v = "hotspot"} },
+      {"action", Logger::STRING_T, {.string_v = "disabled"}}
 
     };
 
@@ -455,8 +467,8 @@ void Wireless::_enableServer() {
     // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"source",  Logger::STRING_T, {.string_v = "server"}      },
-      {"enabled", Logger::BOOL_T,   {.bool_v   = _serverEnabled}}
+      {"source", Logger::STRING_T, {.string_v = "server"} },
+      {"action", Logger::STRING_T, {.string_v = "enabled"}}
 
     };
 
@@ -484,8 +496,8 @@ void Wireless::_disableServer() {
     // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"source",  Logger::STRING_T, {.string_v = "server"}      },
-      {"enabled", Logger::BOOL_T,   {.bool_v   = _serverEnabled}}
+      {"source", Logger::STRING_T, {.string_v = "server"}  },
+      {"action", Logger::STRING_T, {.string_v = "disabled"}}
 
     };
 

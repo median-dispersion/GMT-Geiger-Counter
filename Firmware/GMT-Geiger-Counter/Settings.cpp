@@ -101,20 +101,32 @@ void Settings::load() {
     // Reset settings to the default
     reset();
 
-  }
+    // Create event data
+    Logger::KeyValuePair event[2] = {
 
+      {"source", Logger::STRING_T, {.string_v = "settings"}},
+      {"action", Logger::STRING_T, {.string_v = "reset"}   }
+
+    };
+
+    // Log event message
+    logger.log(Logger::EVENT, "event", event, 2);
+  
   // Log if settings where loaded
+  } else {
 
-  // Create event data
-  Logger::KeyValuePair event[2] = {
+    // Create event data
+    Logger::KeyValuePair event[2] = {
 
-    {"source",  Logger::STRING_T, {.string_v = "settings"}},
-    {"loaded", Logger::BOOL_T,    {.bool_v   = success}   }
+      {"source", Logger::STRING_T, {.string_v = "settings"}},
+      {"action", Logger::STRING_T, {.string_v = "loaded"}  }
 
-  };
+    };
 
-  // Log event message
-  logger.log(Logger::EVENT, "event", event, 2);
+    // Log event message
+    logger.log(Logger::EVENT, "event", event, 2);
+
+  }
 
 }
 

@@ -83,8 +83,8 @@ void CosmicRayDetector::enable() {
     // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"source",  Logger::STRING_T, {.string_v = "cosmicRayDetector"}},
-      {"enabled", Logger::BOOL_T,   {.bool_v   = _enabled}       }
+      {"source", Logger::STRING_T, {.string_v = "cosmicRayDetector"}},
+      {"action", Logger::STRING_T, {.string_v = "enabled"}          }
 
     };
 
@@ -121,8 +121,8 @@ void CosmicRayDetector::disable() {
     // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"source",  Logger::STRING_T, {.string_v = "cosmicRayDetector"}},
-      {"enabled", Logger::BOOL_T,   {.bool_v   = _enabled}       }
+      {"source", Logger::STRING_T, {.string_v = "cosmicRayDetector"}},
+      {"action", Logger::STRING_T, {.string_v = "disabled"}         }
 
     };
 

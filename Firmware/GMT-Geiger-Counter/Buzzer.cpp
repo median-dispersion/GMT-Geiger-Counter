@@ -62,7 +62,7 @@ void Buzzer::mute() {
   Logger::KeyValuePair event[2] = {
 
     {"source", Logger::STRING_T, {.string_v = "buzzer"}},
-    {"muted",  Logger::BOOL_T,   {.bool_v   = _muted}  }
+    {"action", Logger::STRING_T, {.string_v = "muted"} }
 
   };
 
@@ -82,8 +82,8 @@ void Buzzer::unmute() {
   // Create event data
   Logger::KeyValuePair event[2] = {
 
-    {"source", Logger::STRING_T, {.string_v = "buzzer"}},
-    {"muted",  Logger::BOOL_T,   {.bool_v   = _muted}  }
+    {"source", Logger::STRING_T, {.string_v = "buzzer"} },
+    {"action", Logger::STRING_T, {.string_v = "unmuted"}}
 
   };
 

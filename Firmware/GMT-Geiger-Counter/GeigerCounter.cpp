@@ -83,8 +83,8 @@ void GeigerCounter::enable() {
     // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"source",  Logger::STRING_T, {.string_v = "geigerCounter"}},
-      {"enabled", Logger::BOOL_T,   {.bool_v   = _enabled}       }
+      {"source", Logger::STRING_T, {.string_v = "geigerCounter"}},
+      {"action", Logger::STRING_T, {.string_v = "enabled"}      }
 
     };
 
@@ -128,8 +128,8 @@ void GeigerCounter::disable() {
     // Create event data
     Logger::KeyValuePair event[2] = {
 
-      {"source",  Logger::STRING_T, {.string_v = "geigerCounter"}},
-      {"enabled", Logger::BOOL_T,   {.bool_v   = _enabled}       }
+      {"source", Logger::STRING_T, {.string_v = "geigerCounter"}},
+      {"action", Logger::STRING_T, {.string_v = "disabled"}     }
 
     };
 
