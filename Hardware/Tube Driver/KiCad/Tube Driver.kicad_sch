@@ -8107,7 +8107,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "100uF"
+		(property "Value" "3.3uF"
 			(at 20.066 39.116 0)
 			(effects
 				(font
@@ -8125,7 +8125,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://www.we-online.com/components/products/datasheet/875105344010.pdf"
+		(property "Datasheet" "https://industrial.panasonic.com/ww/products/pt/os-con/models/16SVP3R3M"
 			(at 22.86 38.1 0)
 			(effects
 				(font
@@ -8143,7 +8143,7 @@
 				(hide yes)
 			)
 		)
-		(property "MPN" "875105344010"
+		(property "MPN" "16SVP3R3M"
 			(at 22.86 38.1 0)
 			(effects
 				(font
@@ -8152,7 +8152,7 @@
 				(hide yes)
 			)
 		)
-		(property "DigiKey" "https://www.digikey.com/en/products/detail/würth-elektronik/875105344010/5147589"
+		(property "DigiKey" "https://www.digikey.com/en/products/detail/panasonic-electronic-components/16svp3r3m/4204797"
 			(at 22.86 38.1 0)
 			(effects
 				(font
@@ -8161,7 +8161,7 @@
 				(hide yes)
 			)
 		)
-		(property "Price (EUR)" "0,62€"
+		(property "Price (EUR)" "0,75€"
 			(at 22.86 38.1 0)
 			(effects
 				(font
