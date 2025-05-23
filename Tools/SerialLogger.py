@@ -5,8 +5,8 @@ import sys
 import serial
 import time
 import json
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # =================================================================================================
 # Get launch arguments
@@ -17,20 +17,40 @@ def getLaunchArguments():
     parser = argparse.ArgumentParser(description="A python script for logging data sent by a GMT Geiger Counter via the serial interface. (https://github.com/median-dispersion/GMT-Geiger-Counter)")
     
     # Add arguments
-    parser.add_argument("--port",   type=str, required=True,                    help="Serial port")
-    parser.add_argument("--baud",   type=int, required=False, default=115200,   help="Serial baud rate")
-    parser.add_argument("--output", type=str, required=False, default="./Logs", help="Path to output file or directory")
+    parser.add_argument("--port",   type=str, required=True,                    help="Serial port.")
+    parser.add_argument("--baud",   type=int, required=False, default=115200,   help="Serial baud rate. The default is 115200 baud.")
+    parser.add_argument("--output", type=str, required=False, default="./Logs", help="Path to output file or directory. The default output directory is './Logs'.")
     
     # Parse arguments
     return parser.parse_args()
+
+# =================================================================================================
+# Print a log message
+# =================================================================================================
+def log(level = "DEBUG", message = "Invalid log message!"):
+
+    # Get the current date and time in ISO form
+    date  = datetime.now().astimezone().isoformat()
+    
+    # Depending on the log level color in the level text
+    match level:
+
+        case "DEBUG":   level = f"\033[92m[{level}]\033[0m"
+        case "INFO":    level = f"\033[96m[{level}]\033[0m"
+        case "WARNING": level = f"\033[93m[{level}]\033[0m"
+        case "ERROR":   level = f"\033[91m[{level}]\033[0m"
+        case _:         level = f"\033[95m[UNKNOWN]\033[0m"
+
+    # Print log message
+    print(f"{date} {level} >> {message}")
 
 # =================================================================================================
 # Terminate script execution
 # =================================================================================================
 def terminate():
 
-    # Print info message
-    print(f"{datetime.now().astimezone().isoformat()} [INFO] >> Exiting!")
+    # Print log message
+    log("INFO", f"Exiting!")
     
     # Exit
     sys.exit()
@@ -61,8 +81,8 @@ def getOutputPath(output):
     # If an exception occurs
     except Exception as exception:
 
-        # Print info message
-        print(f"{datetime.now().astimezone().isoformat()} [ERROR] >> Failed to initialize the output file! ({exception})")
+        # Print log message
+        log("ERROR", f"Failed to initialize the output file! ({exception})")
         
         # Exit
         terminate()
@@ -78,8 +98,8 @@ def getSerialDevice(port, baud):
         # Connect to serial device in blocking mode
         device = serial.Serial(port, baud, timeout=None)
 
-        # Print info message
-        print(f"{datetime.now().astimezone().isoformat()} [INFO] >> Connected to serial device '{port}' at {baud} baud...")
+        # Print log message
+        log("INFO", f"Connected to serial device '{port}' at {baud} baud!")
 
         # Return serial device
         return device
@@ -87,8 +107,8 @@ def getSerialDevice(port, baud):
     # If an exception occurs
     except Exception as exception:
 
-        # Print info message
-        print(f"{datetime.now().astimezone().isoformat()} [ERROR] >> Failed to connect to serial device '{port}' at {baud} baud! ({exception})")
+        # Print log message
+        log("ERROR", f"Failed to connect to serial device '{port}' at {baud} baud! ({exception})")
 
         # Return no device
         return None
@@ -104,8 +124,8 @@ def getSerialData(device):
         # Read serial data
         data = device.readline().decode("utf-8").strip()
 
-        # Print info message
-        print(f"{datetime.now().astimezone().isoformat()} [INFO] >> New serial data: '{data}'...")
+        # Print log message
+        log("INFO", f"New serial data: '{data}'")
 
         # Return data
         return data
@@ -113,8 +133,8 @@ def getSerialData(device):
     # If an exception occurs
     except Exception as exception:
 
-        # Print info message
-        print(f"{datetime.now().astimezone().isoformat()} [ERROR] >> Failed to communicate with serial device '{device.port}' at {device.baudrate} baud! ({exception})")
+        # Print log message
+        log("ERROR", f"Failed to communicate with serial device '{device.port}' at {device.baudrate} baud! ({exception})")
 
         # Return no data
         return None
@@ -133,8 +153,8 @@ def getJSONData(data):
         # If data doesn't contain a date add current date in ISO form
         if "date" not in data: data["date"] = datetime.now().astimezone().isoformat()
 
-        # Print info message
-        print(f"{datetime.now().astimezone().isoformat()} [INFO] >> Parsed JSON data: '{data}'...")
+        # Print log message
+        log("INFO", f"Parsed JSON data: '{data}'")
 
         # Return JSON data
         return data
@@ -142,8 +162,8 @@ def getJSONData(data):
     # If an exception occurs
     except Exception as exception:
 
-        # Print info message
-        print(f"{datetime.now().astimezone().isoformat()} [WARNING] >> Failed to parse '{data}' as JSON! ({exception})")
+        # Print log message
+        log("WARNING", f"[WARNING] >> Failed to parse '{data}' as JSON! ({exception})")
 
         # Return no data
         return None
@@ -164,8 +184,8 @@ def writeToLogFile(path, data):
 
     except Exception as exception:
 
-        # Print info message
-        print(f"{datetime.now().astimezone().isoformat()} [ERROR] >> Failed to write to the output file! ({exception})")
+        # Print log message
+        log("ERROR", f"Unable to write to the output file! ({exception})")
 
         # Exit
         terminate()
@@ -220,8 +240,8 @@ def main():
                     # Loop until a new device connection is established
                     while device == None:
 
-                        # Print info message
-                        print(f"{datetime.now().astimezone().isoformat()} [INFO] >> Reconnecting serial device in 5 seconds...")
+                        # Print log message
+                        log("INFO", f"Reconnecting serial device in 5 seconds...")
 
                         # Wait for 5 seconds
                         time.sleep(5)
