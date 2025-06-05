@@ -148,7 +148,7 @@ const char* Logger::getLogFilePath() {
 
         // Construct the full log file path with the new log file ID
         _logFilePath  = SD_CARD_LOG_DIRECTORY;
-        _logFilePath += "/Log";
+        _logFilePath += "/Log_";
         _logFilePath += _logFileID;
         _logFilePath += ".json";
       
@@ -171,7 +171,7 @@ const char* Logger::getLogFilePath() {
 
         // Construct new file path to the next log file part
         _logFilePath  = SD_CARD_LOG_DIRECTORY;
-        _logFilePath += "/Log";
+        _logFilePath += "/Log_";
         _logFilePath += _logFileID;
         _logFilePath += ".json.part";
         _logFilePath += _logFilePart;

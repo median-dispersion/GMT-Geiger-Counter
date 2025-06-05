@@ -1,4 +1,7 @@
+#!/usr/bin/env python3
+
 import argparse
+import sys
 import re
 import json
 import csv
@@ -7,135 +10,199 @@ from dateutil import parser
 from pathlib import Path
 
 # =================================================================================================
-# Get the scripts launch arguments
+# Get launch arguments
 # =================================================================================================
-def getLaunchArguments(): 
+def getLaunchArguments():
 
     # Launch argument parser
-    parser = argparse.ArgumentParser(description="A script for parsing GMT Geiger counter log files.")
+    parser = argparse.ArgumentParser(description="A python script for parsing log files from a GMT Geiger Counter into CSV tables. (https://github.com/median-dispersion/GMT-Geiger-Counter)")
     
     # Add arguments
-    parser.add_argument("--file",   type=str, required=True,  help="Path to the main '.json' log file. Additional '.part' files will be added automatically.")
-    parser.add_argument("--date",   type=str, required=False, help="Start date of the log file recording.")
-    parser.add_argument("--output", type=str, required=False, help="Path to the output directory.")
+    parser.add_argument("--files",  type=str, required=True,  nargs="+",                                         help="A list of log file paths separated by spaces that will be parsed into CSV tables. Additional '.part' files should be added to this list to combine them into one output. The list will be sorted by filename.")
+    parser.add_argument("--date",   type=str, required=False, default=datetime(1970, 1, 1, 0, 0, 0).isoformat(), help="Start date of the log file recording. If the log file already contains date information, this will be ignored.")
+    parser.add_argument("--output", type=str, required=False,                                                    help="Path of the output directory.")
     
     # Parse arguments
     return parser.parse_args()
+
+# =================================================================================================
+# Print a log message
+# =================================================================================================
+def log(level = "DEBUG", message = "Invalid log message!"):
+
+    # Get the current date and time in ISO form
+    date = datetime.now().astimezone().isoformat()
+    
+    # Depending on the log level color in the level text
+    match level:
+
+        case "DEBUG":   level = f"\033[92m[{level}]\033[0m"
+        case "INFO":    level = f"\033[96m[{level}]\033[0m"
+        case "WARNING": level = f"\033[93m[{level}]\033[0m"
+        case "ERROR":   level = f"\033[91m[{level}]\033[0m"
+        case _:         level = f"\033[95m[UNKNOWN]\033[0m"
+
+    # Print log message
+    print(f"{date} {level} >> {message}")
+
+# =================================================================================================
+# Terminate script execution
+# =================================================================================================
+def terminate():
+
+    # Print log message
+    log("INFO", f"Exiting!")
+    
+    # Exit
+    sys.exit()
+
+# =================================================================================================
+# Get the natural key
+# =================================================================================================
+def getNaturalKey(values):
+
+    # Split into parts: text and numbers
+    return [int(text) if text.isdigit() else text.lower() for text in re.split(r"(\d+)", values)]
+
+# =================================================================================================
+# Read data from the log files
+# =================================================================================================
+def readLogFiles(files):
+
+    # Raw log file data
+    data = ""
+
+    # Try reading log files
+    try:
+
+        # For each file sorted in order
+        for file in sorted(files, key=getNaturalKey):
+
+            # Open the file
+            with open(file, "r") as logFile:
+
+                # Read the log file content into data
+                data += logFile.read()
+
+            # Print log message
+            log("INFO", f"Loaded '{file}'")
+
+        # Return the log file data
+        return data
+
+    # If an exception occurs
+    except Exception as exception:
+
+        # Print log message
+        log("ERROR", f"Reading log file failed! ({exception})")
+        
+        # Exit
+        terminate()
+
+# =================================================================================================
+# Get the output directory path
+# =================================================================================================
+def getOutputPath(path, file):
+
+    # Try getting the output path
+    try:
+
+        # If an output path is provided
+        if path is not None:
+
+            # Create path element
+            path = Path(path)
+
+            # If path is a file raise an exception
+            if path.is_file(): raise ValueError(f"Output path '{path}' is not a directory!")
+
+        # If no output path was provided
+        else:
+
+            # Use the current path as the output directory
+            path = Path("./")
+
+            # Input log file path
+            file = Path(file)
+
+            # Add log file name without extension to the output path
+            path = path / file.with_suffix("").stem
+
+        # Create directory if it doesn't exists
+        path.mkdir(parents=True, exist_ok=True)
+
+        # Return the output path
+        return path
+
+    # If an exception occurs
+    except Exception as exception:
+
+        # Print error message
+        log("ERROR", f"Failed to initialize the output directory! ({exception})")
+        
+        # Exit
+        terminate()
 
 # =================================================================================================
 # Get log start date
 # =================================================================================================
 def getStartDate(date):
 
-    # Try parsing the date string, if that fails use the unix epoch as the start date
-    try:    date = parser.parse(date)
-    except: date = datetime(1970, 1, 1, 0, 0, 0)
+    # Try parsing the date string
+    try:    
+
+        # Parse date
+        date = parser.parse(date)
+
+    # If parsing the date fails use the unix epoch as the start date
+    except: 
+        
+        # Log warning message
+        log("WARNING", f"Could not parse date '{date}'. Using '1970-01-01T00:00:00' instead...")
+
+        # Use unix epoch as starting date
+        date = datetime(1970, 1, 1, 0, 0, 0)
 
     # Return the date
     return date
 
 # =================================================================================================
-# Get the output directory path
+# Parse raw log file data into JSON data
 # =================================================================================================
-def getOutputDirectory(path):
+def getJSONData(raw, date):
 
-    # If an output path is provided
-    if path is not None:
-
-        # Create path element
-        path = Path(path)
-
-        # If path is a file get the parent directory
-        if path.is_file(): path = path.parent
-
-    # If no output path was provided
-    else:
-
-        # Use the current path
-        path = Path("./")
-
-    # Create directory if it doesn't exists
-    path.mkdir(parents=True, exist_ok=True)
-
-    # Return the output path
-    return str(path)
-
-# =================================================================================================
-# 
-# =================================================================================================
-def getNaturalKey(string):
-
-    return [int(text) if text.isdigit() else text.lower() for text in re.split(r"(\d+)", string)]
-
-# =================================================================================================
-# Get all log files
-# =================================================================================================
-def getLogFiles(file):
-
-    # Get the path of the log file
-    file = Path(file)
-
-    # List of log files
-    files = []
-
-    # For all log part files in the log file directory
-    for part in file.parent.glob(f"{file.name}.part*"):
-
-        # Add part file to the list of log files
-        files.append(str(part))
-
-    # Sort the list of log files
-    files = sorted(files, key=getNaturalKey)
-
-    # Insert the main log file to the list of log files
-    files.insert(0, str(file))
-
-    # Return the list of log files
-    return files
-
-# =================================================================================================
-# Get log file JSON data
-# =================================================================================================
-def getJSONData(files):
-
-    # JSON log data
+    # JSON data
     data = []
 
-    # For every log file
-    for file in files:
+    # If the raw data ends with a trailing "," remove it
+    if raw.endswith(","): raw = raw[:-1]
 
-        # Open the log file
-        with open(file, "r") as log:
+    # Split the raw data into parts delimited by "},{"
+    parts = re.split(r"(?<=})\s*,\s*(?={)", raw)
 
-            # Read the log file
-            raw = log.read()
+    # For every part in the data
+    for part in parts:
 
-            # While there is still raw data to parse
-            while len(raw):
+        # Try parsing that part as JSON
+        try:
 
-                # Try parsing raw data as JSON
-                try:
+            # Parse raw part data as JSON
+            message = json.loads(part)
+            
+            # Append parsed JSON to data
+            data.append(message)
 
-                    # Parse raw data as JSON
-                    message, index = json.JSONDecoder().raw_decode(raw)
+        # If the raw part data couldn't be parsed as JSON
+        except Exception as exception:
 
-                    # Append parsed JSON to the list of data
-                    data.append(message)
+            # Print a warning message
+            log("WARNING", f"Could not parse '{part}' as JSON! ({exception})")
 
-                    # Remove parsed JSON from the raw data
-                    raw = raw[index:]
-
-                # If parsing the raw data as JSON fails
-                except: 
-                    
-                    # Remove one character from the raw data
-                    raw = raw[1:]
-
-    # Return the list of log data
+    # Return the JSON data
     return data
 
 # =================================================================================================
-# Get all log messages in the log message data
+# Get all log messages in the JSON data
 # =================================================================================================
 def getLogMessages(data):
 
@@ -149,16 +216,16 @@ def getLogMessages(data):
 
     }
 
-    # For every entry in the log data
-    for entry in data:
+    # For every message in the data
+    for message in data:
 
         # Depending on the message type add it to the specific message list
-        match(entry["type"]):
+        match(message["type"]):
 
-            case "geigerCounter":     messages["geigerCounter"].append(entry)
-            case "cosmicRayDetector": messages["cosmicRayDetector"].append(entry)
-            case "system":            messages["systemInfo"].append(entry)
-            case "event":             messages["systemEvents"].append(entry)
+            case "geigerCounter":     messages["geigerCounter"].append(message)
+            case "cosmicRayDetector": messages["cosmicRayDetector"].append(message)
+            case "system":            messages["systemInfo"].append(message)
+            case "event":             messages["systemEvents"].append(message)
 
     # Return log messages
     return messages
@@ -183,8 +250,8 @@ def getMessageData(messages, date):
         # Set the entry index
         entry = {"index": index}
 
-        # If the message contains a date use that
-        # Else add the message time to the start date and use the resulting ISO date string
+        # If the message contains a date use it
+        # Else use the start date offset by the message time in ISO form
         if "date" in message: entry["date"] = message["date"]
         else                : entry["date"] = (date + timedelta(milliseconds=message["time"])).isoformat()
 
@@ -205,7 +272,7 @@ def getMessageData(messages, date):
 # =================================================================================================
 def writeMessageData(data, file, fieldnames):
 
-    # Only do write if there is any data
+    # Only write to file there is any data
     if (len(data) > 0):
 
         # Get data keys
@@ -214,35 +281,60 @@ def writeMessageData(data, file, fieldnames):
         # Get CSV header
         header = [fieldnames[key] for key in keys]
 
-        # Open output file
-        with open(file, "w") as output:
+        # Try writing to file
+        try:
 
-            # Initialize CSV writer
-            writer = csv.writer(output)
+            # Open output file
+            with open(file, "w") as output:
 
-            # Write CSV header
-            writer.writerow(header)
+                # Initialize CSV writer
+                writer = csv.writer(output)
 
-            # For every entry in data
-            for entry in data:
+                # Write CSV header
+                writer.writerow(header)
 
-                # Match the data to the data key
-                row = [entry.get(key, "") for key in keys]
+                # For every entry in data
+                for entry in data:
 
-                # Write data row
-                writer.writerow(row)
+                    # Match the data to the data key
+                    row = [entry.get(key, "") for key in keys]
+
+                    # Write data row
+                    writer.writerow(row)
+
+            log("INFO", f"Created '{file}'!")
+
+        # If an error occurs writing to the output file
+        except Exception as exception:
+
+            # Log error message
+            log("ERROR", f"Writing to the output file '{file}' failed! ({exception})")
 
 # =================================================================================================
 # Main
 # =================================================================================================
 def main():
 
-    arguments = getLaunchArguments()                 # Get the launch arguments
-    date      = getStartDate(arguments.date)         # Get the log start date
-    output    = getOutputDirectory(arguments.output) # Get the output directory
-    files     = getLogFiles(arguments.file)          # Get all log files
-    data      = getJSONData(files)                   # Get log file JSON data
-    messages  = getLogMessages(data)                 # Get log messages
+    # Get launch arguments
+    arguments = getLaunchArguments()
+
+    # Sort input files in order of file name
+    arguments.files = sorted(arguments.files, key=getNaturalKey)
+
+    # Read in raw data from the log files
+    raw = readLogFiles(arguments.files)
+
+    # Get the output directory path
+    output = getOutputPath(arguments.output, arguments.files[0])
+
+    # Get the log start date
+    date = getStartDate(arguments.date)
+
+    # Parse raw data as JSON
+    data = getJSONData(raw, date)
+
+    # Sort JSON data into message data
+    messages = getLogMessages(data)
 
     # Get message data for specific message type
     geigerCounter     = getMessageData(messages["geigerCounter"],     date)
@@ -256,7 +348,7 @@ def main():
         geigerCounter,
 
         # Output file
-        f"{output}/Geiger_Counter_{Path(arguments.file).stem}.csv",
+        f"{str(output)}/Geiger_Counter_{Path(arguments.files[0]).stem}.csv",
 
         # Output fieldname mapping
         {
@@ -279,7 +371,7 @@ def main():
         cosmicRayDetector,
 
         # Output file
-        f"{output}/Cosmic_Ray_Detector_{Path(arguments.file).stem}.csv",
+        f"{str(output)}/Cosmic_Ray_Detector_{Path(arguments.files[0]).stem}.csv",
 
         # Output fieldname mapping
         {
@@ -300,7 +392,7 @@ def main():
         systemInfo,
 
         # Output file
-        f"{output}/System_Info_{Path(arguments.file).stem}.csv",
+        f"{str(output)}/System_Info_{Path(arguments.files[0]).stem}.csv",
 
         # Output fieldname mapping
         {
@@ -321,7 +413,7 @@ def main():
         systemEvents,
 
         # Output file
-        f"{output}/System_Events_{Path(arguments.file).stem}.csv",
+        f"{str(output)}/System_Events_{Path(arguments.files[0]).stem}.csv",
 
         # Output fieldname mapping
         {

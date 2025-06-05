@@ -180,7 +180,7 @@ def writeToLogFile(path, data):
         with open(path, "a") as file:
 
             # Write JSON to output file as compact as possible
-            file.write(json.dumps(data, separators=(",", ":")))
+            file.write(f"{json.dumps(data, separators=(",", ":"))},")
 
     except Exception as exception:
 
