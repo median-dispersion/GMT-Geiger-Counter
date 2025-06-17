@@ -59,6 +59,12 @@ void Wireless::begin() {
     // Restore the last WiFi state
     setWiFiState(wifiState);
 
+    // Handle system restart requests
+    server.on("/system/restart", _handleSystemRestart);
+
+    // Handle updates of the WiFi credentials via the web interface
+    server.on("/system/wifi-credentials", HTTP_PUT, _handleWiFiCredentials);
+
     // Handle all HTTP request not previously defined
     server.onNotFound(_handleRequest);
 
@@ -648,5 +654,21 @@ void Wireless::_handleWiFiCredentials() {
     wireless.server.send(400, "application/json", "{\"success\":false}");
 
   }
+
+}
+
+// ================================================================================================
+// Handle requests for restarting the system
+// ================================================================================================
+void Wireless::_handleSystemRestart() {
+
+  // Reply with a success message
+  wireless.server.send(200, "application/json", "{\"success\":true}");
+
+  // Update the wireless interface
+  wireless.update();
+
+  // Restart the system
+  ESP.restart();
 
 }

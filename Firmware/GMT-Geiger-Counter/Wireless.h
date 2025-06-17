@@ -64,6 +64,7 @@ class Wireless {
     void        _disableServer();         // Disable the HTTP server
     static void _handleRequest();         // Handle all HTTP requests not previously defined
     static void _handleWiFiCredentials(); // Handle updates of the WiFi credentials via the web interface
+    static void _handleSystemRestart();   // Handle requests for restarting the system
     
 };
 

@@ -74,6 +74,10 @@ void toggleSystemSDCardLogging(const bool toggled);
 void toggleSystemDataLogging(const bool toggled);
 void toggleSystemEventLogging(const bool toggled);
 void toggleSystemInfoLogging(const bool toggled);
+void sendGeigerCounterData();
+void sendCosmicRayDetectorData();
+void sendLogFileData();
+void sendSystemInfoData();
 
 // ================================================================================================
 // Setup
@@ -1515,8 +1519,8 @@ void sendLogFileData() {
     // If the log file was not found
     if (!found) {
 
-      // Return with a 404 - Not found!
-      wireless.server.send(404, "text/plain", "404 - Not found!");
+      // Send back an empty log file
+      wireless.server.send(200, "text/plain", "");
 
     }
 
