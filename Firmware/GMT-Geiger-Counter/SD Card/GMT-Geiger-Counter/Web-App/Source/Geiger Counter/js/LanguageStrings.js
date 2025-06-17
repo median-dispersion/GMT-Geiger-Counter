@@ -67,7 +67,9 @@ const language = {
         restart_system:                        "Restart system?",
         restart_system_message:                "Restart the system? Keep in mind that restarting the system will reset all data that has been recorded so far.",
         yes:                                   "Yes",
-        no:                                    "No"
+        no:                                    "No",
+        unknown_error:                         "Unknown error!",
+        unknown_error_message:                 "An unknown error occurred! Please refresh the interface."
 
     },
 
@@ -137,7 +139,9 @@ const language = {
         restart_system:                        "System neu starten?",
         restart_system_message:                "System neu starten? Beachten Sie, dass durch einen Neustart des Systems alle bisher aufgezeichneten Daten zurückgesetzt werden.",
         yes:                                   "Ja",
-        no:                                    "Nein"
+        no:                                    "Nein",
+        unknown_error:                         "Unbekannter Fehler!",
+        unknown_error_message:                 "Ein unbekannter Fehler ist aufgetreten! Bitte aktualisieren Sie die Benutzeroberfläche."
 
     }
 

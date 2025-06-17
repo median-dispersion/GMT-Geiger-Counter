@@ -17,6 +17,12 @@ class DialogBox {
 
     };
 
+    // Notification state
+    #notified = false;
+
+    // Previous scroll state
+    #scrollState = "auto";
+
     // Dialog animation handler
     #dialogAnimation;
 
@@ -31,15 +37,15 @@ class DialogBox {
         // If not initialized
         if(!this.#initialized) {
 
+            // Set initialization flag to true
+            this.#initialized = true;
+
             // Get DOM elements
             this.#element.dialog   = document.querySelector("#dialog");
             this.#element.box      = document.querySelector("#dialog-box");
             this.#element.title    = document.querySelector("#dialog-box-title");
             this.#element.message  = document.querySelector("#dialog-box-message");
             this.#element.actions  = document.querySelector("#dialog-box-actions");
-
-            // Set initialization flag to true
-            this.#initialized = true;
 
         }
 
@@ -90,6 +96,17 @@ class DialogBox {
 
         });
 
+        // If not already notified
+        if (!this.#notified){
+
+            // Get the current scroll state
+            this.#scrollState = getComputedStyle(document.body).overflow;
+
+            // Set the notified flag to true
+            this.#notified = true;
+
+        }
+
         // Prevent page scroll
         document.body.style.overflow = "hidden";
 
@@ -119,9 +136,6 @@ class DialogBox {
             // Stop rendering the dialog element
             this.#element.dialog.style.display = "none";
 
-            // Allow page scroll
-            document.body.style.overflow = "auto";
-
             // Remove the old animation classes
             this.#element.dialog.classList.remove("dialog-fade-out");
             this.#element.box.classList.remove("dialog-box-scale-up");
@@ -136,6 +150,12 @@ class DialogBox {
 
         // Add new animation classes
         this.#element.dialog.classList.add("dialog-fade-out");
+
+        // Reset to the previous scroll state
+        document.body.style.overflow = this.#scrollState;
+
+        // Set the notified flag to false
+        this.#notified = false;
 
     }
 

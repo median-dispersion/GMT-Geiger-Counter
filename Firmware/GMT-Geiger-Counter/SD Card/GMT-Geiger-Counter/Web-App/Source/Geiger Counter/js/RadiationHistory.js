@@ -352,7 +352,7 @@ class RadiationHistory {
 
         // Calculate step width and height
         const stepWidth  = this.#element.canvas.width  / (this.#radiationHistoryData.samples.length - 1);
-        const stepHeight = this.#element.canvas.height / (this.#radiationHistoryData.maximum * this.#horizontalScale)
+        const stepHeight = this.#element.canvas.height / (this.#radiationHistoryData.maximum * this.#horizontalScale);
 
         // Get X and Y starting position
         let x = 0;
@@ -485,6 +485,9 @@ class RadiationHistory {
         // If not initialized
         if(!this.#initialized) {
 
+            // Set the initialization flag to true
+            this.#initialized = true;
+
             // Get DOM elements
             this.#element.canvas  = document.querySelector("#content-history-graph-canvas");
             this.#element.average = document.querySelector("#content-history-statistics-info-value-average");
@@ -521,9 +524,6 @@ class RadiationHistory {
 
             // Update the log file data immediately
             this.#getLogFileData();
-
-            // Set the initialization flag to true
-            this.#initialized = true;
 
         }
 

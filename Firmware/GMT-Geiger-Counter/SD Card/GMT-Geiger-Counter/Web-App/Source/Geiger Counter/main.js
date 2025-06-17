@@ -98,4 +98,24 @@ document.addEventListener("DOMContentLoaded", () => {
     settingsPanel.initialize();
     dialogBox.initialize();
 
+    // Handle any uncaught errors
+    window.addEventListener("error", (event) => {
+
+        // Display error dialog
+        dialogBox.notify(
+
+            string.unknown_error,
+            `${string.unknown_error_message} (${event.message})`,
+            [{title: string.go_back, event: () => { window.location.href = window.location.origin; }},
+             {title: string.refresh, event: () => { location.reload();                             }}]
+
+        );
+
+        // Log error event to console
+        console.error(event);
+
+    });
+
 });
+
+

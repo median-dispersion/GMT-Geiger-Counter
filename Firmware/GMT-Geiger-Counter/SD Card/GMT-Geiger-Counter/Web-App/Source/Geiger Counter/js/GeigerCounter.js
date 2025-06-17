@@ -424,7 +424,7 @@ class GeigerCounter {
             // Remove the event listener
             this.#element.screenPulse.removeEventListener("animationend", this.#pulseAnimation);
 
-        }
+        };
 
         // Add the event listener for stopping the animation
         this.#element.screenPulse.addEventListener("animationend", this.#pulseAnimation);
@@ -482,6 +482,9 @@ class GeigerCounter {
         // If not initialized
         if(!this.#initialized) {
 
+            // Set initialization flag to true
+            this.#initialized = true;
+
             // Get DOM elements
             this.#element.screen               = document.querySelector("#content-screen");
             this.#element.screenPulse          = document.querySelector("#content-screen-pulse");
@@ -517,9 +520,6 @@ class GeigerCounter {
 
             // Update the Geiger counter data immediately
             this.#getGeigerCounterData();
-
-            // Set initialization flag to true
-            this.#initialized = true;
 
         }
 

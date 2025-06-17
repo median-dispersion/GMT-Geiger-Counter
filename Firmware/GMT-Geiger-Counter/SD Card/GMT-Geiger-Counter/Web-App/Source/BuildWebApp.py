@@ -63,7 +63,7 @@ def buildApp(path):
     inlineJavaScript(html, root)
 
     # Return the minified HTML content
-    return htmlmin.minify(str(html))
+    return htmlmin.minify(str(html), remove_empty_space=True).replace("\n", "")
 
 # =================================================================================================
 # Build all web apps

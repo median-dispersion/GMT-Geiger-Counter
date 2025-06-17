@@ -86,6 +86,9 @@ class HeaderBar {
         // If not already initialized
         if(!this.#initialized) {
 
+            // Set the initialization flag to true
+            this.#initialized = true;
+
             // Get DOM elements
             this.#element.header   = document.querySelector("#header");
             this.#element.back     = document.querySelector("#header-button-back");
@@ -102,9 +105,6 @@ class HeaderBar {
 
             // Add an event listener to open the settings panel
             this.#element.settings.addEventListener("click", () => { settingsPanel.open(); });
-
-            // Set the initialization flag to true
-            this.#initialized = true;
 
         }
 

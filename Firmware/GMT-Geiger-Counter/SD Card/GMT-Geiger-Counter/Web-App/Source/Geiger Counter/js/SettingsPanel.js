@@ -306,6 +306,9 @@ class SettingsPanel {
         // If not already initialized
         if(!this.#initialized) {
 
+            // Set the initialization flag to true
+            this.#initialized = true;
+
             // Get DOM elements
             this.#element.settings        = document.querySelector("#settings");
             this.#element.background      = document.querySelector("#settings-background");
@@ -383,9 +386,6 @@ class SettingsPanel {
             
             });
 
-            // Set the initialization flag to true
-            this.#initialized = true;
-
         }
 
     }
@@ -432,9 +432,6 @@ class SettingsPanel {
             // Stop rendering the settings element
             this.#element.settings.style.display = "none";
 
-            // Allow page scroll
-            document.body.style.overflow = "auto";
-
             // Remove old animation classes
             this.#element.background.classList.remove("settings-background-fade-out");
             this.#element.panel.classList.remove("settings-panel-slide-out");
@@ -442,7 +439,7 @@ class SettingsPanel {
             // Remove the event listener
             this.#element.settings.removeEventListener("animationend", this.#settingsAnimation);
 
-        }
+        };
 
         // Add the event listener for stopping the animation
         this.#element.settings.addEventListener("animationend", this.#settingsAnimation);
@@ -450,6 +447,9 @@ class SettingsPanel {
         // Add new animation classes
         this.#element.background.classList.add("settings-background-fade-out");
         this.#element.panel.classList.add("settings-panel-slide-out");
+
+        // Allow page scroll
+        document.body.style.overflow = "auto";
 
     }
     
