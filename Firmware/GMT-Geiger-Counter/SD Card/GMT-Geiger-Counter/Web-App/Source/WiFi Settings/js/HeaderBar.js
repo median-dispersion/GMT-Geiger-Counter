@@ -8,8 +8,8 @@ class HeaderBar {
 
     #element = {
 
-        header:    null,
-        easterEgg: null
+        header:   null,
+        back:     null
 
     };
 
@@ -89,14 +89,14 @@ class HeaderBar {
             this.#initialized = true;
 
             // Get DOM elements
-            this.#element.header    = document.querySelector("#header");
-            this.#element.easterEgg = document.querySelector("#header-button-easter-egg");
+            this.#element.header   = document.querySelector("#header");
+            this.#element.back     = document.querySelector("#header-button-back");
 
             // Handle mobile devices
             this.#handleMobileDevices();
 
-            // Add an event listener for the easter egg animation
-            this.#element.easterEgg.addEventListener("click", () => { this.#element.easterEgg.classList.add("header-easter-egg"); });
+            // Add an event listener to go back
+            this.#element.back.addEventListener("click", () => { window.location = window.location.origin; });
 
         }
 

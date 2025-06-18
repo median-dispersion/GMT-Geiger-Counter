@@ -15,10 +15,10 @@ const language = {
         wifi_settings_message:           "Update the WiFi access point the Geiger counter tries to connect to by changing its credentials.",
         rest_api_endpoints:              "REST API endpoints",
         wifi_credentials:                "WiFi Credentials",
-        wifi_credentials_message:        "A PUT API endpoint for updating the WiFi credentials.",
+        wifi_credentials_message:        "An API PUT endpoint for updating the WiFi credentials.",
         ok:                              "OK",
         restart_system:                  "Restart system?",
-        restart_system_message:          "A PUT API endpoint for restarting the system. Restart the system now? Keep in mind that restarting the system will reset all data that has been recorded so far.",
+        restart_system_message:          "An API PUT endpoint for restarting the system. Restart the system now? Keep in mind that restarting the system will reset all data that has been recorded so far.",
         yes:                             "Yes",
         no:                              "No"
 
@@ -38,10 +38,10 @@ const language = {
         wifi_settings_message:           "Ändern des WLAN-Zugangspunktes, mit dem sich der Geigerzähler verbindet.",
         rest_api_endpoints:              "REST API Endpunkte",
         wifi_credentials:                "WLAN-Anmeldeinformationen",
-        wifi_credentials_message:        "Ein PUT API Endpunkt zum Aktualisieren der WLAN Anmeldeinformationen.",
+        wifi_credentials_message:        "Ein API PUT Endpunkt zum Aktualisieren der WLAN Anmeldeinformationen.",
         ok:                              "OK",
         restart_system:                  "System neu starten?",
-        restart_system_message:          "Ein PUT-API-Endpunkt zum Neustart des Systems. Soll das System jetzt neu gestartet werden? Beachten Sie, dass beim Neustart des Systems alle bisher aufgezeichneten Daten zurückgesetzt werden.",
+        restart_system_message:          "Ein API PUT Endpunkt zum Neustart des Systems. Soll das System jetzt neu gestartet werden? Beachten Sie, dass beim Neustart des Systems alle bisher aufgezeichneten Daten zurückgesetzt werden.",
         yes:                             "Ja",
         no:                              "Nein"
 

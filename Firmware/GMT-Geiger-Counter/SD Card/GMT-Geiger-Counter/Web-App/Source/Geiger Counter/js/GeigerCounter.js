@@ -286,9 +286,9 @@ class GeigerCounter {
         tubeStatistics.number                   = this.#geigerCounterData.data.tubes;
         tubeStatistics.counts.total             = this.#geigerCounterData.data.counts;
         tubeStatistics.counts.main.absolute     = this.#geigerCounterData.data.mainCounts;
-        tubeStatistics.counts.main.relative     = (tubeStatistics.counts.main.absolute / tubeStatistics.counts.total) * 100;
+        tubeStatistics.counts.main.relative     = tubeStatistics.counts.total > 0 ? (tubeStatistics.counts.main.absolute / tubeStatistics.counts.total) * 100 : 0;
         tubeStatistics.counts.follower.absolute = this.#geigerCounterData.data.followerCounts;
-        tubeStatistics.counts.follower.relative = (tubeStatistics.counts.follower.absolute / tubeStatistics.counts.total) * 100;
+        tubeStatistics.counts.follower.relative = tubeStatistics.counts.total > 0 ?  (tubeStatistics.counts.follower.absolute / tubeStatistics.counts.total) * 100 : 0;
 
         // Set the tube statistics
         this.#tubeStatistics = tubeStatistics;
