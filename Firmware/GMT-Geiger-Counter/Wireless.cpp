@@ -60,7 +60,7 @@ void Wireless::begin() {
     setWiFiState(wifiState);
 
     // Handle system restart requests
-    server.on("/system/restart", _handleSystemRestart);
+    server.on("/system/restart", HTTP_PUT, _handleSystemRestart);
 
     // Handle updates of the WiFi credentials via the web interface
     server.on("/system/wifi-credentials", HTTP_PUT, _handleWiFiCredentials);

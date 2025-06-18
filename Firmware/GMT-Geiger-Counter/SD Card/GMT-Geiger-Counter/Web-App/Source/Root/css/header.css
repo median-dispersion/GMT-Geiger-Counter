@@ -94,3 +94,18 @@
     100% { transform: translateY(0);     }
 
 }
+
+.header-easter-egg {
+
+    animation: header-easter-egg-animation 1000ms ease infinite;
+    background-color: transparent !important;
+    cursor: default !important;
+
+}
+
+@keyframes header-easter-egg-animation {
+    
+    0%   { transform: rotate(0deg);   }
+    100% { transform: rotate(360deg); }
+
+}

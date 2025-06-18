@@ -255,7 +255,7 @@ class SettingsPanel {
                     const url = `${window.location.origin}/system/restart`;
 
                     // Restart the system
-                    fetch(url, {method: "GET", cache: "no-store"});
+                    fetch(url, {method: "PUT", cache: "no-store"});
 
                     // Dismiss the dialog box
                     dialogBox.dismiss();

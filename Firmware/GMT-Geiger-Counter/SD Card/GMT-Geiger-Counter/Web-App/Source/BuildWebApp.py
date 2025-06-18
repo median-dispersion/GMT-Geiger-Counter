@@ -69,4 +69,5 @@ def buildApp(path):
 # Build all web apps
 # =================================================================================================
 
+with open("./index.html", "w")          as file: file.write(buildApp("./Root"))
 with open("./geiger-counter.html", "w") as file: file.write(buildApp("./Geiger Counter"))
