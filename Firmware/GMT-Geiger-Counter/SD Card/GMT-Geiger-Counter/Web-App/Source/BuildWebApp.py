@@ -69,6 +69,7 @@ def buildApp(path):
 # Build all web apps
 # =================================================================================================
 
-with open("./index.html",          "w") as file: file.write(buildApp("./Root"))
-with open("./geiger-counter.html", "w") as file: file.write(buildApp("./Geiger Counter"))
-with open("./wifi-settings.html",  "w") as file: file.write(buildApp("./WiFi Settings"))
+with open("./index.html",               "w") as file: file.write(buildApp("./Root"))
+with open("./geiger-counter.html",      "w") as file: file.write(buildApp("./Geiger Counter"))
+with open("./cosmic-ray-detector.html", "w") as file: file.write(buildApp("./Cosmic Ray Detector"))
+with open("./wifi-settings.html",       "w") as file: file.write(buildApp("./WiFi Settings"))
