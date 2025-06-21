@@ -128,7 +128,7 @@ const language = {
         radiation_rating_unknown_title:        "UNBEKANNT",
         radiation_rating_unknown_description:  "Unbekannt, womöglich liegt ein Kommunikationsfehler vor.",
         data_request_failed:                   "Datenübertragung fehlgeschlagen!",
-        data_request_failed_message:           "Die Anforderung der benötigten Daten ist fehlgeschlagen! Bitte überprüfen Sie die WLAN-Verbindung.",
+        data_request_failed_message:           "Die Anfrage der benötigten Daten ist fehlgeschlagen! Bitte überprüfen Sie die WLAN-Verbindung.",
         go_back:                               "Zurück",
         refresh:                               "Neuladen",
         geiger_counter_disabled:               "Geigerzähler ist deaktiviert!",

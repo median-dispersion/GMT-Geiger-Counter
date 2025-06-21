@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Cosmic ray detector | GMT Geiger Counter</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m374.35 68.461a16.002 16.002 0 0 0-14.682 7.9785l-56.344 97.592a16.002 16.002 0 0 0 3.6562 20.326c14.788 12.24 24.675 29.378 27.871 48.307a16.002 16.002 0 0 0 15.777 13.336h112.69a16.002 16.002 0 0 0 15.953-17.232c-5.2189-67.588-40.787-129.2-96.705-167.53a16.002 16.002 0 0 0-8.2207-2.7812zm-236.56 0.26562a16.002 16.002 0 0 0-8.2266 2.7949c-55.715 38.332-91.144 99.816-96.367 167.24a16.002 16.002 0 0 0 15.953 17.236h112.34a16.002 16.002 0 0 0 15.775-13.324c3.2053-18.89 13.077-35.992 27.83-48.217a16.002 16.002 0 0 0 3.6465-20.32l-56.254-97.436a16.002 16.002 0 0 0-14.697-7.9766zm118.21 139.27c-26.32 0-48 21.68-48 48s21.68 48 48 48 48-21.68 48-48-21.68-48-48-48zm-33.186 121.76a16.002 16.002 0 0 0-5.5332 0.92773 16.002 16.002 0 0 0-8.4844 7.0723l-56.369 97.635a16.002 16.002 0 0 0 6.9121 22.414c30.144 14.52 63.158 22.103 96.617 22.191a16.002 16.002 0 0 0 0.0859 0c33.459-0.088 66.473-7.6716 96.617-22.191a16.002 16.002 0 0 0 6.9121-22.414l-56.369-97.635a16.002 16.002 0 0 0-19.531-6.959c-8.8445 3.3556-18.213 5.1099-27.672 5.1934-9.4587-0.0835-18.827-1.8378-27.672-5.1934a16.002 16.002 0 0 0-5.5137-1.041z'/%3E%3C/svg%3E">
+
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./css/content.css">
+    <link rel="stylesheet" href="./css/header.css">
+    <link rel="stylesheet" href="./css/settings.css">
+    <link rel="stylesheet" href="./css/dialog.css">
+
+    <script src="./js/LanguageStrings.js"></script>
+    <script src="./js/CosmicRayDetector.js"></script>
+    <script src="./js/EventHistory.js"></script>
+    <script src="./js/HeaderBar.js"></script>
+    <script src="./js/SettingsPanel.js"></script>
+    <script src="./js/DialogBox.js"></script>
+    <script src="./main.js"></script>
+
+</head>
+
+<body>
+
+    <div id="content">
+
+        <div id="content-screen">
+
+            <div id="content-screen-pulse"></div>
+            <p id="content-screen-value">?</p>
+            <p id="content-screen-unit">Coincidence events</p>
+
+        </div>
+
+        <div id="content-dose">
+
+            <div id="content-dose-icon" class="icon-muon"></div>
+
+            <p id="content-dose-reading">
+
+                <span id="content-dose-reading-value">?</span>
+                <span id="content-dose-reading-unit">CPH</span>
+
+            </p>
+
+        </div>
+
+        <p id="content-title-radiation-history" class="content-title">Coincidence event history</p>
+
+        <div id="content-history">
+
+            <div id="content-history-graph">
+
+                <canvas id="content-history-graph-canvas"></canvas>
+
+            </div>
+
+            <div id="content-history-statistics">
+
+                <div class="content-history-statistics-info">
+
+                    <div class="content-history-statistics-info-icon icon-average"></div>
+                    <p id="content-history-statistics-info-value-average" class="content-history-statistics-info-value">?</p>
+
+                </div>
+
+                <div class="content-history-statistics-info">
+
+                    <div class="content-history-statistics-info-icon icon-maximum"></div>
+                    <p id="content-history-statistics-info-value-maximum" class="content-history-statistics-info-value">?</p>
+
+                </div>
+
+                <div class="content-history-statistics-info">
+
+                    <div class="content-history-statistics-info-icon icon-minimum"></div>
+                    <p id="content-history-statistics-info-value-minimum" class="content-history-statistics-info-value">?</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <p id="content-title-tube-statistics" class="content-title">Tube statistics</p>
+
+        <div class="content-tube">
+
+            <p id="content-tube-header-coincidence-tube" class="content-tube-header">Coincidence tube</p>
+
+            <div class="content-tube-info">
+
+                <!-- <div id="content-tube-info-row-coincidence-events" class="content-tube-info-row">
+
+                    <p class="content-tube-info-title">Coincidence events</p>
+                    <p class="content-tube-info-value">?</p>
+
+                </div> -->
+
+                <div id="content-tube-info-row-coincidence-total" class="content-tube-info-row">
+
+                    <p class="content-tube-info-title">Total events</p>
+                    <p class="content-tube-info-value">?</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="content-tube">
+
+            <p id="content-tube-header-main-tube" class="content-tube-header">Main tube</p>
+
+            <div class="content-tube-info">
+
+                <div id="content-tube-info-row-main-counts" class="content-tube-info-row">
+
+                    <p class="content-tube-info-title">Counts</p>
+                    <p class="content-tube-info-value">?</p>
+
+                </div>
+
+                <div id="content-tube-info-row-main-events" class="content-tube-info-row">
+
+                    <p class="content-tube-info-title">Events</p>
+                    <p class="content-tube-info-value">?</p>
+
+                </div>
+
+                <div id="content-tube-info-row-main-event-percentage" class="content-tube-info-row">
+
+                    <p class="content-tube-info-title">Event percentage</p>
+                    <p class="content-tube-info-value">? %</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="content-tube">
+
+            <p id="content-tube-header-follower-tube" class="content-tube-header">Follower tube</p>
+
+            <div class="content-tube-info">
+
+                <div id="content-tube-info-row-follower-counts" class="content-tube-info-row">
+
+                    <p class="content-tube-info-title">Counts</p>
+                    <p class="content-tube-info-value">?</p>
+
+                </div>
+
+                <div id="content-tube-info-row-follower-events" class="content-tube-info-row">
+
+                    <p class="content-tube-info-title">Events</p>
+                    <p class="content-tube-info-value">?</p>
+
+                </div>
+
+                <div id="content-tube-info-row-follower-event-percentage" class="content-tube-info-row">
+
+                    <p class="content-tube-info-title">Event percentage</p>
+                    <p class="content-tube-info-value">? %</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    
+    <div id="header">
+
+        <button id="header-button-back" class="header-button icon-back"></button>
+
+        <p id="header-title">Cosmic ray detector</p>
+
+        <button id="header-button-settings" class="header-button icon-settings"></button>
+
+    </div>
+
+    <div id="settings">
+
+        <button id="settings-background"></button>
+
+        <div id="settings-panel">
+
+            <div id="settings-panel-header">
+
+                <button id="settings-panel-header-button-close" class="icon-close"></button>
+
+                <p id="settings-panel-header-title">Settings</p>
+
+            </div>
+
+            <div id="settings-panel-content">
+
+                <div class="settings-panel-content-section">
+
+                    <p id="settings-panel-content-section-title-update-interval" class="settings-panel-content-section-title">Update interval</p>
+
+                    <div id="settings-panel-content-section-range-update-interval" class="settings-panel-content-section-range">
+
+                        <p class="settings-panel-content-section-range-title">Refresh rate</p>
+
+                        <label class="settings-panel-content-section-range-slider">
+
+                            <div class="settings-panel-content-section-range-slider-tack">
+
+                                <div class="settings-panel-content-section-range-slider-tack-thumb"></div>
+
+                            </div>
+
+                            <input class="settings-panel-content-section-range-slider-input" type="range" min="1" max="60" step="1" value="30">
+
+                        </label>
+
+                        <p class="settings-panel-content-section-range-state">
+                            
+                            <span class="settings-panel-content-section-range-state-value">30</span>
+                            <span class="settings-panel-content-section-range-state-init">s</span>
+                        
+                        </p>
+
+                    </div>
+
+                </div>
+
+                <div class="settings-panel-content-section">
+
+                    <p id="settings-panel-content-section-title-event-history" class="settings-panel-content-section-title">Event history</p>
+
+                    <label id="settings-panel-content-section-toggle-ignore-first-hour" class="settings-panel-content-section-toggle">
+
+                        <input class="settings-panel-content-section-toggle-input" type="checkbox">
+                        <p class="settings-panel-content-section-toggle-title">Ignore first hour</p>
+                        <div class="settings-panel-content-section-toggle-switch"></div>
+
+                    </label>
+
+                    <div id="settings-panel-content-section-range-vertical-steps" class="settings-panel-content-section-range">
+
+                        <p class="settings-panel-content-section-range-title">Vertical steps</p>
+
+                        <label class="settings-panel-content-section-range-slider">
+
+                            <div class="settings-panel-content-section-range-slider-tack">
+
+                                <div class="settings-panel-content-section-range-slider-tack-thumb"></div>
+
+                            </div>
+
+                            <input class="settings-panel-content-section-range-slider-input" type="range" min="3" max="16" step="1" value="5">
+
+                        </label>
+
+                        <p class="settings-panel-content-section-range-state">
+                            
+                            <span class="settings-panel-content-section-range-state-value">5</span>
+                        
+                        </p>
+
+                    </div>
+
+                    <div id="settings-panel-content-section-range-horizontal-steps" class="settings-panel-content-section-range">
+
+                        <p class="settings-panel-content-section-range-title">Horizontal steps</p>
+
+                        <label class="settings-panel-content-section-range-slider">
+
+                            <div class="settings-panel-content-section-range-slider-tack">
+
+                                <div class="settings-panel-content-section-range-slider-tack-thumb"></div>
+
+                            </div>
+
+                            <input class="settings-panel-content-section-range-slider-input" type="range" min="3" max="16" step="1" value="5">
+
+                        </label>
+
+                        <p class="settings-panel-content-section-range-state">
+                            
+                            <span class="settings-panel-content-section-range-state-value">5</span>
+                        
+                        </p>
+
+                    </div>
+
+                    <div id="settings-panel-content-section-range-smoothing-factor" class="settings-panel-content-section-range">
+
+                        <p class="settings-panel-content-section-range-title">Smoothing factor</p>
+
+                        <label class="settings-panel-content-section-range-slider">
+
+                            <div class="settings-panel-content-section-range-slider-tack">
+
+                                <div class="settings-panel-content-section-range-slider-tack-thumb"></div>
+
+                            </div>
+
+                            <input class="settings-panel-content-section-range-slider-input" type="range" min="0" max="100" step="1" value="0">
+
+                        </label>
+
+                        <p class="settings-panel-content-section-range-state">
+                            
+                            <span class="settings-panel-content-section-range-state-value">0</span>
+                            <span class="settings-panel-content-section-range-state-unit">%</span>
+                        
+                        </p>
+
+                    </div>
+
+                    <button id="settings-panel-content-section-action-save-history" class="settings-panel-content-section-action">
+
+                        <div class="settings-panel-content-section-action-icon icon-chart"></div>
+                        <p class="settings-panel-content-section-action-title">Save history</p>
+
+                    </button>
+
+                </div>
+
+                <div class="settings-panel-content-section">
+
+                    <p id="settings-panel-content-section-title-actions" class="settings-panel-content-section-title">Actions</p>
+
+                    <button id="settings-panel-content-section-action-download-log" class="settings-panel-content-section-action">
+
+                        <div class="settings-panel-content-section-action-icon icon-download"></div>
+                        <p class="settings-panel-content-section-action-title">Download log</p>
+
+                    </button>
+
+                    <button id="settings-panel-content-section-action-restart-system" class="settings-panel-content-section-action">
+
+                        <div class="settings-panel-content-section-action-icon icon-power"></div>
+                        <p class="settings-panel-content-section-action-title">Restart system</p>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="dialog">
+
+        <div id="dialog-box">
+
+            <p id="dialog-box-title">Title</p>
+
+            <p id="dialog-box-message">Message</p>
+
+            <div id="dialog-box-actions">
+
+                <button class="dialog-box-actions-button">Button</button>
+                <button class="dialog-box-actions-button">Button</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
