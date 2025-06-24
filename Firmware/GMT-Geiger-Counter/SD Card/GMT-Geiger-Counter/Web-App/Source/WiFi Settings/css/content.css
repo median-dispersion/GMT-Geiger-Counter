@@ -1,0 +1,189 @@
+/* ============================================================================================= */
+/* Content */
+/* ============================================================================================= */
+
+#content {
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-default);
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 800px;
+    left: 50%;
+    top: 64px;
+    transform: translateX(-50%);
+    padding: var(--spacing-default);
+
+}
+
+.content-title {
+
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 100%;
+    margin: 0;
+    padding-top: var(--spacing-default);
+    padding-bottom: var(--spacing-default);
+    font-size: var(--font-size-title);
+    color: var(--font-color-info);
+    word-break: break-word;
+    hyphens: auto;
+
+}
+
+/* ============================================================================================= */
+/* Content notification */
+/* ============================================================================================= */
+
+.content-notification {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: calc(var(--spacing-default) * 2);
+    flex-grow: 0;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 100%;
+    padding: calc(var(--spacing-default) * 2);
+    border-width: 1px;
+    border-style: solid;
+    border-radius: var(--border-radius-default);
+    box-shadow: var(--box-shadow-default);
+
+}
+
+.content-notification-warning {
+
+    border-color: var(--color-yellow-medium-100);
+    background-color: var(--color-yellow-dark-100);
+
+}
+
+.content-notification-info {
+
+    border-color: var(--color-blue-medium-100);
+    background-color: var(--color-blue-dark-100);
+
+}
+
+.content-notification-icon {
+
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+
+}
+
+.content-notification-message {
+
+    margin: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    font-size: var(--font-size-text);
+    text-align: justify;
+    word-break: break-word;
+    hyphens: auto;
+
+}
+
+/* ============================================================================================= */
+/* Content credentials */
+/* ============================================================================================= */
+
+#content-credentials {
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-default);
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 100%;
+
+}
+
+.content-credentials-input {
+
+    flex-grow: 0;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 100%;
+    height: 48px;
+    padding: 0;
+    padding-left: var(--spacing-default);
+    padding-right: var(--spacing-default);
+    border: 0;
+    border-radius: var(--border-radius-default);
+    border-bottom: 3px solid transparent;
+    font-size: var(--font-size-text);
+    color: var(--font-color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    overflow-y: auto;
+    background-color: var(--theme-color-foreground);
+    box-shadow: var(--box-shadow-default);
+    transition: var(--transition-time-default);
+
+}
+
+.content-credentials-input::placeholder {
+
+    color: var(--font-color-info);
+
+}
+
+.content-credentials-input:hover {
+
+    background-color: var(--theme-color-active);
+
+}
+
+.content-credentials-input:focus {
+
+    outline: 0;
+    border-color: var(--theme-color-highlight);
+    background-color: var(--theme-color-active);
+
+}
+
+#content-credentials-button {
+
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: fit-content;
+    min-width: 150px;
+    height: 48px;
+    padding: 0;
+    padding-left: calc(var(--spacing-default)* 2);
+    padding-right: calc(var(--spacing-default) * 2);
+    border: 0;
+    border-radius: var(--border-radius-default);
+    font-size: var(--font-size-text);
+    color: var(--font-color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: var(--theme-color-foreground);
+    box-shadow: var(--box-shadow-default);
+    cursor: pointer;
+    transition: var(--transition-time-default);
+
+}
+
+#content-credentials-button:hover {
+
+    background-color: var(--theme-color-highlight);
+
+}
+
+#content-credentials-button:active {
+
+    background-color: var(--theme-color-active);
+
+}

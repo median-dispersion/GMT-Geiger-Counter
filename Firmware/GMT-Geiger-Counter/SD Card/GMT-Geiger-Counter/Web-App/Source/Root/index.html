@@ -1,146 +1,175 @@
 <!DOCTYPE html>
 
 <html lang="en">
-
+    
 <head>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>GMT Geiger Counter</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m374.35 68.461a16.002 16.002 0 0 0-14.682 7.9785l-56.344 97.592a16.002 16.002 0 0 0 3.6562 20.326c14.788 12.24 24.675 29.378 27.871 48.307a16.002 16.002 0 0 0 15.777 13.336h112.69a16.002 16.002 0 0 0 15.953-17.232c-5.2189-67.588-40.787-129.2-96.705-167.53a16.002 16.002 0 0 0-8.2207-2.7812zm-236.56 0.26562a16.002 16.002 0 0 0-8.2266 2.7949c-55.715 38.332-91.144 99.816-96.367 167.24a16.002 16.002 0 0 0 15.953 17.236h112.34a16.002 16.002 0 0 0 15.775-13.324c3.2053-18.89 13.077-35.992 27.83-48.217a16.002 16.002 0 0 0 3.6465-20.32l-56.254-97.436a16.002 16.002 0 0 0-14.697-7.9766zm118.21 139.27c-26.32 0-48 21.68-48 48s21.68 48 48 48 48-21.68 48-48-21.68-48-48-48zm-33.186 121.76a16.002 16.002 0 0 0-5.5332 0.92773 16.002 16.002 0 0 0-8.4844 7.0723l-56.369 97.635a16.002 16.002 0 0 0 6.9121 22.414c30.144 14.52 63.158 22.103 96.617 22.191a16.002 16.002 0 0 0 0.0859 0c33.459-0.088 66.473-7.6716 96.617-22.191a16.002 16.002 0 0 0 6.9121-22.414l-56.369-97.635a16.002 16.002 0 0 0-19.531-6.959c-8.8445 3.3556-18.213 5.1099-27.672 5.1934-9.4587-0.0835-18.827-1.8378-27.672-5.1934a16.002 16.002 0 0 0-5.5137-1.041z'/%3E%3C/svg%3E">
-    
-    <link rel="stylesheet" href="./style.css">
 
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./css/content.css">
+    <link rel="stylesheet" href="./css/header.css">
+    <link rel="stylesheet" href="./css/dialog.css">
+
+    <script src="./js/LanguageStrings.js"></script>
+    <script src="./js/HeaderBar.js"></script>
+    <script src="./js/DialogBox.js"></script>
     <script src="./main.js"></script>
-    <script src="./strings.js"></script>
 
 </head>
 
 <body>
-    
-    <div id="header">
 
-        <div id="header-icon" class="icon-radiation"></div>
-        <div id="header-title">GMT Geiger Counter</div>
+    <div id="content">
+
+        <p id="content-title-web-interfaces" class="content-title">Web interfaces</p>
+
+        <a class="content-card" href="./geiger-counter.html">
+
+            <div class="content-card-icon icon-radiation"></div>
+
+            <div id="content-card-info-geiger-counter" class="content-card-info">
+
+                <p class="content-card-info-title">Geiger counter</p>
+                <p class="content-card-info-description">Get and visualize the Geiger counter data via the main web interface.</p>
+
+            </div>
+
+            <div class="content-card-icon icon-arrow-right"></div>
+
+        </a>
+
+        <a class="content-card" href="./cosmic-ray-detector.html">
+
+            <div class="content-card-icon icon-muon"></div>
+
+            <div id="content-card-info-cosmic-ray-detector" class="content-card-info">
+
+                <p class="content-card-info-title">Cosmic ray detector</p>
+                <p class="content-card-info-description">Get and visualize the cosmic ray detector data via the web interface.</p>
+
+            </div>
+
+            <div class="content-card-icon icon-arrow-right"></div>
+
+        </a>
+
+        <a class="content-card" href="./wifi-settings.html">
+
+            <div class="content-card-icon icon-wifi"></div>
+
+            <div id="content-card-info-wifi-settings" class="content-card-info">
+
+                <p class="content-card-info-title">WiFi settings</p>
+                <p class="content-card-info-description">Update the WiFi access point the Geiger counter tries to connect to by changing its credentials.</p>
+
+            </div>
+
+            <div class="content-card-icon icon-arrow-right"></div>
+
+        </a>
+
+        <p id="content-title-api-endpoints" class="content-title">REST API endpoints</p>
+
+        <a class="content-endpoint" href="/data/geiger-counter">
+
+            <div class="content-endpoint-icon icon-api-endpoint"></div>
+
+            <p class="content-endpoint-request">
+
+                <span class="content-endpoint-request-method">GET</span>
+                <span class="content-endpoint-request-url">/data/geiger-counter</span>
+
+            </p>
+
+            <div class="content-endpoint-icon icon-arrow-right"></div>
+
+        </a>
+
+        <a class="content-endpoint" href="/data/cosmic-ray-detector">
+
+            <div class="content-endpoint-icon icon-api-endpoint"></div>
+
+            <p class="content-endpoint-request">
+
+                <span class="content-endpoint-request-method">GET</span>
+                <span class="content-endpoint-request-url">/data/cosmic-ray-detector</span>
+
+            </p>
+
+            <div class="content-endpoint-icon icon-arrow-right"></div>
+
+        </a>
+
+        <a class="content-endpoint" href="/data/system">
+
+            <div class="content-endpoint-icon icon-api-endpoint"></div>
+
+            <p class="content-endpoint-request">
+
+                <span class="content-endpoint-request-method">GET</span>
+                <span class="content-endpoint-request-url">/data/system</span>
+
+            </p>
+
+            <div class="content-endpoint-icon icon-arrow-right"></div>
+
+        </a>
+
+        <a id="content-endpoint-wifi-credentials" class="content-endpoint">
+
+            <div class="content-endpoint-icon icon-api-endpoint"></div>
+
+            <p class="content-endpoint-request">
+
+                <span class="content-endpoint-request-method">PUT</span>
+                <span class="content-endpoint-request-url">/system/wifi-credentials</span>
+
+            </p>
+
+        </a>
+
+        <a id="content-endpoint-restart" class="content-endpoint">
+
+            <div class="content-endpoint-icon icon-api-endpoint"></div>
+
+            <p class="content-endpoint-request">
+
+                <span class="content-endpoint-request-method">PUT</span>
+                <span class="content-endpoint-request-url">/system/restart</span>
+
+            </p>
+
+        </a>
 
     </div>
 
-    <div id="main">
+    <div id="header">
 
-        <div id="interface-cards-title" class="main-section-title">Web interface</div>
+        <button id="header-button-easter-egg" class="header-button icon-radiation"></button>
 
-        <div id="interface-cards">
+        <p id="header-title">GMT Geiger Counter</p>
 
-            <a href="./geiger-counter.html">
+    </div>
 
-                <div class="interface-card">
+    <div id="dialog">
 
-                    <div class="interface-card-icon icon-radiation"></div>
+        <div id="dialog-box">
 
-                    <div class="interface-card-info">
+            <p id="dialog-box-title">Title</p>
 
-                        <div class="interface-card-info-box">
+            <p id="dialog-box-message">Message</p>
 
-                            <div id="interface-card-geiger-counter-title" class="interface-card-info-box-title">Geiger counter</div>
-                            <div id="interface-card-geiger-counter-description" class="interface-card-info-box-description">Get and visualize the Geiger counter data via the main web interface.</div>
+            <div id="dialog-box-actions">
 
-                        </div>
+                <button class="dialog-box-actions-button">Button</button>
+                <button class="dialog-box-actions-button">Button</button>
 
-                    </div>
-
-                    <div class="interface-card-navigation-arrow icon-navigation-arrow"></div>
-
-                </div>
-
-            </a>
-
-            <a href="./cosmic-ray-detector.html">
-
-                <div class="interface-card">
-
-                    <div class="interface-card-icon icon-muon"></div>
-
-                    <div class="interface-card-info">
-
-                        <div class="interface-card-info-box">
-
-                            <div id="interface-card-cosmic-ray-detector-title" class="interface-card-info-box-title">Cosmic ray detector</div>
-                            <div id="interface-card-cosmic-ray-detector-description" class="interface-card-info-box-description">Get and visualize the cosmic ray detector data via the web interface.</div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="interface-card-navigation-arrow icon-navigation-arrow"></div>
-
-                </div>
-                
-            </a>
-
-            <a href="./wifi-settings.html">
-
-                <div class="interface-card">
-
-                    <div class="interface-card-icon icon-wifi"></div>
-
-                    <div class="interface-card-info">
-
-                        <div class="interface-card-info-box">
-
-                            <div id="interface-card-wifi-title" class="interface-card-info-box-title">WiFi settings</div>
-                            <div id="interface-card-wifi-description" class="interface-card-info-box-description">Update the WiFi access point the Geiger counter tries to connect to by changing its credentials.</div>
-
-                        </div>
-
-                    </div>
-
-                    <div class="interface-card-navigation-arrow icon-navigation-arrow"></div>
-
-                </div>
-                
-            </a>
-
-        </div>
-
-        <div id="api-endpoints-title" class="main-section-title">REST API endpoints</div>
-
-        <div id="api-endpoints">
-
-            <a href="./data/geiger-counter">
-
-                <div class="api-endpoint">
-
-                    <div class="api-endpoint-icon icon-api-endpoint"></div>
-                    <div class="api-endpoint-path">/data/geiger-counter</div>
-                    <div class="api-endpoint-icon icon-navigation-arrow"></div>
-
-                </div>
-
-            </a>
-
-            <a href="./data/cosmic-ray-detector">
-
-                <div class="api-endpoint">
-
-                    <div class="api-endpoint-icon icon-api-endpoint"></div>
-                    <div class="api-endpoint-path">/data/cosmic-ray-detector</div>
-                    <div class="api-endpoint-icon icon-navigation-arrow"></div>
-
-                </div>
-                
-            </a>
-
-            <a href="./data/system">
-
-                <div class="api-endpoint">
-
-                    <div class="api-endpoint-icon icon-api-endpoint"></div>
-                    <div class="api-endpoint-path">/data/system</div>
-                    <div class="api-endpoint-icon icon-navigation-arrow"></div>
-
-                </div>
-                
-            </a>
+            </div>
 
         </div>
 

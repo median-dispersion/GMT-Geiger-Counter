@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>Geiger counter | GMT Geiger Counter</title>
+    <title>Cosmic ray detector | GMT Geiger Counter</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512' fill='%23fff'%3E%3Cpath d='m374.35 68.461a16.002 16.002 0 0 0-14.682 7.9785l-56.344 97.592a16.002 16.002 0 0 0 3.6562 20.326c14.788 12.24 24.675 29.378 27.871 48.307a16.002 16.002 0 0 0 15.777 13.336h112.69a16.002 16.002 0 0 0 15.953-17.232c-5.2189-67.588-40.787-129.2-96.705-167.53a16.002 16.002 0 0 0-8.2207-2.7812zm-236.56 0.26562a16.002 16.002 0 0 0-8.2266 2.7949c-55.715 38.332-91.144 99.816-96.367 167.24a16.002 16.002 0 0 0 15.953 17.236h112.34a16.002 16.002 0 0 0 15.775-13.324c3.2053-18.89 13.077-35.992 27.83-48.217a16.002 16.002 0 0 0 3.6465-20.32l-56.254-97.436a16.002 16.002 0 0 0-14.697-7.9766zm118.21 139.27c-26.32 0-48 21.68-48 48s21.68 48 48 48 48-21.68 48-48-21.68-48-48-48zm-33.186 121.76a16.002 16.002 0 0 0-5.5332 0.92773 16.002 16.002 0 0 0-8.4844 7.0723l-56.369 97.635a16.002 16.002 0 0 0 6.9121 22.414c30.144 14.52 63.158 22.103 96.617 22.191a16.002 16.002 0 0 0 0.0859 0c33.459-0.088 66.473-7.6716 96.617-22.191a16.002 16.002 0 0 0 6.9121-22.414l-56.369-97.635a16.002 16.002 0 0 0-19.531-6.959c-8.8445 3.3556-18.213 5.1099-27.672 5.1934-9.4587-0.0835-18.827-1.8378-27.672-5.1934a16.002 16.002 0 0 0-5.5137-1.041z'/%3E%3C/svg%3E">
 
     <link rel="stylesheet" href="./style.css">
@@ -17,8 +17,8 @@
     <link rel="stylesheet" href="./css/dialog.css">
 
     <script src="./js/LanguageStrings.js"></script>
-    <script src="./js/GeigerCounter.js"></script>
-    <script src="./js/RadiationHistory.js"></script>
+    <script src="./js/CosmicRayDetector.js"></script>
+    <script src="./js/EventHistory.js"></script>
     <script src="./js/HeaderBar.js"></script>
     <script src="./js/SettingsPanel.js"></script>
     <script src="./js/DialogBox.js"></script>
@@ -30,82 +30,28 @@
 
     <div id="content">
 
-        <div id="content-screen" class="content-screen-unknown">
+        <div id="content-screen">
 
             <div id="content-screen-pulse"></div>
             <p id="content-screen-value">?</p>
-            <p id="content-screen-unit">µSv/h</p>
+            <p id="content-screen-unit">Coincidence events</p>
 
         </div>
 
-        <div class="content-readings">
+        <div id="content-dose">
 
-            <p id="content-readings-reading-counts-per-minute" class="content-readings-reading">
+            <div id="content-dose-icon" class="icon-muon"></div>
 
-                <span class="content-readings-reading-value">?</span>
-                <span class="content-readings-reading-unit">CPM</span>
+            <p id="content-dose-reading">
 
-            </p>
-
-            <p id="content-readings-reading-counts-per-second" class="content-readings-reading">
-
-                <span class="content-readings-reading-value">?</span>
-                <span class="content-readings-reading-unit">CPS</span>
+                <span id="content-dose-reading-value">?</span>
+                <span id="content-dose-reading-unit">CPH</span>
 
             </p>
 
         </div>
 
-        <p id="content-title-equivalent-doses" class="content-title">Equivalent doses</p>
-
-        <div class="content-readings">
-
-            <p id="content-readings-reading-sieverts" class="content-readings-reading">
-
-                <span class="content-readings-reading-value">?</span>
-                <span class="content-readings-reading-unit">µSv/h</span>
-
-            </p>
-
-            <p id="content-readings-reading-rem" class="content-readings-reading">
-
-                <span class="content-readings-reading-value">?</span>
-                <span class="content-readings-reading-unit">µrem/h</span>
-
-            </p>
-
-            <p id="content-readings-reading-rontgen" class="content-readings-reading">
-
-                <span class="content-readings-reading-value">?</span>
-                <span class="content-readings-reading-unit">µR/h</span>
-
-            </p>
-
-            <p id="content-readings-reading-gray" class="content-readings-reading">
-
-                <span class="content-readings-reading-value">?</span>
-                <span class="content-readings-reading-unit">µGy/h</span>
-
-            </p>
-
-        </div>
-
-        <p id="content-title-radiation-rating" class="content-title">Radiation rating</p>
-
-        <div id="content-rating">
-
-            <div id="content-rating-icon" class="icon-radiation"></div>
-
-            <div id="content-rating-value">
-
-                <p id="content-rating-value-title">UNKNOWN</p>
-                <p id="content-rating-value-description">Unknown radiation rating, which is indicative of a communication error.</p>
-
-            </div>
-
-        </div>
-
-        <p id="content-title-radiation-history" class="content-title">Radiation history</p>
+        <p id="content-title-radiation-history" class="content-title">Coincidence event history</p>
 
         <div id="content-history">
 
@@ -146,27 +92,20 @@
 
         <div class="content-tube">
 
-            <p id="content-tube-header-tube-info" class="content-tube-header">Tube info</p>
+            <p id="content-tube-header-coincidence-tube" class="content-tube-header">Coincidence tube</p>
 
             <div class="content-tube-info">
 
-                <div id="content-tube-info-row-total-counts" class="content-tube-info-row">
+                <!-- <div id="content-tube-info-row-coincidence-events" class="content-tube-info-row">
 
-                    <p class="content-tube-info-title">Total counts</p>
+                    <p class="content-tube-info-title">Coincidence events</p>
                     <p class="content-tube-info-value">?</p>
 
-                </div>
+                </div> -->
 
-                <div id="content-tube-info-row-number-of-tubes" class="content-tube-info-row">
+                <div id="content-tube-info-row-coincidence-total" class="content-tube-info-row">
 
-                    <p class="content-tube-info-title">Number of tubes</p>
-                    <p class="content-tube-info-value">?</p>
-
-                </div>
-
-                <div id="content-tube-info-row-tube-types" class="content-tube-info-row">
-
-                    <p class="content-tube-info-title">Tube type</p>
+                    <p class="content-tube-info-title">Total events</p>
                     <p class="content-tube-info-value">?</p>
 
                 </div>
@@ -181,16 +120,23 @@
 
             <div class="content-tube-info">
 
-                <div id="content-tube-info-row-main-absolute" class="content-tube-info-row">
+                <div id="content-tube-info-row-main-counts" class="content-tube-info-row">
 
                     <p class="content-tube-info-title">Counts</p>
                     <p class="content-tube-info-value">?</p>
 
                 </div>
 
-                <div id="content-tube-info-row-main-relative" class="content-tube-info-row">
+                <div id="content-tube-info-row-main-events" class="content-tube-info-row">
 
-                    <p class="content-tube-info-title">Relative</p>
+                    <p class="content-tube-info-title">Events</p>
+                    <p class="content-tube-info-value">?</p>
+
+                </div>
+
+                <div id="content-tube-info-row-main-event-percentage" class="content-tube-info-row">
+
+                    <p class="content-tube-info-title">Event percentage</p>
                     <p class="content-tube-info-value">? %</p>
 
                 </div>
@@ -205,16 +151,23 @@
 
             <div class="content-tube-info">
 
-                <div id="content-tube-info-row-follower-absolute" class="content-tube-info-row">
+                <div id="content-tube-info-row-follower-counts" class="content-tube-info-row">
 
                     <p class="content-tube-info-title">Counts</p>
                     <p class="content-tube-info-value">?</p>
 
                 </div>
 
-                <div id="content-tube-info-row-follower-relative" class="content-tube-info-row">
+                <div id="content-tube-info-row-follower-events" class="content-tube-info-row">
 
-                    <p class="content-tube-info-title">Relative</p>
+                    <p class="content-tube-info-title">Events</p>
+                    <p class="content-tube-info-value">?</p>
+
+                </div>
+
+                <div id="content-tube-info-row-follower-event-percentage" class="content-tube-info-row">
+
+                    <p class="content-tube-info-title">Event percentage</p>
                     <p class="content-tube-info-value">? %</p>
 
                 </div>
@@ -224,12 +177,12 @@
         </div>
 
     </div>
-
+    
     <div id="header">
 
         <button id="header-button-back" class="header-button icon-back"></button>
 
-        <p id="header-title">Geiger counter</p>
+        <p id="header-title">Cosmic ray detector</p>
 
         <button id="header-button-settings" class="header-button icon-settings"></button>
 
@@ -253,58 +206,6 @@
 
                 <div class="settings-panel-content-section">
 
-                    <p id="settings-panel-content-section-title-unit-settings" class="settings-panel-content-section-title">Unit settings</p>
-
-                    <label id="settings-panel-content-section-toggle-auto-range" class="settings-panel-content-section-toggle">
-
-                        <input class="settings-panel-content-section-toggle-input" type="checkbox" checked="checked">
-                        <p class="settings-panel-content-section-toggle-title">Auto range units</p>
-                        <div class="settings-panel-content-section-toggle-switch"></div>
-
-                    </label>
-
-                </div>
-
-                <div class="settings-panel-content-section">
-
-                    <p id="settings-panel-content-section-title-screen-unit" class="settings-panel-content-section-title">Main screen unit</p>
-
-                    <label id="settings-panel-content-section-radio-sieverts" class="settings-panel-content-section-radio">
-
-                        <input class="settings-panel-content-section-radio-input" type="radio" name="screen-unit" value="sieverts" checked="checked">
-                        <p class="settings-panel-content-section-radio-title">Sieverts</p>
-                        <div class="settings-panel-content-section-radio-switch"></div>
-
-                    </label>
-
-                    <label id="settings-panel-content-section-radio-rem" class="settings-panel-content-section-radio">
-
-                        <input class="settings-panel-content-section-radio-input" type="radio" name="screen-unit" value="rem">
-                        <p class="settings-panel-content-section-radio-title">Rem</p>
-                        <div class="settings-panel-content-section-radio-switch"></div>
-
-                    </label>
-
-                    <label id="settings-panel-content-section-radio-rontgen" class="settings-panel-content-section-radio">
-
-                        <input class="settings-panel-content-section-radio-input" type="radio" name="screen-unit" value="rontgen">
-                        <p class="settings-panel-content-section-radio-title">Röntgen</p>
-                        <div class="settings-panel-content-section-radio-switch"></div>
-
-                    </label>
-
-                    <label id="settings-panel-content-section-radio-gray" class="settings-panel-content-section-radio">
-
-                        <input class="settings-panel-content-section-radio-input" type="radio" name="screen-unit" value="gray">
-                        <p class="settings-panel-content-section-radio-title">Gray</p>
-                        <div class="settings-panel-content-section-radio-switch"></div>
-
-                    </label>
-
-                </div>
-
-                <div class="settings-panel-content-section">
-
                     <p id="settings-panel-content-section-title-update-interval" class="settings-panel-content-section-title">Update interval</p>
 
                     <div id="settings-panel-content-section-range-update-interval" class="settings-panel-content-section-range">
@@ -319,13 +220,13 @@
 
                             </div>
 
-                            <input class="settings-panel-content-section-range-slider-input" type="range" min="1" max="60" step="1" value="10">
+                            <input class="settings-panel-content-section-range-slider-input" type="range" min="1" max="60" step="1" value="30">
 
                         </label>
 
                         <p class="settings-panel-content-section-range-state">
                             
-                            <span class="settings-panel-content-section-range-state-value">10</span>
+                            <span class="settings-panel-content-section-range-state-value">30</span>
                             <span class="settings-panel-content-section-range-state-init">s</span>
                         
                         </p>
@@ -336,7 +237,15 @@
 
                 <div class="settings-panel-content-section">
 
-                    <p id="settings-panel-content-section-title-radiation-history" class="settings-panel-content-section-title">Radiation history</p>
+                    <p id="settings-panel-content-section-title-event-history" class="settings-panel-content-section-title">Event history</p>
+
+                    <label id="settings-panel-content-section-toggle-ignore-first-hour" class="settings-panel-content-section-toggle">
+
+                        <input class="settings-panel-content-section-toggle-input" type="checkbox">
+                        <p class="settings-panel-content-section-toggle-title">Ignore first hour</p>
+                        <div class="settings-panel-content-section-toggle-switch"></div>
+
+                    </label>
 
                     <div id="settings-panel-content-section-range-vertical-steps" class="settings-panel-content-section-range">
 
@@ -464,7 +373,7 @@
         </div>
 
     </div>
-    
+
 </body>
 
 </html>
