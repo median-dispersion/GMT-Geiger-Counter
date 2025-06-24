@@ -466,6 +466,7 @@
 
 .settings-panel-content-section-range-state-value {
 
+    margin-right: calc(var(--spacing-default) / 2);
     font-weight: bold;
 
 }
