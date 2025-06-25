@@ -398,7 +398,7 @@ def main():
         {
             "index":    "Index",
             "date":     "Date",
-            "upTime":   "System uptime [Milliseconds]",
+            "uptime":   "System uptime [Milliseconds]",
             "heapSize": "Total heap [Bytes]",
             "freeHeap": "Free heap [Bytes]",
             "minHeap":  "Smallest heap size since boot [Bytes]",

@@ -539,7 +539,7 @@ void dataFeedback() {
       // Get data
       Logger::KeyValuePair systemData[6] = {
 
-        {"upTime",   Logger::UINT64_T, {.uint64_v = millis()}             },
+        {"uptime",   Logger::UINT64_T, {.uint64_v = millis()}             },
         {"heapSize", Logger::UINT32_T, {.uint32_v = ESP.getHeapSize()}    },
         {"freeHeap", Logger::UINT32_T, {.uint32_v = ESP.getFreeHeap()}    },
         {"minHeap",  Logger::UINT32_T, {.uint32_v = ESP.getMinFreeHeap()} },
@@ -1539,9 +1539,9 @@ void sendLogFileData() {
 void sendSystemInfoData() {
 
   // Get data
-  Logger::KeyValuePair data[14] = {
+  Logger::KeyValuePair data[15] = {
 
-    {"upTime",            Logger::UINT64_T, {.uint64_v = millis()}                                     },
+    {"uptime",            Logger::UINT64_T, {.uint64_v = millis()}                                     },
     {"heapSize",          Logger::UINT32_T, {.uint32_v = ESP.getHeapSize()}                            },
     {"freeHeap",          Logger::UINT32_T, {.uint32_v = ESP.getFreeHeap()}                            },
     {"minHeap",           Logger::UINT32_T, {.uint32_v = ESP.getMinFreeHeap()}                         },
@@ -1551,6 +1551,7 @@ void sendSystemInfoData() {
     {"cosmicRayDetector", Logger::BOOL_T,   {.bool_v   = cosmicRayDetector.getCosmicRayDetectorState()}},
     {"buzzer",            Logger::BOOL_T,   {.bool_v   = !buzzer.getMuteState()}                       },
     {"touchscreen",       Logger::BOOL_T,   {.bool_v   = touchscreen.getTouchscreenState()}            },
+    {"led",               Logger::BOOL_T,   {.bool_v   = rgbLED.getLEDState()}                         },
     {"hotspot",           Logger::BOOL_T,   {.bool_v   = wireless.getHotspotState()}                   },
     {"wifi",              Logger::BOOL_T,   {.bool_v   = wireless.getWiFiState()}                      },
     {"server",            Logger::BOOL_T,   {.bool_v   = wireless.getServerState()}                    },
@@ -1562,7 +1563,7 @@ void sendSystemInfoData() {
   String json;
 
   // Construct the data string
-  logger.getLogMessage("system", data, 14, json);
+  logger.getLogMessage("system", data, 15, json);
 
   // Send JSON data
   wireless.server.send(200, "application/json", json);
