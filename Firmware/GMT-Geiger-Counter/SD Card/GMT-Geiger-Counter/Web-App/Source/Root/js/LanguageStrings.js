@@ -20,7 +20,9 @@ const language = {
         restart_system:                  "Restart system?",
         restart_system_message:          "An API PUT endpoint for restarting the system. Restart the system now? Keep in mind that restarting the system will reset all data that has been recorded so far.",
         yes:                             "Yes",
-        no:                              "No"
+        no:                              "No",
+        system_info:                     "System info",
+        system_info_description:         "View the latest system statistics like uptime, memory usage, or enabled services."
 
     },
 
@@ -43,7 +45,9 @@ const language = {
         restart_system:                  "System neu starten?",
         restart_system_message:          "Ein API PUT Endpunkt zum Neustart des Systems. Soll das System jetzt neu gestartet werden? Beachten Sie, dass beim Neustart des Systems alle bisher aufgezeichneten Daten zurückgesetzt werden.",
         yes:                             "Ja",
-        no:                              "Nein"
+        no:                              "Nein",
+        system_info:                     "Systeminformationen",
+        system_info_description:         "Einsicht in die aktuellen Systemstatistiken wie Betriebszeit, Speichernutzung oder aktivierte Dienste."
 
     }
 

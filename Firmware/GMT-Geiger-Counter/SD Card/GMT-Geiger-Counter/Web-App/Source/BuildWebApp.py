@@ -73,3 +73,4 @@ with open("./index.html",               "w") as file: file.write(buildApp("./Roo
 with open("./geiger-counter.html",      "w") as file: file.write(buildApp("./Geiger Counter"))
 with open("./cosmic-ray-detector.html", "w") as file: file.write(buildApp("./Cosmic Ray Detector"))
 with open("./wifi-settings.html",       "w") as file: file.write(buildApp("./WiFi Settings"))
+with open("./system-info.html",         "w") as file: file.write(buildApp("./System Info"))

@@ -18,7 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
         wifiSettingsDescription:      document.querySelector("#content-card-info-wifi-settings").querySelector(".content-card-info-description"),
         restAPIEndpoints:             document.querySelector("#content-title-api-endpoints"),
         wifiCredentials:              document.querySelector("#content-endpoint-wifi-credentials"),
-        restart:                      document.querySelector("#content-endpoint-restart")
+        restart:                      document.querySelector("#content-endpoint-restart"),
+        systemInfoTitle:              document.querySelector("#content-card-info-system-info").querySelector(".content-card-info-title"),
+        systemInfoDescription:        document.querySelector("#content-card-info-system-info").querySelector(".content-card-info-description")
 
     };
     
@@ -42,6 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
     element.wifiSettingsTitle.innerHTML            = string.wifi_settings;
     element.wifiSettingsDescription.innerHTML      = string.wifi_settings_message;
     element.restAPIEndpoints.innerHTML             = string.rest_api_endpoints;
+    element.systemInfoTitle.innerHTML              = string.system_info;
+    element.systemInfoDescription.innerHTML        = string.system_info_description;
 
     // Initialize components
     headerBar.initialize();
