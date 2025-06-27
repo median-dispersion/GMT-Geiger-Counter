@@ -22,6 +22,7 @@
     <script src="./js/HeaderBar.js"></script>
     <script src="./js/SettingsPanel.js"></script>
     <script src="./js/DialogBox.js"></script>
+    <script src="./js/AudioFeedback.js"></script>
     <script src="./main.js"></script>
 
 </head>
@@ -305,11 +306,43 @@
 
                 <div class="settings-panel-content-section">
 
-                    <p id="settings-panel-content-section-title-update-interval" class="settings-panel-content-section-title">Update interval</p>
+                    <p id="settings-panel-content-section-title-audio-settings" class="settings-panel-content-section-title">Audio settings</p>
 
-                    <div id="settings-panel-content-section-range-update-interval" class="settings-panel-content-section-range">
+                    <label id="settings-panel-content-section-toggle-enable-audio" class="settings-panel-content-section-toggle">
 
-                        <p class="settings-panel-content-section-range-title">Refresh rate</p>
+                        <input class="settings-panel-content-section-toggle-input" type="checkbox">
+                        <p class="settings-panel-content-section-toggle-title">Enable audio</p>
+                        <div class="settings-panel-content-section-toggle-switch"></div>
+
+                    </label>
+
+                    <label id="settings-panel-content-section-toggle-simulate-detection" class="settings-panel-content-section-toggle">
+
+                        <input class="settings-panel-content-section-toggle-input" type="checkbox" checked="checked">
+                        <p class="settings-panel-content-section-toggle-title">Simulate detections</p>
+                        <div class="settings-panel-content-section-toggle-switch"></div>
+
+                    </label>
+
+                    <label id="settings-panel-content-section-toggle-warning" class="settings-panel-content-section-toggle">
+
+                        <input class="settings-panel-content-section-toggle-input" type="checkbox" checked="checked">
+                        <p class="settings-panel-content-section-toggle-title">Warning</p>
+                        <div class="settings-panel-content-section-toggle-switch"></div>
+
+                    </label>
+
+                    <label id="settings-panel-content-section-toggle-alarm" class="settings-panel-content-section-toggle">
+
+                        <input class="settings-panel-content-section-toggle-input" type="checkbox" checked="checked">
+                        <p class="settings-panel-content-section-toggle-title">Alarm</p>
+                        <div class="settings-panel-content-section-toggle-switch"></div>
+
+                    </label>
+
+                    <div id="settings-panel-content-section-range-volume" class="settings-panel-content-section-range">
+
+                        <p class="settings-panel-content-section-range-title">Volume</p>
 
                         <label class="settings-panel-content-section-range-slider">
 
@@ -319,14 +352,14 @@
 
                             </div>
 
-                            <input class="settings-panel-content-section-range-slider-input" type="range" min="1" max="60" step="1" value="10">
+                            <input class="settings-panel-content-section-range-slider-input" type="range" min="1" max="100" step="1" value="50">
 
                         </label>
 
                         <p class="settings-panel-content-section-range-state">
                             
-                            <span class="settings-panel-content-section-range-state-value">10</span>
-                            <span class="settings-panel-content-section-range-state-init">s</span>
+                            <span class="settings-panel-content-section-range-state-value">50</span>
+                            <span class="settings-panel-content-section-range-state-init">%</span>
                         
                         </p>
 
@@ -417,6 +450,37 @@
                         <p class="settings-panel-content-section-action-title">Save history</p>
 
                     </button>
+
+                </div>
+
+                <div class="settings-panel-content-section">
+
+                    <p id="settings-panel-content-section-title-update-interval" class="settings-panel-content-section-title">Update interval</p>
+
+                    <div id="settings-panel-content-section-range-update-interval" class="settings-panel-content-section-range">
+
+                        <p class="settings-panel-content-section-range-title">Refresh rate</p>
+
+                        <label class="settings-panel-content-section-range-slider">
+
+                            <div class="settings-panel-content-section-range-slider-tack">
+
+                                <div class="settings-panel-content-section-range-slider-tack-thumb"></div>
+
+                            </div>
+
+                            <input class="settings-panel-content-section-range-slider-input" type="range" min="1" max="60" step="1" value="10">
+
+                        </label>
+
+                        <p class="settings-panel-content-section-range-state">
+                            
+                            <span class="settings-panel-content-section-range-state-value">10</span>
+                            <span class="settings-panel-content-section-range-state-init">s</span>
+                        
+                        </p>
+
+                    </div>
 
                 </div>
 

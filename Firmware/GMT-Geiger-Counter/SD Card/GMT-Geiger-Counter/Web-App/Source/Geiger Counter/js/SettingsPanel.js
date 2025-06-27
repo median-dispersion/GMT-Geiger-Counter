@@ -9,13 +9,18 @@ class SettingsPanel {
     // Settings values
     #value = {
 
-        version:               1,
+        version:               2,
         autoRange:             true,
         screenUnit:            "sieverts",
         updateIntervalSeconds: 10,
         verticalSteps:         5,
         horizontalSteps:       5,
-        smoothingFactor:       0.0
+        smoothingFactor:       0,
+        enableAudio:           false,
+        simulateDetections:    true,
+        playWarning:           true,
+        playAlarm:             true,
+        volume:                50
 
     };
 
@@ -37,7 +42,12 @@ class SettingsPanel {
         smoothingFactor: null,
         saveHistory:     null,
         downloadLog:     null,
-        restartSystem:   null
+        restartSystem:   null,
+        enableAudio:     null,
+        detections:      null,
+        warning:         null,
+        alarm:           null,
+        volume:          null
 
     };
 
@@ -55,6 +65,11 @@ class SettingsPanel {
         this.#element.verticalSteps.value   = this.#value.verticalSteps;
         this.#element.horizontalSteps.value = this.#value.horizontalSteps;
         this.#element.smoothingFactor.value = this.#value.smoothingFactor;
+        this.#element.enableAudio.checked   = this.#value.enableAudio;
+        this.#element.detections.checked    = this.#value.simulateDetections;
+        this.#element.warning.checked       = this.#value.playWarning;
+        this.#element.alarm.checked         = this.#value.playAlarm;
+        this.#element.volume.value          = this.#value.volume;
 
         // Depending on the selected screen unit apply it to the appropriate radio button
         switch (this.#value.screenUnit) {
@@ -90,8 +105,9 @@ class SettingsPanel {
             // If the loaded version of the values is not the current settings version throw an error
             if (value.version !== this.#value.version) { throw Error("Settings version mismatch!"); }
 
-            // Reset the smoothing factor
-            value.smoothingFactor = 0.0;
+            // Reset important values
+            value.smoothingFactor = 0;
+            value.enableAudio     = false;
 
             // Set current values to loaded values
             this.#value = value;
@@ -198,7 +214,7 @@ class SettingsPanel {
         this.#value.smoothingFactor = event.currentTarget.value;
 
         // Update the radiation history with the new value
-        radiationHistory.setSmoothingFactor(this.#value.smoothingFactor/100);
+        radiationHistory.setSmoothingFactor(this.#value.smoothingFactor / 100);
 
         // Apply current settings
         this.#apply();
@@ -272,6 +288,86 @@ class SettingsPanel {
     }
 
     // ============================================================================================
+    // Change the enable audio state
+    // ============================================================================================
+    #changeEnableAudio(event) {
+
+        // Set new value
+        this.#value.enableAudio = event.currentTarget.checked;
+
+        // Set the state
+        audioFeedback.setEnableState(this.#value.enableAudio);
+
+        // Apply current settings
+        this.#apply();
+
+    }
+
+    // ============================================================================================
+    // Change the simulate detections state
+    // ============================================================================================
+    #changeSimulateDetections(event) {
+
+        // Set new value
+        this.#value.simulateDetections = event.currentTarget.checked;
+
+        // Set the state
+        audioFeedback.setSimulateDetectionsState(this.#value.simulateDetections);
+        
+        // Apply current settings
+        this.#apply();
+
+    }
+
+    // ============================================================================================
+    // Change the warning state
+    // ============================================================================================
+    #changePlayWarning(event) {
+
+        // Set new value
+        this.#value.playWarning = event.currentTarget.checked;
+
+        // Set the state
+        audioFeedback.setWarningState(this.#value.playWarning);
+
+        // Apply current settings
+        this.#apply();
+
+    }
+
+    // ============================================================================================
+    // Change the alarm state
+    // ============================================================================================
+    #changePlayAlarm(event) {
+
+        // Set new value
+        this.#value.playAlarm = event.currentTarget.checked;
+
+        // Set the state
+        audioFeedback.setAlarmState(this.#value.playAlarm);
+
+        // Apply current settings
+        this.#apply();
+
+    }
+
+    // ============================================================================================
+    // Change the audio volume
+    // ============================================================================================
+    #changeVolume(event) {
+
+        // Set new value
+        this.#value.volume = event.currentTarget.value;
+
+        // Set the volume
+        audioFeedback.setVolume(this.#value.volume / 100);
+
+        // Apply current settings
+        this.#apply();
+
+    }
+
+    // ============================================================================================
     // Update a settings input range
     // ============================================================================================
     #updateInputRange(event) {
@@ -326,6 +422,11 @@ class SettingsPanel {
             this.#element.saveHistory     = document.querySelector("#settings-panel-content-section-action-save-history");
             this.#element.downloadLog     = document.querySelector("#settings-panel-content-section-action-download-log");
             this.#element.restartSystem   = document.querySelector("#settings-panel-content-section-action-restart-system");
+            this.#element.enableAudio     = document.querySelector("#settings-panel-content-section-toggle-enable-audio").querySelector(".settings-panel-content-section-toggle-input");
+            this.#element.detections      = document.querySelector("#settings-panel-content-section-toggle-simulate-detection").querySelector(".settings-panel-content-section-toggle-input");
+            this.#element.warning         = document.querySelector("#settings-panel-content-section-toggle-warning").querySelector(".settings-panel-content-section-toggle-input");
+            this.#element.alarm           = document.querySelector("#settings-panel-content-section-toggle-alarm").querySelector(".settings-panel-content-section-toggle-input");
+            this.#element.volume          = document.querySelector("#settings-panel-content-section-range-volume").querySelector(".settings-panel-content-section-range-slider-input");
 
             // Load settings
             this.#load();
@@ -352,7 +453,19 @@ class SettingsPanel {
 
                 verticalSteps:   this.#value.verticalSteps,
                 horizontalSteps: this.#value.horizontalSteps,
-                smoothingFactor: this.#value.smoothingFactor
+                smoothingFactor: this.#value.smoothingFactor / 100
+
+            });
+
+            // Initialize audio feedback and update its settings
+            audioFeedback.initialize();
+            audioFeedback.setProperties({
+
+                enableAudio:        this.#value.enableAudio,
+                simulateDetections: this.#value.simulateDetections,
+                playWarning:        this.#value.playWarning,
+                playAlarm:          this.#value.playAlarm,
+                volume:             this.#value.volume / 100,
 
             });
             
@@ -366,6 +479,11 @@ class SettingsPanel {
             this.#element.verticalSteps.addEventListener("change", this.#changeVerticalSteps.bind(this));
             this.#element.horizontalSteps.addEventListener("change", this.#changeHorizontalSteps.bind(this));
             this.#element.smoothingFactor.addEventListener("change", this.#changeSmoothingFactor.bind(this));
+            this.#element.enableAudio.addEventListener("change", this.#changeEnableAudio.bind(this));
+            this.#element.detections.addEventListener("change", this.#changeSimulateDetections.bind(this));
+            this.#element.warning.addEventListener("change", this.#changePlayWarning.bind(this));
+            this.#element.alarm.addEventListener("change", this.#changePlayAlarm.bind(this));
+            this.#element.volume.addEventListener("change", this.#changeVolume.bind(this));
 
             // For every screen unit radio button add an event listener for the selected screen unit
             document.querySelectorAll("[name='screen-unit']").forEach(radio => {radio.addEventListener("change", this.#changeScreenUnit.bind(this));});

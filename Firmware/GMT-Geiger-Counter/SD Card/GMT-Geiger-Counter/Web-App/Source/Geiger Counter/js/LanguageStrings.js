@@ -69,7 +69,13 @@ const language = {
         yes:                                   "Yes",
         no:                                    "No",
         unknown_error:                         "Unknown error!",
-        unknown_error_message:                 "An unknown error occurred! Please refresh the interface."
+        unknown_error_message:                 "An unknown error occurred! Please refresh the interface.",
+        audio_settings:                        "Audio settings",
+        enable_audio:                          "Enable audio",
+        simulate_detections:                   "Simulate detections",
+        warning:                               "Warning",
+        alarm:                                 "Alarm",
+        volume:                                "Volume"
 
     },
 
@@ -141,7 +147,13 @@ const language = {
         yes:                                   "Ja",
         no:                                    "Nein",
         unknown_error:                         "Unbekannter Fehler!",
-        unknown_error_message:                 "Ein unbekannter Fehler ist aufgetreten! Bitte aktualisieren Sie die Benutzeroberfläche."
+        unknown_error_message:                 "Ein unbekannter Fehler ist aufgetreten! Bitte aktualisieren Sie die Benutzeroberfläche.",
+        audio_settings:                        "Audioeinstellungen",
+        enable_audio:                          "Audio einschalten",
+        simulate_detections:                   "Zählungen simulieren",
+        warning:                               "Warnung",
+        alarm:                                 "Alarm",
+        volume:                                "Lautstärke"
 
     }
 

@@ -41,7 +41,13 @@ document.addEventListener("DOMContentLoaded", () => {
         actions:                  document.querySelector("#settings-panel-content-section-title-actions"),
         saveHistory:              document.querySelector("#settings-panel-content-section-action-save-history").querySelector(".settings-panel-content-section-action-title"),
         downloadLog:              document.querySelector("#settings-panel-content-section-action-download-log").querySelector(".settings-panel-content-section-action-title"),
-        restartSystem:            document.querySelector("#settings-panel-content-section-action-restart-system").querySelector(".settings-panel-content-section-action-title")
+        restartSystem:            document.querySelector("#settings-panel-content-section-action-restart-system").querySelector(".settings-panel-content-section-action-title"),
+        audioSettings:            document.querySelector("#settings-panel-content-section-title-audio-settings"),
+        enableAudio:              document.querySelector("#settings-panel-content-section-toggle-enable-audio").querySelector(".settings-panel-content-section-toggle-title"),
+        simulateDetections:       document.querySelector("#settings-panel-content-section-toggle-simulate-detection").querySelector(".settings-panel-content-section-toggle-title"),
+        warning:                  document.querySelector("#settings-panel-content-section-toggle-warning").querySelector(".settings-panel-content-section-toggle-title"),
+        alarm:                    document.querySelector("#settings-panel-content-section-toggle-alarm").querySelector(".settings-panel-content-section-toggle-title"),
+        volume:                   document.querySelector("#settings-panel-content-section-range-volume").querySelector(".settings-panel-content-section-range-title")
 
     };
 
@@ -90,6 +96,12 @@ document.addEventListener("DOMContentLoaded", () => {
     element.actions.innerHTML                  = string.actions;
     element.downloadLog.innerHTML              = string.download_log;
     element.restartSystem.innerHTML            = string.restart_system_title;
+    element.audioSettings.innerHTML            = string.audio_settings;
+    element.enableAudio.innerHTML              = string.enable_audio;
+    element.simulateDetections.innerHTML       = string.simulate_detections;
+    element.warning.innerHTML                  = string.warning;
+    element.alarm.innerHTML                    = string.alarm;
+    element.volume.innerHTML                   = string.volume;
 
     // Initialize components
     geigerCounter.initialize();
@@ -97,6 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
     headerBar.initialize();
     settingsPanel.initialize();
     dialogBox.initialize();
+    audioFeedback.initialize();
 
     // Handle any uncaught errors
     window.addEventListener("error", (event) => {

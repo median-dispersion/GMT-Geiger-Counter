@@ -15,6 +15,8 @@ class GeigerCounter {
     #countReadings;
     #radiationRating;
     #tubeStatistics;
+    #previousCountsTotal;
+    #previousRatingLevel;
 
     // DOM elements
     #element = {
@@ -460,6 +462,31 @@ class GeigerCounter {
 
             // Play the pulse animation
             this.#pulseScreen();
+
+            // Calculate new counts since last update
+            const newCounts = this.#geigerCounterData.data.counts - this.#previousCountsTotal;
+
+            // If there are any new counts play the detections sound for the number of new counts
+            if (newCounts > 0) { audioFeedback.playDetections(newCounts, this.#updateIntervalSeconds); }
+
+            // If the radiation reaches medium play the warning sound
+            if (this.#geigerCounterData.data.rating == 2 && this.#previousRatingLevel < 2) { audioFeedback.playWarning(); }
+            
+            // If the radiation rating reaches at least the high level sound the alarm
+            if (this.#geigerCounterData.data.rating > 2) {
+
+                audioFeedback.playAlarm();
+
+            // If the radiation rating falls below the high level clear the alarm sound
+            } else {
+
+                audioFeedback.clearAlarm();
+
+            }
+
+            // Update the previous values
+            this.#previousCountsTotal = this.#geigerCounterData.data.counts;
+            this.#previousRatingLevel = this.#geigerCounterData.data.rating;
         
         // If there is no Geiger counter data available
         } else {
@@ -514,6 +541,9 @@ class GeigerCounter {
 
             // Initialize the dialog box
             dialogBox.initialize();
+
+            // Initialize audio feedback
+            audioFeedback.initialize();
 
             // Create a new update loop
             this.#updateLoop = setInterval(this.#getGeigerCounterData.bind(this), this.#updateIntervalSeconds * 1000);
