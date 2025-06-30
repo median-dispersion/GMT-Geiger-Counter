@@ -9,6 +9,7 @@ class CosmicRayDetector {
 
     // Cosmic ray detector data
     #cosmicRayDetectorData;
+    #previousEventsTotal;
 
     // DOM elements
     #element = {
@@ -182,6 +183,15 @@ class CosmicRayDetector {
 
             // Set the cosmic ray detector values
             this.#setCosmicRayDetectorValues();
+
+            // Calculate new events since last update
+            const newEvents = this.#cosmicRayDetectorData.data.eventsTotal - this.#previousEventsTotal;
+
+            // If there a any new events play the event sound for each event
+            if (newEvents > 0) { audioFeedback.playEvent(newEvents, this.#updateIntervalSeconds); }
+
+            // Update the previous values
+            this.#previousEventsTotal = this.#cosmicRayDetectorData.data.eventsTotal;
         
         // If there is no cosmic ray detector data available
         } else {
@@ -222,6 +232,9 @@ class CosmicRayDetector {
 
             // Initialize the dialog box
             dialogBox.initialize();
+
+            // Initialize the audio feedback
+            audioFeedback.initialize();
 
             // Create a new update loop
             this.#updateLoop = setInterval(this.#getCosmicRayDetectorData.bind(this), this.#updateIntervalSeconds * 1000);

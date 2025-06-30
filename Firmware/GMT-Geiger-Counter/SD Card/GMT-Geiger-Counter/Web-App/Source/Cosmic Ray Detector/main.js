@@ -35,7 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
         actions:                   document.querySelector("#settings-panel-content-section-title-actions"),
         saveHistory:               document.querySelector("#settings-panel-content-section-action-save-history").querySelector(".settings-panel-content-section-action-title"),
         downloadLog:               document.querySelector("#settings-panel-content-section-action-download-log").querySelector(".settings-panel-content-section-action-title"),
-        restartSystem:             document.querySelector("#settings-panel-content-section-action-restart-system").querySelector(".settings-panel-content-section-action-title")
+        restartSystem:             document.querySelector("#settings-panel-content-section-action-restart-system").querySelector(".settings-panel-content-section-action-title"),
+        audioSettings:             document.querySelector("#settings-panel-content-section-title-audio-settings"),
+        simulateEvents:            document.querySelector("#settings-panel-content-section-toggle-simulate-events").querySelector(".settings-panel-content-section-toggle-title"),
+        volume:                    document.querySelector("#settings-panel-content-section-range-volume").querySelector(".settings-panel-content-section-range-title")
 
     };
 
@@ -78,6 +81,9 @@ document.addEventListener("DOMContentLoaded", () => {
     element.saveHistory.innerHTML               = string.save_history;
     element.downloadLog.innerHTML               = string.download_log;
     element.restartSystem.innerHTML             = string.restart_system_title;
+    element.audioSettings.innerHTML             = string.audio_settings;
+    element.simulateEvents.innerHTML            = string.simulate_events;
+    element.volume.innerHTML                    = string.volume;
 
     // Initialize components
     cosmicRayDetector.initialize();
@@ -85,5 +91,6 @@ document.addEventListener("DOMContentLoaded", () => {
     headerBar.initialize();
     settingsPanel.initialize();
     dialogBox.initialize();
+    audioFeedback.initialize();
 
 });

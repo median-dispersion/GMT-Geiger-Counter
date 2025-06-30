@@ -41,7 +41,10 @@ const language = {
         minute_abbreviation:                  "m",
         hour_abbreviation:                    "h",
         cosmic_ray_detector_disabled:         "Cosmic ray detector is disabled!",
-        cosmic_ray_detector_disabled_message: "The cosmic ray detector is disabled! Please enable it before using this feature."
+        cosmic_ray_detector_disabled_message: "The cosmic ray detector is disabled! Please enable it before using this feature.",
+        audio_settings:                       "Audio settings",
+        simulate_events:                      "Simulate events",
+        volume:                               "Volume"
 
     },
 
@@ -85,7 +88,10 @@ const language = {
         minute_abbreviation:                  "m",
         hour_abbreviation:                    "h",
         cosmic_ray_detector_disabled:         "Kosmischer Strahlungsdetektor ist deaktiviert!",
-        cosmic_ray_detector_disabled_message: "Der Kosmischer Strahlungsdetektor ist deaktiviert! Bitte aktivieren Sie ihn, bevor Sie diese Funktion verwenden."
+        cosmic_ray_detector_disabled_message: "Der Kosmischer Strahlungsdetektor ist deaktiviert! Bitte aktivieren Sie ihn, bevor Sie diese Funktion verwenden.",
+        audio_settings:                       "Audioeinstellungen",
+        simulate_events:                      "Ereignisse simulieren",
+        volume:                               "Lautstärke"
 
     }
 

@@ -9,12 +9,14 @@ class SettingsPanel {
     // Settings values
     #value = {
 
-        version:               1,
+        version:               2,
         updateIntervalSeconds: 30,
         ignoreFirstHour:       false,
         verticalSteps:         5,
         horizontalSteps:       5,
-        smoothingFactor:       0.0
+        smoothingFactor:       0,
+        simulateEvents:        false,
+        volume:                50
 
     };
 
@@ -32,7 +34,9 @@ class SettingsPanel {
         smoothingFactor: null,
         saveHistory:     null,
         downloadLog:     null,
-        restartSystem:   null
+        restartSystem:   null,
+        simulateEvents:  null,
+        volume:          null
 
     };
 
@@ -50,6 +54,8 @@ class SettingsPanel {
         this.#element.verticalSteps.value     = this.#value.verticalSteps;
         this.#element.horizontalSteps.value   = this.#value.horizontalSteps;
         this.#element.smoothingFactor.value   = this.#value.smoothingFactor;
+        this.#element.simulateEvents.checked  = this.#value.simulateEvents;
+        this.#element.volume.value            = this.#value.volume;
 
         // Convert values to JSON string and store in localStorage
         localStorage.setItem("cosmicRayDetectorSettings", JSON.stringify(this.#value));
@@ -76,6 +82,7 @@ class SettingsPanel {
             // Reset temporary values
             value.ignoreFirstHour = false;
             value.smoothingFactor = 0.0;
+            value.simulateEvents  = false;
 
             // Set current values to loaded values
             this.#value = value;
@@ -166,7 +173,7 @@ class SettingsPanel {
         this.#value.smoothingFactor = event.currentTarget.value;
 
         // Update the event history with the new value
-        eventHistory.setSmoothingFactor(this.#value.smoothingFactor/100);
+        eventHistory.setSmoothingFactor(this.#value.smoothingFactor / 100);
 
         // Apply current settings
         this.#apply();
@@ -240,6 +247,38 @@ class SettingsPanel {
     }
 
     // ============================================================================================
+    // Change the simulate events state
+    // ============================================================================================
+    #changeSimulateEvents(event) {
+
+        // Set new value
+        this.#value.simulateEvents = event.currentTarget.checked;
+
+        // Set the state
+        audioFeedback.setSimulateEvents(this.#value.simulateEvents);
+        
+        // Apply current settings
+        this.#apply();
+
+    }
+
+    // ============================================================================================
+    // Change the audio volume
+    // ============================================================================================
+    #changeVolume(event) {
+
+        // Set new value
+        this.#value.volume = event.currentTarget.value;
+
+        // Set the volume
+        audioFeedback.setVolume(this.#value.volume / 100);
+
+        // Apply current settings
+        this.#apply();
+
+    }
+
+    // ============================================================================================
     // Update a settings input range
     // ============================================================================================
     #updateInputRange(event) {
@@ -290,6 +329,8 @@ class SettingsPanel {
             this.#element.saveHistory     = document.querySelector("#settings-panel-content-section-action-save-history");
             this.#element.downloadLog     = document.querySelector("#settings-panel-content-section-action-download-log");
             this.#element.restartSystem   = document.querySelector("#settings-panel-content-section-action-restart-system");
+            this.#element.simulateEvents  = document.querySelector("#settings-panel-content-section-toggle-simulate-events").querySelector(".settings-panel-content-section-toggle-input");
+            this.#element.volume          = document.querySelector("#settings-panel-content-section-range-volume").querySelector(".settings-panel-content-section-range-slider-input");
 
             // Load settings
             this.#load();
@@ -311,7 +352,16 @@ class SettingsPanel {
                 ignoreFirstHour: this.#value.ignoreFirstHour,
                 verticalSteps:   this.#value.verticalSteps,
                 horizontalSteps: this.#value.horizontalSteps,
-                smoothingFactor: this.#value.smoothingFactor
+                smoothingFactor: this.#value.smoothingFactor / 100
+
+            });
+
+            // Initialize audio feedback and update its settings
+            audioFeedback.initialize();
+            audioFeedback.setProperties({
+
+                simulateEvents: this.#value.simulateEvents,
+                volume:         this.#value.volume / 100,
 
             });
             
@@ -325,6 +375,8 @@ class SettingsPanel {
             this.#element.verticalSteps.addEventListener("change", this.#changeVerticalSteps.bind(this));
             this.#element.horizontalSteps.addEventListener("change", this.#changeHorizontalSteps.bind(this));
             this.#element.smoothingFactor.addEventListener("change", this.#changeSmoothingFactor.bind(this));
+            this.#element.simulateEvents.addEventListener("change", this.#changeSimulateEvents.bind(this));
+            this.#element.volume.addEventListener("change", this.#changeVolume.bind(this));
             
             // Add event listeners for action elements
             this.#element.saveHistory.addEventListener("click", this.#saveHistory.bind(this));
