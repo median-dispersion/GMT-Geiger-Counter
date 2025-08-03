@@ -120,6 +120,23 @@ void Wireless::update() {
 
   }
 
+  // If the WiFi is enabled but disconnected and the connection timeout has been reached
+  if (
+    
+      getWiFiState() == true
+      && 
+      WiFi.status() != WL_CONNECTED
+      && 
+      millis() - _wifiConnectionAttemptMilliseconds >= WIFI_CONNECTION_TIMEOUT_SECONDS * 1000
+    
+  ) {
+
+    // Disable and then reenable the WiFi to manually try a reconnection
+    disableWiFi();
+    enableWiFi();
+
+  }
+
 }
 
 // ================================================================================================
@@ -132,6 +149,9 @@ void Wireless::enableWiFi() {
 
     // Disable the wireless hotspot
     disableHotspot();
+
+    // Automatically reconnect WiFi if the connection is lost (is not reliable for some reason?)
+    WiFi.setAutoReconnect(true);
 
     // Connect to WiFi
     WiFi.begin(_wifiName.c_str(), _wifiPassword.c_str());
@@ -146,6 +166,9 @@ void Wireless::enableWiFi() {
 
     // Set the enabled flag to true
     _wifiEnabled = true;
+
+    // Set the wifi connection attempt to the current time in milliseconds
+    _wifiConnectionAttemptMilliseconds = millis();
 
     // Create event data
     Logger::KeyValuePair event[2] = {
@@ -452,7 +475,8 @@ Wireless::Wireless():
   _wifiName(""),
   _wifiPassword(""),
   _ipAddress(""),
-  _hotspotClients(0)
+  _hotspotClients(0),
+  _wifiConnectionAttemptMilliseconds(0)
 
 {}
 

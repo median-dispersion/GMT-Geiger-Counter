@@ -50,15 +50,16 @@ class Wireless {
     Wireless(const Wireless&) = delete;
     Wireless& operator=(const Wireless&) = delete;
 
-    bool        _initialized;    // Flag for checking if the wireless interface was initialized
-    bool        _wifiEnabled;    // Flag for checking if the WiFi is enabled
-    bool        _hotspotEnabled; // Flag for checking if the hotspot is enabled
-    bool        _serverEnabled;  // Flag for checking if the webserver is enabled
-    String      _wifiName;       // WiFi Name string
-    String      _wifiPassword;   // WiFi password string
-    String      _ipAddress;      // WiFi IP address string
-    Preferences _preferences;    // WiFi preferences stored in non-volatile memory
-    uint8_t     _hotspotClients; // Number of connected hotspot clients
+    bool        _initialized;                       // Flag for checking if the wireless interface was initialized
+    bool        _wifiEnabled;                       // Flag for checking if the WiFi is enabled
+    bool        _hotspotEnabled;                    // Flag for checking if the hotspot is enabled
+    bool        _serverEnabled;                     // Flag for checking if the webserver is enabled
+    String      _wifiName;                          // WiFi Name string
+    String      _wifiPassword;                      // WiFi password string
+    String      _ipAddress;                         // WiFi IP address string
+    Preferences _preferences;                       // WiFi preferences stored in non-volatile memory
+    uint8_t     _hotspotClients;                    // Number of connected hotspot clients
+    uint64_t    _wifiConnectionAttemptMilliseconds; // Milliseconds since the last WiFi connection attempt
 
     void        _enableServer();          // Enable the HTTP server
     void        _disableServer();         // Disable the HTTP server

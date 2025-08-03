@@ -165,6 +165,12 @@
 // This value is only used for the initial flash and can later be changed during runtime
 #define WIFI_PASSWORD "Your-WiFi-Password"
 
+// The time in seconds the system will have to reach a WiFi before the connection times out
+// After the timeout is reached, it disables and then reenables the WiFi antenna, trying to establish a new connection with the WiFi
+// This will also affect the time in between reconnection attempts if a WiFi connection is lost
+// Default: 60
+#define WIFI_CONNECTION_TIMEOUT_SECONDS 60
+
 // ================================================================================================
 // System setting
 // ================================================================================================
@@ -204,7 +210,7 @@
 // Firmware version
 // This can be set to any arbitrary string
 // This value should not be changed!
-#define FIRMWARE_VERSION "GMTGC-2025-06-25"
+#define FIRMWARE_VERSION "GMTGC-2025-08-03"
 
 // The minimum threshold of free heap the system is allowed to have
 // If the free heap falls below this value, the system will reboot to prevent software instability or lock-ups
