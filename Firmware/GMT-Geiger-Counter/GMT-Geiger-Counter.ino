@@ -608,14 +608,8 @@ void dataFeedback() {
 // ================================================================================================
 void goToSleep() {
 
-  // Get the buzzer mute state
-  LAST_BUZZER_MUTER_STATE = buzzer.getMuteState();
-
   // Mute the buzzer
   buzzer.mute();
-
-  // Get the last LED state
-  LAST_RGB_LED_STATE = rgbLED.getLEDState();
 
   // Disable the RGB LED
   rgbLED.disable();
@@ -1228,6 +1222,9 @@ void toggleAudioMuteEverything(const bool toggled) {
   // Update settings
   settings.data.parameters.buzzer.muteEverything = toggled;
 
+  // Update last mute state
+  LAST_BUZZER_MUTER_STATE = toggled;
+
   // Play a sound
   buzzer.play(buzzer.tap);
 
@@ -1275,6 +1272,9 @@ void toggleDisplayLEDState(const bool toggled) {
 
   // Update settings
   settings.data.parameters.display.rgbLED = toggled;
+
+  // Update last LED state
+  LAST_RGB_LED_STATE = toggled;
 
   // Play a sound
   buzzer.play(buzzer.tap);
