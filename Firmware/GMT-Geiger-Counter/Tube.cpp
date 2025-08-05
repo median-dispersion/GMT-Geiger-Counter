@@ -127,17 +127,45 @@ void IRAM_ATTR Tube::_countPulse(void *instancePointer) {
     // Check if the pulse length is longer than the noise threshold
     if (pulseLengthMicroseconds > TUBE_NOISE_THRESHOLD_MICROSECONDS) {
       
-      // Add one count to the moving average
-      instance->_movingAverage[instance->_movingAverageIndex]++;
+      // Adding just one count is not ideal. For just one tube per pin header, this is fine and the most precise way of counting, but for multiple tubes it is not. 
+      // When daisy-chaining multiple tubes on one pin header, pulses from different tubes might occur simultaneously or overlap.
+      // To capture overlapping pulses, the total pulse length should be divided by the median single pulse length for a tube to get the actual number of pulses.
 
-      // Add one count to the total number of counts
-      instance->_counts++;
+      // If there is a total number of 2 tubes or less, i.e. 1 tube per pin header
+      // Use the most precise and fastest method for counting by simply increasing the pulse counter by 1
+      #if TOTAL_NUMBER_OF_TUBES <= 2
 
-      // TODO
-      // Adding just plus one to is not ideal. For just one tube, this is fine, but for multiple it is not. 
-      // When daisy-chaining multiple tubes on one header, pulses from different tube might occur simultaneously or overlap.
-      // To capture overlapping pulses, the total pulse length should be divided by the average singe pulse length for a tube to get the actual number of pulses.
-      // This still needs to be implemented!
+        // Add one count to the moving average
+        instance->_movingAverage[instance->_movingAverageIndex]++;
+
+        // Add one count to the total number of counts
+        instance->_counts++;
+
+      // If 3 or more tubes are connected i.e. multiple tubes per pin header
+      // Use a counting method that derives the number of counts based on the total pulse length
+      #else
+
+        // Get the number of full counts by dividing the pulse length by the median single pulse length
+        uint64_t counts = pulseLengthMicroseconds / TUBE_MEDIAN_PULSE_LENGTH_MICROSECONDS;
+
+        // Get the remaining part of a count
+        uint64_t remainder = pulseLengthMicroseconds % TUBE_MEDIAN_PULSE_LENGTH_MICROSECONDS;
+
+        // If the remaining part of a count is more than the threshold
+        if (remainder >= TUBE_PULSE_REMAINDER_THRESHOLD_MICROSECONDS) {
+
+          // Add one more count
+          counts++;
+
+        }
+
+        // Add the calculated number of counts to the moving average
+        instance->_movingAverage[instance->_movingAverageIndex] += counts;
+
+        // Add the calculated number of counts to the total number of counts
+        instance->_counts += counts;
+
+      #endif
 
     }
 

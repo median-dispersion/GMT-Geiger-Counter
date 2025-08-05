@@ -7,6 +7,7 @@
 // Enable pulse counting for a specific tube header
 // If only one tube is connected, disable the follower tube pin header
 // If two or more tubes are connected, split them evenly and enable both pin headers
+// 0 = Disabled, 1 = Enabled
 #define ENABLE_MAIN_TUBE     1
 #define ENABLE_FOLLOWER_TUBE 0
 
@@ -16,20 +17,43 @@
 
 // Conversion factor to convert counts per minute to microsieverts per hour
 // This is different for each type of tube and must be calculated from the datasheet
-// SMB-20: 0.008095385
-#define TUBE_CONVERSION_FACTOR_CPM_TO_USVH 0.008095385
+// SMB-20: 0.005011429 [Ra226]
+#define TUBE_CONVERSION_FACTOR_CPM_TO_USVH 0.005011429
 
-// CURRENTLY NOT USED, PLEASE IGNORE FOR NOW!
-// The average length of a pulse in microseconds
+// The median length of a pulse in microseconds
 // This is not the tube's dead time, but the length of the pulse the tube driver board generates
-// To get an accurate value for a specific tube type, use the Calibrate-Average-Pulse-Length firmware to measure it
-// SBM-20: 115 µs
-#define TUBE_PULSE_LENGTH_MICROSECONDS 115
+// When daisy-chaining multiple tubes on one pin header, pulses from different tubes might occur simultaneously or overlap
+// To capture overlapping pulses, the total pulse length must be divided by the median single pulse length for a tube to get the actual number of counts
+// To get an accurate value for a specific tube type, use the Calibrate-Pulse-Length firmware to measure it
+// This value will only be used if 3 or more tubes are connected and set through the TOTAL_NUMBER_OF_TUBES definition
+// SBM-20: 122 µs
+#define TUBE_MEDIAN_PULSE_LENGTH_MICROSECONDS 122
+
+// The minimum length of a pulse in microseconds
+// Related to TUBE_MEDIAN_PULSE_LENGTH_MICROSECONDS
+// Will also be measured by the Calibrate-Pulse-Length firmware
+// SBM-20: 116 µs
+#define TUBE_MINIMUM_PULSE_LENGTH_MICROSECONDS 116
+
+// The maximum length of a pulse in microseconds
+// Related to TUBE_MEDIAN_PULSE_LENGTH_MICROSECONDS
+// Will also be measured by the Calibrate-Pulse-Length firmware
+// SBM-20: 124 µs
+#define TUBE_MAXIMUM_PULSE_LENGTH_MICROSECONDS 124
 
 // Noise threshold, the minimum length in microseconds a pulse must be to count as an actual pulse
 // Anything shorter than that will be ignored as noise
-// This should be around 30% of the pulse length in microseconds
-#define TUBE_NOISE_THRESHOLD_MICROSECONDS 30
+// This should be around 30% of the minimum pulse length in microseconds
+// This value should not be changed!
+#define TUBE_NOISE_THRESHOLD_MICROSECONDS (TUBE_MINIMUM_PULSE_LENGTH_MICROSECONDS * 30 / 100)
+
+// Tube pulse time remainder threshold
+// When calculating the number of counts for a given pulse time, the total pulse length will be divided by the median single pulse length (TUBE_MEDIAN_PULSE_LENGTH_MICROSECONDS)
+// This threshold will determine if the pulse time that will remain after the division is counted as an additional full pulse
+// This should be around 20% of the maximum pulse length in microseconds
+// This value will only be used if 3 or more tubes are connected and set through the TOTAL_NUMBER_OF_TUBES definition
+// This value should not be changed!
+#define TUBE_PULSE_REMAINDER_THRESHOLD_MICROSECONDS (TUBE_MAXIMUM_PULSE_LENGTH_MICROSECONDS * 20 / 100)
 
 // Name of the tube type
 // This can be set to an arbitrary string and is only used for logging
@@ -210,7 +234,7 @@
 // Firmware version
 // This can be set to any arbitrary string
 // This value should not be changed!
-#define FIRMWARE_VERSION "GMTGC-2025-08-04"
+#define FIRMWARE_VERSION "GMTGC-2025-08-05"
 
 // The minimum threshold of free heap the system is allowed to have
 // If the free heap falls below this value, the system will reboot to prevent software instability or lock-ups

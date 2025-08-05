@@ -333,6 +333,12 @@ void setUserSettings() {
   wireless.setHotspotState(settings.data.parameters.wireless.hotspot);
   // wireless.setWiFiState(settings.data.parameters.wireless.wifi);
 
+  // --------------------------------------------
+  // Load settings in the last state variables
+
+  LAST_BUZZER_MUTER_STATE = settings.data.parameters.buzzer.muteEverything;
+  LAST_RGB_LED_STATE      = settings.data.parameters.display.rgbLED;
+
 }
 
 //-------------------------------------------------------------------------------------------------
