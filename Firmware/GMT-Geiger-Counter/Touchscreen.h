@@ -23,6 +23,7 @@
 #include "ScreenWiFiSettings.h"
 #include "ScreenSystemSettings1.h"
 #include "ScreenSystemSettings2.h"
+#include "ScreenSystemSettings3.h"
 
 class Touchscreen {
 
@@ -46,6 +47,7 @@ class Touchscreen {
     ScreenWiFiSettings             wifiSettings;
     ScreenSystemSettings1          systemSettings1;
     ScreenSystemSettings2          systemSettings2;
+    ScreenSystemSettings3          systemSettings3;
 
     // Get the single instance of the class
     static Touchscreen& getInstance();

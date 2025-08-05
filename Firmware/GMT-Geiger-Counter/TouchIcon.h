@@ -14,7 +14,15 @@ class TouchIcon {
   public:
 
     // Constructor
-    TouchIcon(const uint16_t x, const uint16_t y, const uint16_t width, const uint16_t height, const Image &icon);
+    TouchIcon(
+      const uint16_t x,
+      const uint16_t y,
+      const uint16_t width,
+      const uint16_t height,
+      const Image    &icon,
+      const uint16_t backgroundColor = COLOR_GRAY_MEDIUM, 
+      const uint16_t borderColor     = COLOR_GRAY_MEDIUM
+    );
 
     void update(const XPT2046::Point &position); // Update the touch icon with the touch position
     void draw(GFXcanvas16 &canvas);              // Draw the touch icon to the frame buffer
@@ -25,11 +33,13 @@ class TouchIcon {
 
   private:
 
-    const uint16_t _x;      // X position
-    const uint16_t _y;      // Y position
-    const uint16_t _width;  // Touch icon width
-    const uint16_t _height; // Touch icon height
-    const Image    &_icon;  // Touch icon graphic
+    const uint16_t _x;               // X position
+    const uint16_t _y;               // Y position
+    const uint16_t _width;           // Touch icon width
+    const uint16_t _height;          // Touch icon height
+    const Image    &_icon;           // Touch icon graphic
+    const uint16_t _backgroundColor; // Touch icon background color
+    const uint16_t _borderColor;     // Touch icon border color
 
 };
 

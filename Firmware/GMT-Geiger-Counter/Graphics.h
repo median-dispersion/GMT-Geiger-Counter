@@ -66,5 +66,7 @@ extern Image IMAGE_SLEEP_SMALL;
 extern Image IMAGE_SUM;
 extern Image IMAGE_VOLUME;
 extern Image IMAGE_WIFI;
+extern Image IMAGE_POWER;
+extern Image IMAGE_RESET_SYSTEM;
 
 #endif

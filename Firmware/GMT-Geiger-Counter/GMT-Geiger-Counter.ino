@@ -52,6 +52,7 @@ void displayHotspotSettings();
 void displayWiFiSettings();
 void displaySystemSettings1();
 void displaySystemSettings2();
+void displaySystemSettings3();
 void selectGeigerCounterSieverts();
 void selectGeigerCounterRem();
 void selectGeigerCounterRontgen();
@@ -78,6 +79,8 @@ void sendGeigerCounterData();
 void sendCosmicRayDetectorData();
 void sendLogFileData();
 void sendSystemInfoData();
+void reboot();
+void reset();
 
 // ================================================================================================
 // Setup
@@ -254,7 +257,7 @@ void setTouchActions() {
 
   touchscreen.systemSettings1.back.action          = displayGeigerCounter;
   touchscreen.systemSettings1.next.action          = displaySystemSettings2;
-  touchscreen.systemSettings1.previous.action      = displaySystemSettings2;
+  touchscreen.systemSettings1.previous.action      = displaySystemSettings3;
   touchscreen.systemSettings1.sdCardMounted.action = toggleSystemSDCardMount;
   touchscreen.systemSettings1.serialLogging.action = toggleSystemSerialLogging;
   touchscreen.systemSettings1.sdCardLogging.action = toggleSystemSDCardLogging;
@@ -266,8 +269,17 @@ void setTouchActions() {
   // System settings 2 touch actions
 
   touchscreen.systemSettings2.back.action          = displayGeigerCounter;
-  touchscreen.systemSettings2.next.action          = displaySystemSettings1;
+  touchscreen.systemSettings2.next.action          = displaySystemSettings3;
   touchscreen.systemSettings2.previous.action      = displaySystemSettings1;
+
+  // --------------------------------------------
+  // System settings 3 touch actions
+
+  touchscreen.systemSettings3.back.action          = displayGeigerCounter;
+  touchscreen.systemSettings3.reboot.action        = reboot;
+  touchscreen.systemSettings3.reset.action         = reset;
+  touchscreen.systemSettings3.next.action          = displaySystemSettings1;
+  touchscreen.systemSettings3.previous.action      = displaySystemSettings2;
 
   // --------------------------------------------
   // Hotspot settings touch actions
@@ -1036,6 +1048,22 @@ void displaySystemSettings2() {
 // ================================================================================================
 // 
 // ================================================================================================
+void displaySystemSettings3() {
+
+  // Rotate to correct orientation
+  touchscreen.setRotationLandscape();
+
+  // Draw the screen
+  touchscreen.draw(touchscreen.systemSettings3);
+
+  // Play a sound
+  buzzer.play(buzzer.next);
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
 void selectGeigerCounterSieverts() {
 
   // Set Geiger counter measurement unit
@@ -1573,5 +1601,39 @@ void sendSystemInfoData() {
 
   // Send JSON data
   wireless.server.send(200, "application/json", json);
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void reboot() {
+
+  // Create event data
+  Logger::KeyValuePair event[2] = {
+
+    {"source", Logger::STRING_T, {.string_v = "system"}   },
+    {"action", Logger::STRING_T, {.string_v = "reboot"}}
+
+  };
+
+  // Log event message
+  logger.log(Logger::EVENT, "event", event, 2);
+
+  // Delay reboot for 100 ms
+  delay(100);
+
+  // Reboot
+  ESP.restart();
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void reset() {
+
+  // Reboot the system
+  reboot();
 
 }
