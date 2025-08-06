@@ -430,6 +430,33 @@ double GeigerCounter::getEquivalentDose() {
 }
 
 // ================================================================================================
+// Get the total absorbed dose in microsieverts
+// ================================================================================================
+double GeigerCounter::getAbsorbedMicrosieverts() {
+
+  return getCounts() * (TUBE_CONVERSION_FACTOR_CPM_TO_USVH / 60.0);
+
+}
+
+// ================================================================================================
+// Get the total absorbed dose for the main tube in microsieverts
+// ================================================================================================
+double GeigerCounter::getMainAbsorbedMicrosieverts() {
+
+  return getMainTubeCounts() * (TUBE_CONVERSION_FACTOR_CPM_TO_USVH / 60.0);
+
+}
+
+// ================================================================================================
+// Get the total absorbed dose for the follower tube in microsieverts
+// ================================================================================================
+double GeigerCounter::getFollowerAbsorbedMicrosieverts() {
+
+  return getFollowerTubeCounts() * (TUBE_CONVERSION_FACTOR_CPM_TO_USVH / 60.0);
+
+}
+
+// ================================================================================================
 // Get the equivalent dose unit
 // ================================================================================================
 GeigerCounter::EquivalentDoseUnit GeigerCounter::getEquivalentDoseUnit() {

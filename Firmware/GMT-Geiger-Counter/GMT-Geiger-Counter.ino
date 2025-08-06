@@ -39,8 +39,9 @@ void geigerCounterDeselectAllUnits();
 void cosmicRayDetectorMute();
 void cosmicRayDetectorDisable();
 void displayGeigerCounter();
-void displayGeigerCounterSettings1();
-void displayGeigerCounterSettings2();
+void displayGeigerCounterInfo1();
+void displayGeigerCounterInfo2();
+void displayGeigerCounterInfo3();
 void displayAudioSettings();
 void displayDisplaySettings();
 void displayRotationConfirmation();
@@ -158,7 +159,7 @@ void setTouchActions() {
   // --------------------------------------------
   // Geiger counter touch actions
 
-  touchscreen.geigerCounter.geigerCounterSetting.action    = displayGeigerCounterSettings1;
+  touchscreen.geigerCounter.geigerCounterSetting.action    = displayGeigerCounterInfo1;
   touchscreen.geigerCounter.audioSettings.action           = displayAudioSettings;
   touchscreen.geigerCounter.displaySettings.action         = displayDisplaySettings;
   touchscreen.geigerCounter.goToSleep.action               = goToSleep;
@@ -173,24 +174,31 @@ void setTouchActions() {
   touchscreen.geigerCounter.systemSettings.action          = displaySystemSettings1;
 
   // --------------------------------------------
-  // Geiger counter settings 1 touch actions
+  // Geiger counter info 1 touch actions
 
-  touchscreen.geigerCounterSettings1.back.action     = displayGeigerCounter;
-  touchscreen.geigerCounterSettings1.next.action     = displayGeigerCounterSettings2;
-  touchscreen.geigerCounterSettings1.previous.action = displayGeigerCounterSettings2;
+  touchscreen.geigerCounterInfo1.back.action     = displayGeigerCounter;
+  touchscreen.geigerCounterInfo1.next.action     = displayGeigerCounterInfo2;
+  touchscreen.geigerCounterInfo1.previous.action = displayGeigerCounterInfo3;
 
   // --------------------------------------------
-  // Geiger counter settings 2 touch actions
+  // Geiger counter info 2 touch actions
 
-  touchscreen.geigerCounterSettings2.back.action          = displayGeigerCounter;
-  touchscreen.geigerCounterSettings2.next.action          = displayGeigerCounterSettings1;
-  touchscreen.geigerCounterSettings2.previous.action      = displayGeigerCounterSettings1;
-  touchscreen.geigerCounterSettings2.autoIntegrate.action = toggleGeigerCounterAutoIntegration;
-  touchscreen.geigerCounterSettings2.autoRange.action     = toggleGeigerCounterAutoRanging;
-  touchscreen.geigerCounterSettings2.sieverts.action      = selectGeigerCounterSieverts;
-  touchscreen.geigerCounterSettings2.rem.action           = selectGeigerCounterRem;
-  touchscreen.geigerCounterSettings2.rontgen.action       = selectGeigerCounterRontgen;
-  touchscreen.geigerCounterSettings2.gray.action          = selectGeigerCounterGray;
+  touchscreen.geigerCounterInfo2.back.action     = displayGeigerCounter;
+  touchscreen.geigerCounterInfo2.next.action     = displayGeigerCounterInfo3;
+  touchscreen.geigerCounterInfo2.previous.action = displayGeigerCounterInfo1;
+
+  // --------------------------------------------
+  // Geiger counter info 2 touch actions
+
+  touchscreen.geigerCounterInfo3.back.action          = displayGeigerCounter;
+  touchscreen.geigerCounterInfo3.next.action          = displayGeigerCounterInfo1;
+  touchscreen.geigerCounterInfo3.previous.action      = displayGeigerCounterInfo2;
+  touchscreen.geigerCounterInfo3.autoIntegrate.action = toggleGeigerCounterAutoIntegration;
+  touchscreen.geigerCounterInfo3.autoRange.action     = toggleGeigerCounterAutoRanging;
+  touchscreen.geigerCounterInfo3.sieverts.action      = selectGeigerCounterSieverts;
+  touchscreen.geigerCounterInfo3.rem.action           = selectGeigerCounterRem;
+  touchscreen.geigerCounterInfo3.rontgen.action       = selectGeigerCounterRontgen;
+  touchscreen.geigerCounterInfo3.gray.action          = selectGeigerCounterGray;
 
   // --------------------------------------------
   // Audio settings touch actions
@@ -371,17 +379,24 @@ void visualFeedback() {
   touchscreen.geigerCounter.setIntegrationTime(geigerCounter.getIntegrationTime());
 
   // --------------------------------------------
-  // Geiger counter settings 1 screen
+  // Geiger counter info 1 screen
 
-  touchscreen.geigerCounterSettings1.setCounts(geigerCounter.getCounts());
-  touchscreen.geigerCounterSettings1.setMainTubeCounts(geigerCounter.getMainTubeCounts());
-  touchscreen.geigerCounterSettings1.setFollowerTubeCounts(geigerCounter.getFollowerTubeCounts());
+  touchscreen.geigerCounterInfo1.setCounts(geigerCounter.getCounts());
+  touchscreen.geigerCounterInfo1.setMainTubeCounts(geigerCounter.getMainTubeCounts());
+  touchscreen.geigerCounterInfo1.setFollowerTubeCounts(geigerCounter.getFollowerTubeCounts());
 
   // --------------------------------------------
-  // Geiger counter settings 2 screen
+  // Geiger counter info 2 screen
 
-  touchscreen.geigerCounterSettings2.autoIntegrate.setToggleState(geigerCounter.getAutoIntegrateState());
-  touchscreen.geigerCounterSettings2.autoRange.setToggleState(geigerCounter.getAutoRangeState());
+  touchscreen.geigerCounterInfo2.setTotalAbsorbedDose(geigerCounter.getAbsorbedMicrosieverts());
+  touchscreen.geigerCounterInfo2.setMainAbsorbedDose(geigerCounter.getMainAbsorbedMicrosieverts());
+  touchscreen.geigerCounterInfo2.setFollowerAbsorbedDose(geigerCounter.getFollowerAbsorbedMicrosieverts());
+
+  // --------------------------------------------
+  // Geiger counter info 3 screen
+
+  touchscreen.geigerCounterInfo3.autoIntegrate.setToggleState(geigerCounter.getAutoIntegrateState());
+  touchscreen.geigerCounterInfo3.autoRange.setToggleState(geigerCounter.getAutoRangeState());
   
   // Deselect all units radio buttons
   geigerCounterDeselectAllUnits();
@@ -389,10 +404,10 @@ void visualFeedback() {
   // Select the measurement unit radio button depending on the selected measurement unit
   switch (geigerCounter.getMeasurementUnit()) {
 
-    case GeigerCounter::SIEVERTS: touchscreen.geigerCounterSettings2.sieverts.select(); break;
-    case GeigerCounter::REM:      touchscreen.geigerCounterSettings2.rem.select();      break;
-    case GeigerCounter::RONTGEN:  touchscreen.geigerCounterSettings2.rontgen.select();  break;
-    case GeigerCounter::GRAY:     touchscreen.geigerCounterSettings2.gray.select();     break;
+    case GeigerCounter::SIEVERTS: touchscreen.geigerCounterInfo3.sieverts.select(); break;
+    case GeigerCounter::REM:      touchscreen.geigerCounterInfo3.rem.select();      break;
+    case GeigerCounter::RONTGEN:  touchscreen.geigerCounterInfo3.rontgen.select();  break;
+    case GeigerCounter::GRAY:     touchscreen.geigerCounterInfo3.gray.select();     break;
 
   }
 
@@ -765,10 +780,10 @@ void geigerCounterIncreaseIntegrationTime() {
 // ================================================================================================
 void geigerCounterDeselectAllUnits() {
 
-  touchscreen.geigerCounterSettings2.sieverts.deselect();
-  touchscreen.geigerCounterSettings2.rem.deselect();
-  touchscreen.geigerCounterSettings2.rontgen.deselect();
-  touchscreen.geigerCounterSettings2.gray.deselect();
+  touchscreen.geigerCounterInfo3.sieverts.deselect();
+  touchscreen.geigerCounterInfo3.rem.deselect();
+  touchscreen.geigerCounterInfo3.rontgen.deselect();
+  touchscreen.geigerCounterInfo3.gray.deselect();
 
 }
 
@@ -820,13 +835,13 @@ void displayGeigerCounter() {
 // ================================================================================================
 // 
 // ================================================================================================
-void displayGeigerCounterSettings1() {
+void displayGeigerCounterInfo1() {
 
   // Rotate to correct orientation
   touchscreen.setRotationLandscape();
 
   // Draw the screen
-  touchscreen.draw(touchscreen.geigerCounterSettings1);
+  touchscreen.draw(touchscreen.geigerCounterInfo1);
 
   // Play a sound
   buzzer.play(buzzer.next);
@@ -836,13 +851,29 @@ void displayGeigerCounterSettings1() {
 // ================================================================================================
 // 
 // ================================================================================================
-void displayGeigerCounterSettings2() {
+void displayGeigerCounterInfo2() {
 
   // Rotate to correct orientation
   touchscreen.setRotationLandscape();
 
   // Draw the screen
-  touchscreen.draw(touchscreen.geigerCounterSettings2);
+  touchscreen.draw(touchscreen.geigerCounterInfo2);
+
+  // Play a sound
+  buzzer.play(buzzer.next);
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void displayGeigerCounterInfo3() {
+
+  // Rotate to correct orientation
+  touchscreen.setRotationLandscape();
+
+  // Draw the screen
+  touchscreen.draw(touchscreen.geigerCounterInfo3);
 
   // Play a sound
   buzzer.play(buzzer.next);
@@ -1076,7 +1107,7 @@ void selectGeigerCounterSieverts() {
   geigerCounterDeselectAllUnits();
 
   // Select unit
-  touchscreen.geigerCounterSettings2.sieverts.select();
+  touchscreen.geigerCounterInfo3.sieverts.select();
 
   // Play a sound
   buzzer.play(buzzer.tap);
@@ -1098,7 +1129,7 @@ void selectGeigerCounterRem() {
   geigerCounterDeselectAllUnits();
 
   // Select unit
-  touchscreen.geigerCounterSettings2.rem.select();
+  touchscreen.geigerCounterInfo3.rem.select();
 
   // Play a sound
   buzzer.play(buzzer.tap);
@@ -1120,7 +1151,7 @@ void selectGeigerCounterRontgen() {
   geigerCounterDeselectAllUnits();
 
   // Select unit
-  touchscreen.geigerCounterSettings2.rontgen.select();
+  touchscreen.geigerCounterInfo3.rontgen.select();
 
   // Play a sound
   buzzer.play(buzzer.tap);
@@ -1142,7 +1173,7 @@ void selectGeigerCounterGray() {
   geigerCounterDeselectAllUnits();
 
   // Select unit
-  touchscreen.geigerCounterSettings2.gray.select();
+  touchscreen.geigerCounterInfo3.gray.select();
 
   // Play a sound
   buzzer.play(buzzer.tap);
@@ -1461,17 +1492,20 @@ void toggleSystemInfoLogging(const bool toggled) {
 void sendGeigerCounterData() {
 
   // Get data
-  Logger::KeyValuePair data[9] = {
+  Logger::KeyValuePair data[12] = {
 
-    {"enabled",               Logger::BOOL_T,   {.bool_v   = geigerCounter.getGeigerCounterState()}    },
-    {"counts",                Logger::UINT64_T, {.uint64_v = geigerCounter.getCounts()}                },
-    {"mainCounts",            Logger::UINT64_T, {.uint64_v = geigerCounter.getMainTubeCounts()}        },
-    {"followerCounts",        Logger::UINT64_T, {.uint64_v = geigerCounter.getFollowerTubeCounts()}    },
-    {"countsPerMinute",       Logger::DOUBLE_T, {.double_v = geigerCounter.getCountsPerMinute(60)}     },
-    {"microsievertsPerHour",  Logger::DOUBLE_T, {.double_v = geigerCounter.getMicrosievertsPerHour(60)}},
-    {"rating",                Logger::UINT8_T,  {.uint8_v  = geigerCounter.getRadiationRating()}       },
-    {"tubes",                 Logger::UINT8_T,  {.uint8_v  = TOTAL_NUMBER_OF_TUBES}                    },
-    {"tubeType",              Logger::STRING_T, {.string_v = TUBE_TYPE_NAME}                           }
+    {"enabled",               Logger::BOOL_T,   {.bool_v   = geigerCounter.getGeigerCounterState()}           },
+    {"counts",                Logger::UINT64_T, {.uint64_v = geigerCounter.getCounts()}                       },
+    {"mainCounts",            Logger::UINT64_T, {.uint64_v = geigerCounter.getMainTubeCounts()}               },
+    {"followerCounts",        Logger::UINT64_T, {.uint64_v = geigerCounter.getFollowerTubeCounts()}           },
+    {"countsPerMinute",       Logger::DOUBLE_T, {.double_v = geigerCounter.getCountsPerMinute(60)}            },
+    {"microsievertsPerHour",  Logger::DOUBLE_T, {.double_v = geigerCounter.getMicrosievertsPerHour(60)}       },
+    {"totalMicrosieverts",    Logger::DOUBLE_T, {.double_v = geigerCounter.getAbsorbedMicrosieverts()}        },
+    {"mainMicrosieverts" ,    Logger::DOUBLE_T, {.double_v = geigerCounter.getMainAbsorbedMicrosieverts()}    },
+    {"followerMicrosieverts", Logger::DOUBLE_T, {.double_v = geigerCounter.getFollowerAbsorbedMicrosieverts()}},
+    {"rating",                Logger::UINT8_T,  {.uint8_v  = geigerCounter.getRadiationRating()}              },
+    {"tubes",                 Logger::UINT8_T,  {.uint8_v  = TOTAL_NUMBER_OF_TUBES}                           },
+    {"tubeType",              Logger::STRING_T, {.string_v = TUBE_TYPE_NAME}                                  }
 
   };
 
@@ -1479,7 +1513,7 @@ void sendGeigerCounterData() {
   String json;
 
   // Construct the data string
-  logger.getLogMessage("geigerCounter", data, 9, json);
+  logger.getLogMessage("geigerCounter", data, 12, json);
 
   // Send JSON data
   wireless.server.send(200, "application/json", json);
@@ -1632,6 +1666,9 @@ void reboot() {
 // 
 // ================================================================================================
 void reset() {
+
+  // Reset settings
+  settings.reset();
 
   // Reboot the system
   reboot();

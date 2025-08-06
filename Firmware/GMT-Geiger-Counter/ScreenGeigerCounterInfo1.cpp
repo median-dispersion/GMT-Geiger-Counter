@@ -1,4 +1,4 @@
-#include "ScreenGeigerCounterSettings1.h"
+#include "ScreenGeigerCounterInfo1.h"
 
 //-------------------------------------------------------------------------------------------------
 // Public
@@ -6,10 +6,10 @@
 // ================================================================================================
 // Constructor
 // ================================================================================================
-ScreenGeigerCounterSettings1::ScreenGeigerCounterSettings1():
+ScreenGeigerCounterInfo1::ScreenGeigerCounterInfo1():
 
   // Initialize members
-  ScreenBasicLandscape(STRING_GEIGER_COUNTER_SETTINGS),
+  ScreenBasicLandscape(STRING_GEIGER_COUNTER_INFO),
   next(    160, 213, 158, 25, IMAGE_NEXT),
   previous(2,   213, 157, 25, IMAGE_BACK),
   _countsString("0"),
@@ -24,7 +24,7 @@ ScreenGeigerCounterSettings1::ScreenGeigerCounterSettings1():
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenGeigerCounterSettings1::update(const XPT2046::Point &position) {
+void ScreenGeigerCounterInfo1::update(const XPT2046::Point &position) {
 
   // Update the basic screen
   ScreenBasicLandscape::update(position);
@@ -38,7 +38,7 @@ void ScreenGeigerCounterSettings1::update(const XPT2046::Point &position) {
 // ================================================================================================
 // Draw
 // ================================================================================================
-void ScreenGeigerCounterSettings1::draw(GFXcanvas16 &canvas) {
+void ScreenGeigerCounterInfo1::draw(GFXcanvas16 &canvas) {
 
   // Draw the basic screen
   ScreenBasicLandscape::draw(canvas);
@@ -60,7 +60,7 @@ void ScreenGeigerCounterSettings1::draw(GFXcanvas16 &canvas) {
 // ================================================================================================
 // Set the total counts
 // ================================================================================================
-void ScreenGeigerCounterSettings1::setCounts(const uint64_t &counts) {
+void ScreenGeigerCounterInfo1::setCounts(const uint64_t &counts) {
 
   _countsString = counts;
 
@@ -69,7 +69,7 @@ void ScreenGeigerCounterSettings1::setCounts(const uint64_t &counts) {
 // ================================================================================================
 // Set the main tube counts
 // ================================================================================================
-void ScreenGeigerCounterSettings1::setMainTubeCounts(const uint64_t &counts) {
+void ScreenGeigerCounterInfo1::setMainTubeCounts(const uint64_t &counts) {
 
   _mainTubeCountsString = counts;
 
@@ -78,7 +78,7 @@ void ScreenGeigerCounterSettings1::setMainTubeCounts(const uint64_t &counts) {
 // ================================================================================================
 // Set the follower tube counts
 // ================================================================================================
-void ScreenGeigerCounterSettings1::setFollowerTubeCounts(const uint64_t &counts) {
+void ScreenGeigerCounterInfo1::setFollowerTubeCounts(const uint64_t &counts) {
 
   _followerTubeCountsString = counts;
 

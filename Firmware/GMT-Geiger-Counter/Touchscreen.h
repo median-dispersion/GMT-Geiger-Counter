@@ -10,8 +10,9 @@
 #include "Screen.h"
 #include "ScreenSleep.h"
 #include "ScreenGeigerCounter.h"
-#include "ScreenGeigerCounterSettings1.h"
-#include "ScreenGeigerCounterSettings2.h"
+#include "ScreenGeigerCounterInfo1.h"
+#include "ScreenGeigerCounterInfo2.h"
+#include "ScreenGeigerCounterInfo3.h"
 #include "ScreenAudioSettings.h"
 #include "ScreenDisplaySettings.h"
 #include "ScreenRotationConfirmation.h"
@@ -34,8 +35,9 @@ class Touchscreen {
 
     ScreenSleep                    sleepScreen;
     ScreenGeigerCounter            geigerCounter;
-    ScreenGeigerCounterSettings1   geigerCounterSettings1;
-    ScreenGeigerCounterSettings2   geigerCounterSettings2;
+    ScreenGeigerCounterInfo1       geigerCounterInfo1;
+    ScreenGeigerCounterInfo2       geigerCounterInfo2;
+    ScreenGeigerCounterInfo3       geigerCounterInfo3;
     ScreenAudioSettings            audioSettings;
     ScreenDisplaySettings          displaySettings;
     ScreenRotationConfirmation     rotationConfirmation;

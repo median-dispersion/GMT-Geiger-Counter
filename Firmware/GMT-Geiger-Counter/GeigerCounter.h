@@ -76,6 +76,9 @@ class GeigerCounter {
     double             getMicrosievertsPerHour(const uint8_t timeSeconds); // Get microsieverts per hour for a fixed integration time
     double             getMicrosievertsPerHour();                          // Get microsieverts per hour
     double             getEquivalentDose();                                // Get the equivalent dose in the selected measurement unit
+    double             getAbsorbedMicrosieverts();                         // Get the total absorbed dose in microsieverts
+    double             getMainAbsorbedMicrosieverts();                     // Get the total absorbed dose for the main tube in microsieverts
+    double             getFollowerAbsorbedMicrosieverts();                 // Get the total absorbed dose for the follower tube in microsieverts
     EquivalentDoseUnit getEquivalentDoseUnit();                            // Get the equivalent dose unit
     RadiationRating    getRadiationRating();                               // Get the radiation rating
     uint32_t*          getHistory();                                       // Get a pointer to the radiation history array

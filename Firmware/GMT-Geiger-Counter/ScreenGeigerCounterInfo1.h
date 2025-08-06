@@ -1,5 +1,5 @@
-#ifndef _SCREE_GEIGER_COUNTER_SETTINGS_1_H
-#define _SCREE_GEIGER_COUNTER_SETTINGS_1_H
+#ifndef _SCREE_GEIGER_COUNTER_INFO_1_H
+#define _SCREE_GEIGER_COUNTER_INFO_1_H
 
 #include "Arduino.h"
 #include "Adafruit_GFX.h"
@@ -11,7 +11,7 @@
 #include "DisplayDoseScreen.h"
 #include "DisplayToastBox.h"
 
-class ScreenGeigerCounterSettings1: public ScreenBasicLandscape {
+class ScreenGeigerCounterInfo1: public ScreenBasicLandscape {
 
   //-----------------------------------------------------------------------------------------------
   // Public
@@ -23,7 +23,7 @@ class ScreenGeigerCounterSettings1: public ScreenBasicLandscape {
     TouchIcon previous;
 
     // Constructor
-    ScreenGeigerCounterSettings1();
+    ScreenGeigerCounterInfo1();
 
     // Update and draw calls
     void update(const XPT2046::Point &position) override;

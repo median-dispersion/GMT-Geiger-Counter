@@ -1,4 +1,4 @@
-#include "ScreenGeigerCounterSettings2.h"
+#include "ScreenGeigerCounterInfo3.h"
 
 //-------------------------------------------------------------------------------------------------
 // Public
@@ -6,10 +6,10 @@
 // ================================================================================================
 // Constructor
 // ================================================================================================
-ScreenGeigerCounterSettings2::ScreenGeigerCounterSettings2():
+ScreenGeigerCounterInfo3::ScreenGeigerCounterInfo3():
 
   // Initialize members
-  ScreenBasicLandscape(STRING_GEIGER_COUNTER_SETTINGS),
+  ScreenBasicLandscape(STRING_GEIGER_COUNTER_INFO),
   autoIntegrate(0, STRING_AUTO_INTEGRATE, true),
   autoRange(    1, STRING_AUTO_RANGE,     true),
   sieverts(     2, STRING_SIEVERTS,       true),
@@ -24,7 +24,7 @@ ScreenGeigerCounterSettings2::ScreenGeigerCounterSettings2():
 // ================================================================================================
 // Update
 // ================================================================================================
-void ScreenGeigerCounterSettings2::update(const XPT2046::Point &position) {
+void ScreenGeigerCounterInfo3::update(const XPT2046::Point &position) {
 
   // Update the basic screen
   ScreenBasicLandscape::update(position);
@@ -44,7 +44,7 @@ void ScreenGeigerCounterSettings2::update(const XPT2046::Point &position) {
 // ================================================================================================
 // Draw
 // ================================================================================================
-void ScreenGeigerCounterSettings2::draw(GFXcanvas16 &canvas) {
+void ScreenGeigerCounterInfo3::draw(GFXcanvas16 &canvas) {
 
   // Draw the basic screen
   ScreenBasicLandscape::draw(canvas);
