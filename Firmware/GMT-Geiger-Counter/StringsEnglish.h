@@ -77,7 +77,7 @@
 #define STRING_SYSTEM_UPTIME                        "System uptime"
 #define STRING_MINUTES_ABBREVIATION                 "min"
 #define STRING_FREE_MEMORY_BYTES                    "Free memory (Bytes)"
-#define STRING_REBOOT                               "Reboot"
+#define STRING_RESTART                              "Restart"
 #define STRING_RESET                                "Reset"
 
 #endif

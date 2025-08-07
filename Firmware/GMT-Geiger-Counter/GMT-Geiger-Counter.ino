@@ -80,7 +80,8 @@ void sendGeigerCounterData();
 void sendCosmicRayDetectorData();
 void sendLogFileData();
 void sendSystemInfoData();
-void reboot();
+void sendRestartAcknowledgement();
+void restart();
 void reset();
 
 // ================================================================================================
@@ -107,10 +108,11 @@ void setup() {
   setUserSettings();
 
   // Assign web server endpoints
-  wireless.server.on("/data/geiger-counter",      sendGeigerCounterData    );
-  wireless.server.on("/data/cosmic-ray-detector", sendCosmicRayDetectorData);
-  wireless.server.on("/data/log",                 sendLogFileData          );
-  wireless.server.on("/data/system",              sendSystemInfoData       );
+  wireless.server.on("/data/geiger-counter",                sendGeigerCounterData     );
+  wireless.server.on("/data/cosmic-ray-detector",           sendCosmicRayDetectorData );
+  wireless.server.on("/data/log",                           sendLogFileData           );
+  wireless.server.on("/data/system",                        sendSystemInfoData        );
+  wireless.server.on("/system/restart",           HTTP_PUT, sendRestartAcknowledgement);
 
   // Enable geiger counter
   geigerCounter.enable();
@@ -284,7 +286,7 @@ void setTouchActions() {
   // System settings 3 touch actions
 
   touchscreen.systemSettings3.back.action          = displayGeigerCounter;
-  touchscreen.systemSettings3.reboot.action        = reboot;
+  touchscreen.systemSettings3.restart.action       = restart;
   touchscreen.systemSettings3.reset.action         = reset;
   touchscreen.systemSettings3.next.action          = displaySystemSettings1;
   touchscreen.systemSettings3.previous.action      = displaySystemSettings2;
@@ -1645,23 +1647,42 @@ void sendSystemInfoData() {
 // ================================================================================================
 // 
 // ================================================================================================
-void reboot() {
+void sendRestartAcknowledgement() {
+
+  // Reply with a success message
+  wireless.server.send(200, "application/json", "{\"success\":true}");
+
+  // Update the wireless interface
+  wireless.update();
+
+  // Restart the system
+  restart();
+
+}
+
+// ------------------------------------------------------------------------------------------------
+// System actions
+
+// ================================================================================================
+// 
+// ================================================================================================
+void restart() {
 
   // Create event data
   Logger::KeyValuePair event[2] = {
 
-    {"source", Logger::STRING_T, {.string_v = "system"}   },
-    {"action", Logger::STRING_T, {.string_v = "reboot"}}
+    {"source", Logger::STRING_T, {.string_v = "system"} },
+    {"action", Logger::STRING_T, {.string_v = "restart"}}
 
   };
 
   // Log event message
   logger.log(Logger::EVENT, "event", event, 2);
 
-  // Delay reboot for 100 ms
+  // Delay restart for 100 ms
   delay(100);
 
-  // Reboot
+  // Restart
   ESP.restart();
 
 }
@@ -1671,10 +1692,13 @@ void reboot() {
 // ================================================================================================
 void reset() {
 
+  // Reset the WiFi
+  wireless.resetWiFi();
+
   // Reset settings
   settings.reset();
 
-  // Reboot the system
-  reboot();
+  // Restart the system
+  restart();
 
 }

@@ -27,6 +27,7 @@ class Wireless {
     void        update();                                      // Update the wireless interfaces
     void        enableWiFi();                                  // Enable the WiFi
     void        disableWiFi();                                 // Disable the WiFi
+    void        resetWiFi();                                   // Reset the WiFi
     void        enableHotspot();                               // Enable the wireless hotspot
     void        disableHotspot();                              // Disable the wireless hotspot
     void        setWiFiState(const bool state);                // Set the WiFi state
@@ -65,7 +66,6 @@ class Wireless {
     void        _disableServer();         // Disable the HTTP server
     static void _handleRequest();         // Handle all HTTP requests not previously defined
     static void _handleWiFiCredentials(); // Handle updates of the WiFi credentials via the web interface
-    static void _handleSystemRestart();   // Handle requests for restarting the system
     
 };
 

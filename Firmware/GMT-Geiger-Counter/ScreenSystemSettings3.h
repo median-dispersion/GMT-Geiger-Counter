@@ -19,7 +19,7 @@ class ScreenSystemSettings3: public ScreenBasicLandscape {
     // Screen elements
     TouchIcon next;
     TouchIcon previous;
-    TouchIcon reboot;
+    TouchIcon restart;
     TouchIcon reset;
 
     // Constructor

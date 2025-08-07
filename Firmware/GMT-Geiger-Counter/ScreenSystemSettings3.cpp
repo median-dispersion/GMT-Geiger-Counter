@@ -12,7 +12,7 @@ ScreenSystemSettings3::ScreenSystemSettings3():
   ScreenBasicLandscape(STRING_SYSTEM_SETTINGS),
   next(    160, 213, 158, 25, IMAGE_NEXT),
   previous(2,   213, 157, 25, IMAGE_BACK),
-  reboot(  55,  110,  51,  51, IMAGE_POWER,        COLOR_YELLOW_DARK, COLOR_YELLOW_MEDIUM),
+  restart(  55,  110,  51,  51, IMAGE_POWER,        COLOR_YELLOW_DARK, COLOR_YELLOW_MEDIUM),
   reset(   214, 110,  51,  51, IMAGE_RESET_SYSTEM, COLOR_RED_DARK,    COLOR_RED_MEDIUM)
 
 {}
@@ -28,7 +28,7 @@ void ScreenSystemSettings3::update(const XPT2046::Point &position) {
   // Update screen elements
   next.update(position);
   previous.update(position);
-  reboot.update(position);
+  restart.update(position);
   reset.update(position);
 
 }
@@ -54,7 +54,7 @@ void ScreenSystemSettings3::draw(GFXcanvas16 &canvas) {
   uint16_t textWidth, textHeight;
 
   // Get the bounding box
-  canvas.getTextBounds(STRING_REBOOT, 0, 0, &textX, &textY, &textWidth, &textHeight);
+  canvas.getTextBounds(STRING_RESTART, 0, 0, &textX, &textY, &textWidth, &textHeight);
 
   // Calculate the X and Y cursor position
   cursorX = 81 - (textWidth / 2) - 2;
@@ -62,7 +62,7 @@ void ScreenSystemSettings3::draw(GFXcanvas16 &canvas) {
 
   // Set the cursor and draw text to the frame buffer
   canvas.setCursor(cursorX, cursorY);
-  canvas.print(STRING_REBOOT);
+  canvas.print(STRING_RESTART);
 
   // Get the bounding box
   canvas.getTextBounds(STRING_RESET, 0, 0, &textX, &textY, &textWidth, &textHeight);
@@ -77,7 +77,7 @@ void ScreenSystemSettings3::draw(GFXcanvas16 &canvas) {
   // Draw screen elements
   next.draw(canvas);
   previous.draw(canvas);
-  reboot.draw(canvas);
+  restart.draw(canvas);
   reset.draw(canvas);
 
 }

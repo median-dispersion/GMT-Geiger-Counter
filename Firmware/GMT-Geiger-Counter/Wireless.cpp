@@ -59,9 +59,6 @@ void Wireless::begin() {
     // Restore the last WiFi state
     setWiFiState(wifiState);
 
-    // Handle system restart requests
-    server.on("/system/restart", HTTP_PUT, _handleSystemRestart);
-
     // Handle updates of the WiFi credentials via the web interface
     server.on("/system/wifi-credentials", HTTP_PUT, _handleWiFiCredentials);
 
@@ -219,6 +216,20 @@ void Wireless::disableWiFi() {
     logger.log(Logger::EVENT, "event", event, 2);
 
   }
+
+}
+
+// ================================================================================================
+// Reset the WiFi
+// ================================================================================================
+void Wireless::resetWiFi() {
+
+  // Disable the WiFi
+  disableWiFi();
+
+  // Set the WiFi name and password to the configuration values
+  setWiFiName(WIFI_NAME);
+  setWiFiPassword(WIFI_PASSWORD);
 
 }
 
@@ -678,21 +689,5 @@ void Wireless::_handleWiFiCredentials() {
     wireless.server.send(400, "application/json", "{\"success\":false}");
 
   }
-
-}
-
-// ================================================================================================
-// Handle requests for restarting the system
-// ================================================================================================
-void Wireless::_handleSystemRestart() {
-
-  // Reply with a success message
-  wireless.server.send(200, "application/json", "{\"success\":true}");
-
-  // Update the wireless interface
-  wireless.update();
-
-  // Restart the system
-  ESP.restart();
 
 }
