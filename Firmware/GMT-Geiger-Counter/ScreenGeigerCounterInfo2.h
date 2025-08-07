@@ -29,9 +29,9 @@ class ScreenGeigerCounterInfo2: public ScreenBasicLandscape {
     void update(const XPT2046::Point &position) override;
     void draw(GFXcanvas16 &canvas) override;
 
-    void setTotalAbsorbedDose(const uint64_t &dose);    // Set the total absorbed dose
-    void setMainAbsorbedDose(const uint64_t &dose);     // Set the main tube absorbed dose
-    void setFollowerAbsorbedDose(const uint64_t &dose); // Set the follower tube absorbed dose
+    void setTotalAbsorbedDose(const double &dose);    // Set the total absorbed dose
+    void setMainAbsorbedDose(const double &dose);     // Set the main tube absorbed dose
+    void setFollowerAbsorbedDose(const double &dose); // Set the follower tube absorbed dose
 
   // ----------------------------------------------------------------------------------------------
   // Private

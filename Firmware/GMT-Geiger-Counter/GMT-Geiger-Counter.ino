@@ -1357,6 +1357,8 @@ void toggleHotspotState(const bool toggled) {
   // Update settings
   settings.data.parameters.wireless.hotspot = toggled;
 
+  if (toggled == true) { settings.data.parameters.wireless.wifi = false; }
+
   // Change state
   touchscreen.hotspotSettings.setIPAddress(wireless.getHotspotIPAddress());
 
@@ -1381,6 +1383,8 @@ void toggleWiFiSate(const bool toggled) {
 
   // Change state
   touchscreen.wifiSettings.setIPAddress(wireless.getWiFiIPAddress());
+
+  if (toggled == true) { settings.data.parameters.wireless.hotspot = false; }
 
   // Update the touchscreen
   touchscreen.refresh();

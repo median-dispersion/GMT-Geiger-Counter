@@ -60,7 +60,7 @@ void ScreenGeigerCounterInfo2::draw(GFXcanvas16 &canvas) {
 // ================================================================================================
 // Set the total absorbed dose
 // ================================================================================================
-void ScreenGeigerCounterInfo2::setTotalAbsorbedDose(const uint64_t &dose) {
+void ScreenGeigerCounterInfo2::setTotalAbsorbedDose(const double &dose) {
 
   _absorbedDoseString = dose;
 
@@ -69,7 +69,7 @@ void ScreenGeigerCounterInfo2::setTotalAbsorbedDose(const uint64_t &dose) {
 // ================================================================================================
 // Set the main tube absorbed dose
 // ================================================================================================
-void ScreenGeigerCounterInfo2::setMainAbsorbedDose(const uint64_t &dose) {
+void ScreenGeigerCounterInfo2::setMainAbsorbedDose(const double &dose) {
 
   _mainAbsorbedDoseString = dose;
 
@@ -78,7 +78,7 @@ void ScreenGeigerCounterInfo2::setMainAbsorbedDose(const uint64_t &dose) {
 // ================================================================================================
 // Set the follower tube absorbed dose
 // ================================================================================================
-void ScreenGeigerCounterInfo2::setFollowerAbsorbedDose(const uint64_t &dose) {
+void ScreenGeigerCounterInfo2::setFollowerAbsorbedDose(const double &dose) {
 
   _followerAbsorbedDoseString = dose;
 
