@@ -56,16 +56,16 @@ class Logger {
     // Get the single instance of the class
     static Logger& getInstance();
 
-    void        begin();                                                                                        // Initialize everything
-    void        setSerialLoggingState(const bool state);                                                        // Set serial logging state
-    void        setSDCardLoggingState(const bool state);                                                        // Set SD card logging state
-    void        setLogLevelState(const LogLevel level, const bool state);                                       // Set a log level state
-    bool        getSerialLoggingState();                                                                        // Get state of serial logging
-    bool        getSDCardLoggingState();                                                                        // Get state of SD card logging
-    bool        getLogLevelState(const LogLevel level);                                                         // Get the state of a log level
-    const char* getLogFilePath();                                                                               // Get path to log file
-    void        getLogMessage(const char *type, const KeyValuePair *data, const uint8_t size, String &message); // Construct and return a log message
-    void        log(const LogLevel level, const char *type, const KeyValuePair *data, const uint8_t size);      // Log data
+    void        begin();                                                                                                                 // Initialize everything
+    void        setSerialLoggingState(const bool state);                                                                                 // Set serial logging state
+    void        setSDCardLoggingState(const bool state);                                                                                 // Set SD card logging state
+    void        setLogLevelState(const LogLevel level, const bool state);                                                                // Set a log level state
+    bool        getSerialLoggingState();                                                                                                 // Get state of serial logging
+    bool        getSDCardLoggingState();                                                                                                 // Get state of SD card logging
+    bool        getLogLevelState(const LogLevel level);                                                                                  // Get the state of a log level
+    const char* getLogFilePath();                                                                                                        // Get path to log file
+    void        getLogMessage(const char *type, const KeyValuePair *data, const uint8_t size, String &message);                          // Construct and return a log message
+    void        log(const LogLevel level, const char *type, const KeyValuePair *data, const uint8_t size, const bool sdCardData = true); // Log data
 
   // ----------------------------------------------------------------------------------------------
   // Private

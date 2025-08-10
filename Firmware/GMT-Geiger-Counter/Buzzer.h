@@ -36,6 +36,7 @@ class Buzzer {
     Sound detection;        // Detection sound effect
     Sound jingle;           // Power on jingle sound effect
     Sound next;             // UI next sound effect
+    Sound success;          // Success sound effect
     Sound tap;              // UI touch press sound effect
     Sound warning;          // Radiation warning sound effect
 

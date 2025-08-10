@@ -21,6 +21,7 @@ extern Melody MELODY_COINCIDENCE_EVENT;
 extern Melody MELODY_DETECTION;
 extern Melody MELODY_JINGLE;
 extern Melody MELODY_NEXT;
+extern Melody MELODY_SUCCESS;
 extern Melody MELODY_TAP;
 extern Melody MELODY_WARNING;
 

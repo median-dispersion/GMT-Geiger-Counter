@@ -69,7 +69,7 @@ void DisplayDoseScreen::draw(GFXcanvas16 &canvas) {
   // Calculate the X cursor position so that the unit text is centered
   // Use the value text Y position and add a 25px offset
   // A little janky but works as long as the font size of the value text doesn't change
-  cursorX = ((_width - textWidth) / 2) + 2;
+  cursorX = ((_width - textWidth) / 2) + _x;
   cursorY += 25;
 
   // Set the cursor and print the unit text

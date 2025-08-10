@@ -267,7 +267,7 @@ void Logger::getLogMessage(const char *type, const KeyValuePair *data, const uin
 // ================================================================================================
 // Log data
 // ================================================================================================
-void Logger::log(const LogLevel level, const char *type, const KeyValuePair *data, const uint8_t size){
+void Logger::log(const LogLevel level, const char *type, const KeyValuePair *data, const uint8_t size, const bool sdCardData){
 
   // If selected log level is enabled
   if (_logLevels[level]) {
@@ -286,11 +286,11 @@ void Logger::log(const LogLevel level, const char *type, const KeyValuePair *dat
 
     }
 
-    // Add a "," to the end of the log message
-    message += ",";
+    // If SD card logging is enabled and data is intended for SD card
+    if (_sdCardLogging && sdCardData) {
 
-    // If SD card logging is enabled
-    if (_sdCardLogging) {
+      // Add a "," to the end of the log message
+      message += ",";
 
       // If SD card is mounted
       if (sdCard.getMountState()) {

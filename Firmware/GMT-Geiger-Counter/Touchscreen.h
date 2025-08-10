@@ -19,6 +19,7 @@
 #include "ScreenCosmicRayDetector.h"
 #include "ScreenDisableCosmicRayDetector.h"
 #include "ScreenRadiationHistory.h"
+#include "ScreenDisableGeigerCounter.h"
 #include "ScreenTrueRNG.h"
 #include "ScreenHotspotSettings.h"
 #include "ScreenWiFiSettings.h"
@@ -44,6 +45,7 @@ class Touchscreen {
     ScreenCosmicRayDetector        cosmicRayDetector;
     ScreenDisableCosmicRayDetector disableCosmicRayDetector;
     ScreenRadiationHistory         radiationHistory;
+    ScreenDisableGeigerCounter     disableGeigerCounter;
     ScreenTrueRNG                  trueRNG;
     ScreenHotspotSettings          hotspotSettings;
     ScreenWiFiSettings             wifiSettings;

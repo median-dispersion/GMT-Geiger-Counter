@@ -5,6 +5,7 @@
 #include "Settings.h"
 #include "GeigerCounter.h"
 #include "CosmicRayDetector.h"
+#include "RandomNumberGenerator.h"
 #include "Buzzer.h"
 #include "Touchscreen.h"
 #include "RGBLED.h"
@@ -16,8 +17,11 @@
 
 // Global variables
 bool     PLAYED_DOSE_WARNING           = false;
+bool     PLAYED_ROLL_FINISHED          = true;
 uint64_t LAST_COUNTS_VALUE             = 0;
 uint64_t LAST_COINCIDENCE_EVENTS_VALUE = 0;
+uint8_t  LAST_RANDOM_NUMBER_VALUE      = 0;
+bool     LAST_DETECTIONS_MUTE_STATE    = false;
 bool     LAST_BUZZER_MUTER_STATE       = false;
 bool     LAST_RGB_LED_STATE            = true;
 uint64_t LOG_TIMER                     = 0;
@@ -32,12 +36,18 @@ void visualFeedback();
 void dataFeedback();
 void goToSleep();
 void wakeFromSleep();
+void temporaryDetectionsToggle();
 void geigerCounterDecreaseIntegrationTime();
 void geigerCounterResetIntegrationTime();
 void geigerCounterIncreaseIntegrationTime();
 void geigerCounterDeselectAllUnits();
-void cosmicRayDetectorMute();
 void cosmicRayDetectorDisable();
+void randomNumberGeneratorIncreaseMinimum();
+void randomNumberGeneratorDecreaseMinimum();
+void randomNumberGeneratorIncreaseMaximum();
+void randomNumberGeneratorDecreaseMaximum();
+void randomNumberGeneratorRoll();
+void randomNumberGeneratorDisable();
 void displayGeigerCounter();
 void displayGeigerCounterInfo1();
 void displayGeigerCounterInfo2();
@@ -48,6 +58,7 @@ void displayRotationConfirmation();
 void displayCosmicRayDetector();
 void displayDisableCosmicRayDetector();
 void displayRadiationHistory();
+void displayDisableGeigerCounter();
 void displayTrueRNG();
 void displayHotspotSettings();
 void displayWiFiSettings();
@@ -95,6 +106,7 @@ void setup() {
   settings.begin();
   geigerCounter.begin();
   cosmicRayDetector.begin();
+  randomNumberGenerator.begin();
   buzzer.begin();
   touchscreen.begin();
   rgbLED.begin();
@@ -139,6 +151,9 @@ void loop() {
   // Data feedback
   dataFeedback();
 
+  // Update the random number generator
+  randomNumberGenerator.update();
+
   // Update user settings
   settings.update();
 
@@ -170,7 +185,7 @@ void setTouchActions() {
   touchscreen.geigerCounter.increaseIntegrationTime.action = geigerCounterIncreaseIntegrationTime;
   touchscreen.geigerCounter.cosmicRayDetector.action       = displayRotationConfirmation;
   touchscreen.geigerCounter.radiationHistory.action        = displayRadiationHistory;
-  touchscreen.geigerCounter.trueRNG.action                 = displayTrueRNG;
+  touchscreen.geigerCounter.trueRNG.action                 = displayDisableGeigerCounter;
   touchscreen.geigerCounter.hotspotSettings.action         = displayHotspotSettings;
   touchscreen.geigerCounter.wifiSettings.action            = displayWiFiSettings;
   touchscreen.geigerCounter.systemSettings.action          = displaySystemSettings1;
@@ -230,7 +245,7 @@ void setTouchActions() {
   // Cosmic ray detector touch actions
 
   touchscreen.cosmicRayDetector.back.action  = displayDisableCosmicRayDetector;
-  touchscreen.cosmicRayDetector.mute.action  = cosmicRayDetectorMute;
+  touchscreen.cosmicRayDetector.mute.action  = temporaryDetectionsToggle;
   touchscreen.cosmicRayDetector.sleep.action = goToSleep;
 
   // --------------------------------------------
@@ -246,9 +261,23 @@ void setTouchActions() {
   touchscreen.radiationHistory.back.action = displayGeigerCounter;
 
   // --------------------------------------------
+  // Disable Geiger counter actions
+
+  touchscreen.disableGeigerCounter.back.action    = displayGeigerCounter;
+  touchscreen.disableGeigerCounter.confirm.action = displayTrueRNG;
+  touchscreen.disableGeigerCounter.dismiss.action = displayGeigerCounter;
+
+  // --------------------------------------------
   // True RNG touch actions
 
-  touchscreen.trueRNG.back.action = displayGeigerCounter;
+  touchscreen.trueRNG.back.action            = randomNumberGeneratorDisable;
+  touchscreen.trueRNG.increaseMinimum.action = randomNumberGeneratorIncreaseMinimum;
+  touchscreen.trueRNG.decreaseMinimum.action = randomNumberGeneratorDecreaseMinimum;
+  touchscreen.trueRNG.increaseMaximum.action = randomNumberGeneratorIncreaseMaximum;
+  touchscreen.trueRNG.decreaseMaximum.action = randomNumberGeneratorDecreaseMaximum;
+  touchscreen.trueRNG.roll.action            = randomNumberGeneratorRoll;
+  touchscreen.trueRNG.mute.action            = temporaryDetectionsToggle;
+  touchscreen.trueRNG.sleep.action           = goToSleep;
 
   // --------------------------------------------
   // Hotspot settings touch actions
@@ -444,6 +473,14 @@ void visualFeedback() {
   touchscreen.radiationHistory.setRadiationHistory(geigerCounter.getHistory(), geigerCounter.getHistoryIndex());
 
   // --------------------------------------------
+  // True RNG screen
+
+  touchscreen.trueRNG.setValue(randomNumberGenerator.getValue());
+  touchscreen.trueRNG.setState(randomNumberGenerator.getRollingState());
+  touchscreen.trueRNG.setMinimum(randomNumberGenerator.getMinimum());
+  touchscreen.trueRNG.setMaximum(randomNumberGenerator.getMaximum());
+
+  // --------------------------------------------
   // Hotspot screen
 
   touchscreen.hotspotSettings.enable.setToggleState(wireless.getHotspotState());
@@ -554,6 +591,50 @@ void audioFeedback() {
   // Update the last known values
   LAST_COUNTS_VALUE             = counts;
   LAST_COINCIDENCE_EVENTS_VALUE = coincidenceEvents;
+
+  // If the random number generator is enabled
+  if (randomNumberGenerator.getState()) {
+    
+    // If no other sound is playing
+    if (!buzzer.getPlaybackState()) {
+
+      // If the random number generator is in the rolling state
+      if (randomNumberGenerator.getRollingState()) {
+
+        // Get the current RNG value
+        uint8_t rngValue = randomNumberGenerator.getValue();
+
+        // If value is not the same as the last known value
+        if (rngValue != LAST_RANDOM_NUMBER_VALUE) {
+
+          // Play a detection sound
+          buzzer.play(buzzer.detection);
+
+        }
+
+        // Set the last known value to the current value
+        LAST_RANDOM_NUMBER_VALUE = rngValue;
+
+      // If random number generator is no longer in the rolling state
+      } else {
+
+        // Check if the roll finished sound has not been played
+        if (!PLAYED_ROLL_FINISHED) {
+
+          // Play a success sound
+          buzzer.play(buzzer.success);
+
+          // Set the played roll finished flag to true;
+          PLAYED_ROLL_FINISHED = true;
+
+        }
+
+      }
+
+    }
+
+  // If random number generator is disabled, reset played roll finished flag
+  } else { PLAYED_ROLL_FINISHED = true; }
 
   // Update the buzzer
   buzzer.update();
@@ -686,6 +767,19 @@ void wakeFromSleep() {
 // ================================================================================================
 // 
 // ================================================================================================
+void temporaryDetectionsToggle() {
+
+  // Toggle the the detections mute state
+  buzzer.detections.setMuteState(!buzzer.detections.getMuteState());
+
+  // Play a sound
+  buzzer.play(buzzer.tap);
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
 void geigerCounterDecreaseIntegrationTime() {
 
   // Set auto integration state
@@ -792,12 +886,164 @@ void geigerCounterDeselectAllUnits() {
 // ================================================================================================
 // 
 // ================================================================================================
-void cosmicRayDetectorMute() {
+void cosmicRayDetectorDisable() {
 
-  // Toggle the the detections mute state
-  buzzer.detections.setMuteState(!buzzer.detections.getMuteState());
+  // Disable the cosmic ray detector
+  cosmicRayDetector.disable();
 
-  // Play a sound
+  // Display the Geiger counter screen
+  displayGeigerCounter();
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void randomNumberGeneratorIncreaseMinimum() {
+
+  // Get the current value
+  uint8_t minimum = randomNumberGenerator.getMinimum();
+
+  // Adjust the value
+  minimum++;
+
+  // If the value is still in the valid range
+  if (minimum < 99 && minimum < randomNumberGenerator.getMaximum()) {
+
+    // Set the new range value
+    randomNumberGenerator.setMinimum(minimum);
+
+    // Update the touchscreen value
+    touchscreen.trueRNG.setMinimum(minimum);
+
+    // Play the appropiate sound
+    buzzer.play(buzzer.next);
+  
+  // If the value is not in the valid range
+  } else {
+
+    // Play a generic buzzer sound
+    buzzer.play(buzzer.tap);
+
+  }
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void randomNumberGeneratorDecreaseMinimum() {
+
+  // Get the current value
+  uint8_t minimum = randomNumberGenerator.getMinimum();
+
+  // Adjust the value
+  minimum--;
+
+  // If the value is still in the valid range
+  if (minimum > 0) {
+
+    // Set the new range value
+    randomNumberGenerator.setMinimum(minimum);
+
+    // Update the touchscreen value
+    touchscreen.trueRNG.setMinimum(minimum);
+
+    // Play the appropiate sound
+    buzzer.play(buzzer.back);
+
+  // If the value is not in the valid range
+  } else {
+
+    // Play a generic buzzer sound
+    buzzer.play(buzzer.tap);
+
+  }
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void randomNumberGeneratorIncreaseMaximum() {
+
+  // Get the current value
+  uint8_t maximum = randomNumberGenerator.getMaximum();
+
+  // Adjust the value
+  maximum++;
+
+  // If the value is still in the valid range
+  if (maximum < 100) {
+
+    // Set the new range value
+    randomNumberGenerator.setMaximum(maximum);
+
+    // Update the touchscreen value
+    touchscreen.trueRNG.setMaximum(maximum);
+
+    // Play the appropiate sound
+    buzzer.play(buzzer.next);
+
+  // If the value is not in the valid range
+  } else {
+
+    // Play a generic buzzer sound
+    buzzer.play(buzzer.tap);
+
+  }
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void randomNumberGeneratorDecreaseMaximum() {
+
+  // Get the current value
+  uint8_t maximum = randomNumberGenerator.getMaximum();
+
+  // Adjust the value
+  maximum--;
+
+  // If the value is still in the valid range
+  if (maximum > 1 && maximum > randomNumberGenerator.getMinimum()) {
+
+    // Set the new range value
+    randomNumberGenerator.setMaximum(maximum);
+
+    // Update the touchscreen value
+    touchscreen.trueRNG.setMaximum(maximum);
+
+    // Play the appropiate sound
+    buzzer.play(buzzer.back);
+
+  // If the value is not in the valid range
+  } else {
+
+    // Play a generic buzzer sound
+    buzzer.play(buzzer.tap);
+
+  }
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void randomNumberGeneratorRoll() {
+
+  // Start rolling a random number
+  randomNumberGenerator.roll();
+
+  // Update the display values
+  touchscreen.trueRNG.setValue(randomNumberGenerator.getValue());
+  touchscreen.trueRNG.setState(randomNumberGenerator.getRollingState());
+
+  // Reset the roll finished sound
+  PLAYED_ROLL_FINISHED = false;
+
+  // Play a buzzer sound
   buzzer.play(buzzer.tap);
 
 }
@@ -805,10 +1051,13 @@ void cosmicRayDetectorMute() {
 // ================================================================================================
 // 
 // ================================================================================================
-void cosmicRayDetectorDisable() {
+void randomNumberGeneratorDisable() {
 
-  // Disable the cosmic ray detector
-  cosmicRayDetector.disable();
+  // Disable the random number generator
+  randomNumberGenerator.disable();
+
+  // Reenable the geiger counter
+  geigerCounter.enable();
 
   // Display the Geiger counter screen
   displayGeigerCounter();
@@ -828,6 +1077,9 @@ void displayGeigerCounter() {
 
   // Draw the screen
   touchscreen.draw(touchscreen.geigerCounter);
+
+  // Restore the detections mute state
+  buzzer.detections.setMuteState(LAST_DETECTIONS_MUTE_STATE);
 
   // Play a sound
   buzzer.play(buzzer.back);
@@ -955,6 +1207,9 @@ void displayCosmicRayDetector() {
   touchscreen.cosmicRayDetector.setMainTubeCounts(cosmicRayDetector.getMainTubeCounts());
   touchscreen.cosmicRayDetector.setFollowerTubeCounts(cosmicRayDetector.getFollowerTubeCounts());
 
+  // Get the last detections mute state
+  LAST_DETECTIONS_MUTE_STATE = buzzer.detections.getMuteState();
+
   // Rotate to correct orientation
   touchscreen.setRotationPortrait();
 
@@ -1001,7 +1256,29 @@ void displayRadiationHistory() {
 // ================================================================================================
 // 
 // ================================================================================================
+void displayDisableGeigerCounter() {
+
+  // Draw the screen
+  touchscreen.draw(touchscreen.disableGeigerCounter);
+
+  // Play a sound
+  buzzer.play(buzzer.next);
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
 void displayTrueRNG() {
+
+  // Disable the Geiger counter
+  geigerCounter.disable();
+
+  // Enable the random number generator
+  randomNumberGenerator.enable();
+
+  // Get the last detections mute state
+  LAST_DETECTIONS_MUTE_STATE = buzzer.detections.getMuteState();
 
   // Rotate to correct orientation
   touchscreen.setRotationLandscape();
