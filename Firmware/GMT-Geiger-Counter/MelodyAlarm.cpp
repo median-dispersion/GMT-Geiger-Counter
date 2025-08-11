@@ -1,10 +1,28 @@
 #include "Melody.h"
 
-const NonBlockingMelody::Note notes[2] = {
+const NonBlockingMelody::Note notes[18] = {
   
-  {BUZZER_FREQUENCY_HERTZ, 200},
-  {0, 50}
+  {BUZZER_FREQUENCY_HERTZ, 100},
+  {0, 50},
+  {BUZZER_FREQUENCY_HERTZ, 100},
+  {0, 50},
+  {BUZZER_FREQUENCY_HERTZ, 100},
+  {0, 200},
+
+  {BUZZER_FREQUENCY_HERTZ, 400},
+  {0, 50},
+  {BUZZER_FREQUENCY_HERTZ, 400},
+  {0, 50},
+  {BUZZER_FREQUENCY_HERTZ, 400},
+  {0, 200},
+
+  {BUZZER_FREQUENCY_HERTZ, 100},
+  {0, 50},
+  {BUZZER_FREQUENCY_HERTZ, 100},
+  {0, 50},
+  {BUZZER_FREQUENCY_HERTZ, 100},
+  {0, 400}
   
 };
 
-Melody MELODY_ALARM = {notes, 2, 1};
+Melody MELODY_ALARM = {notes, 18, 1};

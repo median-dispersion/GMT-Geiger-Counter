@@ -387,8 +387,9 @@ void setUserSettings() {
   // --------------------------------------------
   // Load settings in the last state variables
 
-  LAST_BUZZER_MUTER_STATE = settings.data.parameters.buzzer.muteEverything;
-  LAST_RGB_LED_STATE      = settings.data.parameters.display.rgbLED;
+  LAST_DETECTIONS_MUTE_STATE = settings.data.parameters.buzzer.detections;
+  LAST_BUZZER_MUTER_STATE    = settings.data.parameters.buzzer.muteEverything;
+  LAST_RGB_LED_STATE         = settings.data.parameters.display.rgbLED;
 
 }
 
@@ -525,8 +526,8 @@ void audioFeedback() {
   double   microsievertsPerHour = geigerCounter.getMicrosievertsPerHour();
   uint64_t coincidenceEvents    = cosmicRayDetector.getCoincidenceEvents();
 
-  // If the dose reaches the alarm level and not already playing alarm
-  if (microsievertsPerHour >= BUZZER_ALARM_LEVEL_USVH && !buzzer.getPlaybackState(buzzer.alarm)) {
+  // If the dose reaches the alarm level and not already playing alarm and alerts not muted
+  if (microsievertsPerHour >= BUZZER_ALARM_LEVEL_USVH && !buzzer.getPlaybackState(buzzer.alarm) && !buzzer.alerts.getMuteState()) {
 
     // Play the alarm sound
     buzzer.play(buzzer.alarm);
@@ -1078,7 +1079,7 @@ void displayGeigerCounter() {
   // Draw the screen
   touchscreen.draw(touchscreen.geigerCounter);
 
-  // Restore the detections mute state
+  // Set the last detections mute state
   buzzer.detections.setMuteState(LAST_DETECTIONS_MUTE_STATE);
 
   // Play a sound
@@ -1207,9 +1208,6 @@ void displayCosmicRayDetector() {
   touchscreen.cosmicRayDetector.setMainTubeCounts(cosmicRayDetector.getMainTubeCounts());
   touchscreen.cosmicRayDetector.setFollowerTubeCounts(cosmicRayDetector.getFollowerTubeCounts());
 
-  // Get the last detections mute state
-  LAST_DETECTIONS_MUTE_STATE = buzzer.detections.getMuteState();
-
   // Rotate to correct orientation
   touchscreen.setRotationPortrait();
 
@@ -1274,11 +1272,11 @@ void displayTrueRNG() {
   // Disable the Geiger counter
   geigerCounter.disable();
 
+  // Disable the cosmic ray detector
+  cosmicRayDetector.disable();
+
   // Enable the random number generator
   randomNumberGenerator.enable();
-
-  // Get the last detections mute state
-  LAST_DETECTIONS_MUTE_STATE = buzzer.detections.getMuteState();
 
   // Rotate to correct orientation
   touchscreen.setRotationLandscape();
@@ -1501,6 +1499,9 @@ void toggleAudioDetections(const bool toggled) {
 
   // Update settings
   settings.data.parameters.buzzer.detections = !toggled;
+
+  // Set the last detections mute state
+  LAST_DETECTIONS_MUTE_STATE = !toggled;
 
   // Play a sound
   buzzer.play(buzzer.tap);
@@ -1968,6 +1969,9 @@ void restart() {
 // 
 // ================================================================================================
 void reset() {
+
+  // Try to mount the SD card if not already
+  sdCard.mount();
 
   // Reset the WiFi
   wireless.resetWiFi();

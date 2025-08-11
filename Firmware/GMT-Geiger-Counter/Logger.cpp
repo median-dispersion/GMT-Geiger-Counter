@@ -328,7 +328,7 @@ Logger::Logger():
   // Initialize members
   _initialized(false),
   _serialLogging(true),
-  _sdCardLogging(true),
+  _sdCardLogging(false),
   _logFilePath(""),
   _logFileID(0),
   _logFilePart(0)

@@ -45,8 +45,13 @@ void Buzzer::begin() {
 // ================================================================================================
 void Buzzer::update() {
 
-  // Update the melody
-  _audio.update();
+  // If not muted
+  if (!_muted) {
+
+    // Update the melody
+    _audio.update();
+
+  }
 
 }
 

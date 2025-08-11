@@ -115,6 +115,15 @@ void CosmicRayDetector::disable() {
     // Clear the hardware timer
     _movingAverageTimer = NULL;
 
+    // Clear the moving average array
+    for (uint8_t i = 0; i < 60; i++) { _movingAverage[i] = 0; }
+
+    // Reset variables
+    _movingAverageIndex    = 0;
+    _coincidenceTubeOffset = 0;
+    _mainTubeOffset        = 0;
+    _followerTubeOffset    = 0;
+
     // Set the enabled flag to false
     _enabled = false;
 

@@ -52,11 +52,15 @@ void GeigerCounter::enable() {
     // Clear the moving average array
     for (uint8_t i = 0; i < 60; i++) { _movingAverage[i] = 0; }
 
-    // Reset the position of the moving average index
-    _movingAverageIndex = 0;
-
     // Set all elements in the radiation history array to an impossibly high value marking them as cleared
     for (uint8_t sample = 0; sample < RADIATION_HISTORY_LENGTH_MINUTES; sample++) { _history[sample] = UINT32_MAX; }
+
+    // Reset variables
+    _movingAverageIndex   = 0;
+    _autoIntegrationTimer = 0;
+    _metricPrefix         = METRIC_MICRO;
+    _historyIndex         = 0;
+    _historyTimerSeconds  = 0;
 
     // If main tube is enabled in the main configuration file, enable pulse counting
     #if ENABLE_MAIN_TUBE == 1
@@ -121,6 +125,19 @@ void GeigerCounter::disable() {
 
     // Clear the hardware timer
     _movingAverageTimer = NULL;
+
+    // Clear the moving average array
+    for (uint8_t i = 0; i < 60; i++) { _movingAverage[i] = 0; }
+
+    // Set all elements in the radiation history array to an impossibly high value marking them as cleared
+    for (uint8_t sample = 0; sample < RADIATION_HISTORY_LENGTH_MINUTES; sample++) { _history[sample] = UINT32_MAX; }
+
+    // Reset variables
+    _movingAverageIndex   = 0;
+    _autoIntegrationTimer = 0;
+    _metricPrefix         = METRIC_MICRO;
+    _historyIndex         = 0;
+    _historyTimerSeconds  = 0;
 
     // Set the enabled flag to false
     _enabled = false;
@@ -402,6 +419,9 @@ double GeigerCounter::getEquivalentDose() {
     case GRAY:     equivalentDose = getMicrosievertsPerHour();         break;
 
   }
+
+  // Use the micro prefix as the default
+  _metricPrefix = METRIC_MICRO;
 
   // If auto range is enabled
   if (_autoRange) {
