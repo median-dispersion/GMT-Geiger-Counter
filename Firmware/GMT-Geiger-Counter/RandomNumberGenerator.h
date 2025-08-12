@@ -29,6 +29,8 @@ class RandomNumberGenerator {
     uint8_t getMaximum();                      // Get the range maximum
     bool    getRollingState();                 // Get the rolling state
     uint8_t getValue();                        // Get the final random number result or the process of the rolling process
+    bool    getStaleState();                   // Retrun if the random bit is stale or not
+    uint8_t getRandomBit();                    // Get the latest random bit
 
   // --------------------------------------------------------------------------------------------
   // Private
@@ -50,6 +52,8 @@ class RandomNumberGenerator {
     uint8_t    _requiredBits; // Required bits to represent the maximum value in the range
     uint8_t    _capturedBits; // Number of captured bits
     uint8_t    _result;       // Random number result
+    bool       _stale;
+    uint8_t    _latestBit;
 
     void _calculateRange();                // Calculate the range of random numbers
     void _updateResult(const uint8_t bit); // Update the random number result with a new random bit

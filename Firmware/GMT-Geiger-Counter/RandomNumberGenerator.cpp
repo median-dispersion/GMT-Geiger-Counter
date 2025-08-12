@@ -53,8 +53,10 @@ void RandomNumberGenerator::enable() {
 
     // Reset parameters
     _rolling      = false;
+    _stale        = true;
     _result       = 0;
     _capturedBits = 0;
+    _latestBit    = 0;
 
     // Set the enabled flag to true
     _enabled = true;
@@ -87,8 +89,10 @@ void RandomNumberGenerator::disable() {
 
     // Reset parameters
     _rolling      = false;
+    _stale        = true;
     _result       = 0;
     _capturedBits = 0;
+    _latestBit    = 0;
 
     // Set the enabled flag to false
     _enabled = false;
@@ -119,13 +123,17 @@ void RandomNumberGenerator::update() {
     // If random data is available
     if (_randomTube.available()) {
 
-      uint8_t bit = _randomTube.getRandomBit();
+      // Set the latest bit the the current random bit
+      _latestBit = _randomTube.getRandomBit();
+
+      // Set the stale state to false
+      _stale = false;
 
       // If currently rolling, update the result with the new random bit
-      if (_rolling) { _updateResult(bit); }
+      if (_rolling) { _updateResult(_latestBit); }
 
       // Create random bit data
-      Logger::KeyValuePair data[1] = {{"bit", Logger::UINT8_T, {.uint8_v = bit}}};
+      Logger::KeyValuePair data[1] = {{"bit", Logger::UINT8_T, {.uint8_v = _latestBit}}};
 
       // Log random bit data
       logger.log(Logger::DATA, "randomNumberGenerator", data, 1, false);
@@ -254,6 +262,28 @@ uint8_t RandomNumberGenerator::getValue() {
 
 }
 
+// ================================================================================================
+// Retrun if the random bit is stale or not
+// ================================================================================================
+bool RandomNumberGenerator::getStaleState() {
+
+  return _stale;
+
+}
+
+// ================================================================================================
+// Get the latest random bit
+// ================================================================================================
+uint8_t RandomNumberGenerator::getRandomBit() {
+
+  // Set the stale flag to true
+  _stale = true;
+
+  // Retrun the latest random bit
+  return _latestBit;
+
+}
+
 // ------------------------------------------------------------------------------------------------
 // Private
 
@@ -272,7 +302,9 @@ RandomNumberGenerator::RandomNumberGenerator():
   _range(6),
   _requiredBits(3),
   _capturedBits(0),
-  _result(0)
+  _result(0),
+  _stale(true),
+  _latestBit(0)
 
 {}
 

@@ -120,11 +120,12 @@ void setup() {
   setUserSettings();
 
   // Assign web server endpoints
-  wireless.server.on("/data/geiger-counter",                sendGeigerCounterData     );
-  wireless.server.on("/data/cosmic-ray-detector",           sendCosmicRayDetectorData );
-  wireless.server.on("/data/log",                           sendLogFileData           );
-  wireless.server.on("/data/system",                        sendSystemInfoData        );
-  wireless.server.on("/system/restart",           HTTP_PUT, sendRestartAcknowledgement);
+  wireless.server.on("/data/geiger-counter",          HTTP_GET, sendGeigerCounterData        );
+  wireless.server.on("/data/cosmic-ray-detector",     HTTP_GET, sendCosmicRayDetectorData    );
+  wireless.server.on("/data/random-number-generator", HTTP_GET, sendRandomNumberGeneratorData);
+  wireless.server.on("/data/log",                     HTTP_GET, sendLogFileData              );
+  wireless.server.on("/data/system",                  HTTP_GET, sendSystemInfoData           );
+  wireless.server.on("/system/restart",               HTTP_PUT, sendRestartAcknowledgement   );
 
   // Enable geiger counter
   geigerCounter.enable();
@@ -674,20 +675,23 @@ void dataFeedback() {
     if (geigerCounter.getGeigerCounterState()) {
 
       // Get data
-      Logger::KeyValuePair geigerCounterData[7] = {
+      Logger::KeyValuePair geigerCounterData[10] = {
 
-        {"counts",                Logger::UINT64_T, {.uint64_v = geigerCounter.getCounts()}                },
-        {"mainCounts",            Logger::UINT64_T, {.uint64_v = geigerCounter.getMainTubeCounts()}        },
-        {"followerCounts",        Logger::UINT64_T, {.uint64_v = geigerCounter.getFollowerTubeCounts()}    },
-        {"countsPerMinute",       Logger::DOUBLE_T, {.double_v = geigerCounter.getCountsPerMinute(60)}     },
-        {"microsievertsPerHour",  Logger::DOUBLE_T, {.double_v = geigerCounter.getMicrosievertsPerHour(60)}},
-        {"tubes",                 Logger::UINT8_T,  {.uint8_v  = TOTAL_NUMBER_OF_TUBES}                    },
-        {"tubeType",              Logger::STRING_T, {.string_v = TUBE_TYPE_NAME}                           }
+        {"counts",                Logger::UINT64_T, {.uint64_v = geigerCounter.getCounts()}                       },
+        {"mainCounts",            Logger::UINT64_T, {.uint64_v = geigerCounter.getMainTubeCounts()}               },
+        {"followerCounts",        Logger::UINT64_T, {.uint64_v = geigerCounter.getFollowerTubeCounts()}           },
+        {"countsPerMinute",       Logger::DOUBLE_T, {.double_v = geigerCounter.getCountsPerMinute(60)}            },
+        {"totalMicrosieverts",    Logger::DOUBLE_T, {.double_v = geigerCounter.getAbsorbedMicrosieverts()}        },
+        {"mainMicrosieverts" ,    Logger::DOUBLE_T, {.double_v = geigerCounter.getMainAbsorbedMicrosieverts()}    },
+        {"followerMicrosieverts", Logger::DOUBLE_T, {.double_v = geigerCounter.getFollowerAbsorbedMicrosieverts()}},
+        {"microsievertsPerHour",  Logger::DOUBLE_T, {.double_v = geigerCounter.getMicrosievertsPerHour(60)}       },
+        {"tubes",                 Logger::UINT8_T,  {.uint8_v  = TOTAL_NUMBER_OF_TUBES}                           },
+        {"tubeType",              Logger::STRING_T, {.string_v = TUBE_TYPE_NAME}                                  }
 
       };
 
       // Log data
-      logger.log(Logger::DATA, "geigerCounter", geigerCounterData, 7);
+      logger.log(Logger::DATA, "geigerCounter", geigerCounterData, 10);
 
     }
 
@@ -1783,10 +1787,10 @@ void sendGeigerCounterData() {
     {"mainCounts",            Logger::UINT64_T, {.uint64_v = geigerCounter.getMainTubeCounts()}               },
     {"followerCounts",        Logger::UINT64_T, {.uint64_v = geigerCounter.getFollowerTubeCounts()}           },
     {"countsPerMinute",       Logger::DOUBLE_T, {.double_v = geigerCounter.getCountsPerMinute(60)}            },
-    {"microsievertsPerHour",  Logger::DOUBLE_T, {.double_v = geigerCounter.getMicrosievertsPerHour(60)}       },
     {"totalMicrosieverts",    Logger::DOUBLE_T, {.double_v = geigerCounter.getAbsorbedMicrosieverts()}        },
     {"mainMicrosieverts" ,    Logger::DOUBLE_T, {.double_v = geigerCounter.getMainAbsorbedMicrosieverts()}    },
     {"followerMicrosieverts", Logger::DOUBLE_T, {.double_v = geigerCounter.getFollowerAbsorbedMicrosieverts()}},
+    {"microsievertsPerHour",  Logger::DOUBLE_T, {.double_v = geigerCounter.getMicrosievertsPerHour(60)}       },
     {"rating",                Logger::UINT8_T,  {.uint8_v  = geigerCounter.getRadiationRating()}              },
     {"tubes",                 Logger::UINT8_T,  {.uint8_v  = TOTAL_NUMBER_OF_TUBES}                           },
     {"tubeType",              Logger::STRING_T, {.string_v = TUBE_TYPE_NAME}                                  }
@@ -1826,6 +1830,31 @@ void sendCosmicRayDetectorData() {
 
   // Construct the data string
   logger.getLogMessage("cosmicRayDetector", data, 6, json);
+
+  // Send JSON data
+  wireless.server.send(200, "application/json", json);
+
+}
+
+// ================================================================================================
+// 
+// ================================================================================================
+void sendRandomNumberGeneratorData() {
+
+  // Get data
+  Logger::KeyValuePair data[3] = {
+
+    {"enabled", Logger::BOOL_T,  {.bool_v  = randomNumberGenerator.getState()}     },
+    {"stale",   Logger::BOOL_T,  {.bool_v  = randomNumberGenerator.getStaleState()}},
+    {"bit",     Logger::UINT8_T, {.uint8_v = randomNumberGenerator.getRandomBit()} }
+
+  };
+
+  // JSON data string
+  String json;
+
+  // Construct the data string
+  logger.getLogMessage("randomNumberGenerator", data, 3, json);
 
   // Send JSON data
   wireless.server.send(200, "application/json", json);
@@ -1891,23 +1920,24 @@ void sendLogFileData() {
 void sendSystemInfoData() {
 
   // Get data
-  Logger::KeyValuePair data[15] = {
+  Logger::KeyValuePair data[16] = {
 
-    {"uptime",            Logger::UINT64_T, {.uint64_v = millis()}                                     },
-    {"heapSize",          Logger::UINT32_T, {.uint32_v = ESP.getHeapSize()}                            },
-    {"freeHeap",          Logger::UINT32_T, {.uint32_v = ESP.getFreeHeap()}                            },
-    {"minHeap",           Logger::UINT32_T, {.uint32_v = ESP.getMinFreeHeap()}                         },
-    {"maxBlock",          Logger::UINT32_T, {.uint32_v = ESP.getMaxAllocHeap()}                        },
-    {"sdCard",            Logger::BOOL_T,   {.bool_v   = sdCard.getMountState()}                       },
-    {"geigerCounter",     Logger::BOOL_T,   {.bool_v   = geigerCounter.getGeigerCounterState()}        },
-    {"cosmicRayDetector", Logger::BOOL_T,   {.bool_v   = cosmicRayDetector.getCosmicRayDetectorState()}},
-    {"buzzer",            Logger::BOOL_T,   {.bool_v   = !buzzer.getMuteState()}                       },
-    {"touchscreen",       Logger::BOOL_T,   {.bool_v   = touchscreen.getTouchscreenState()}            },
-    {"led",               Logger::BOOL_T,   {.bool_v   = rgbLED.getLEDState()}                         },
-    {"hotspot",           Logger::BOOL_T,   {.bool_v   = wireless.getHotspotState()}                   },
-    {"wifi",              Logger::BOOL_T,   {.bool_v   = wireless.getWiFiState()}                      },
-    {"server",            Logger::BOOL_T,   {.bool_v   = wireless.getServerState()}                    },
-    {"firmware",          Logger::STRING_T, {.string_v = FIRMWARE_VERSION}                             }
+    {"uptime",                Logger::UINT64_T, {.uint64_v = millis()}                                     },
+    {"heapSize",              Logger::UINT32_T, {.uint32_v = ESP.getHeapSize()}                            },
+    {"freeHeap",              Logger::UINT32_T, {.uint32_v = ESP.getFreeHeap()}                            },
+    {"minHeap",               Logger::UINT32_T, {.uint32_v = ESP.getMinFreeHeap()}                         },
+    {"maxBlock",              Logger::UINT32_T, {.uint32_v = ESP.getMaxAllocHeap()}                        },
+    {"sdCard",                Logger::BOOL_T,   {.bool_v   = sdCard.getMountState()}                       },
+    {"geigerCounter",         Logger::BOOL_T,   {.bool_v   = geigerCounter.getGeigerCounterState()}        },
+    {"cosmicRayDetector",     Logger::BOOL_T,   {.bool_v   = cosmicRayDetector.getCosmicRayDetectorState()}},
+    {"randomNumberGenerator", Logger::BOOL_T,   {.bool_v   = randomNumberGenerator.getState()}             },
+    {"buzzer",                Logger::BOOL_T,   {.bool_v   = !buzzer.getMuteState()}                       },
+    {"touchscreen",           Logger::BOOL_T,   {.bool_v   = touchscreen.getTouchscreenState()}            },
+    {"led",                   Logger::BOOL_T,   {.bool_v   = rgbLED.getLEDState()}                         },
+    {"hotspot",               Logger::BOOL_T,   {.bool_v   = wireless.getHotspotState()}                   },
+    {"wifi",                  Logger::BOOL_T,   {.bool_v   = wireless.getWiFiState()}                      },
+    {"server",                Logger::BOOL_T,   {.bool_v   = wireless.getServerState()}                    },
+    {"firmware",              Logger::STRING_T, {.string_v = FIRMWARE_VERSION}                             }
 
   };
 
@@ -1915,7 +1945,7 @@ void sendSystemInfoData() {
   String json;
 
   // Construct the data string
-  logger.getLogMessage("system", data, 15, json);
+  logger.getLogMessage("system", data, 16, json);
 
   // Send JSON data
   wireless.server.send(200, "application/json", json);
