@@ -11,7 +11,7 @@ In order to use an SD card with the Geiger counter, it must be formatted with th
 
 ## 📋 Copying files to the SD card
 
-Copy the `GMT-Geiger-Counter` directory to the root of the SD card. The files contained in this directory are required for these features:
+Copy the [GMT-Geiger-Counter](/Firmware/GMT-Geiger-Counter/SD%20Card/GMT-Geiger-Counter) directory to the root of the SD card. The files contained in this directory are required for these features:
 
 - Logging data to the SD card
 - Accessing the Web-App interface

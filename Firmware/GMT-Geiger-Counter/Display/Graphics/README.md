@@ -29,11 +29,11 @@ const PROGMEM uint8_t data[] = {
 Image NAME_OF_IMAGE = {WIDTH_PIXEL, HEIGHT_PIXEL, (const uint16_t*)(data)};
 ```
 
-Afterward, rename the file to `.cpp` to make it a C++ source file. For a real example, look at any of the `Image*.cpp` files in the main firmware directory.
+Afterward, rename the file to `.cpp` to make it a C++ source file. For a real example, look at any of the `Image*.cpp` files in the [main firmware directory](/Firmware/GMT-Geiger-Counter).
 
 ## ⏬ Importing an image
 
-Include the image source code into the project by adding this to the `Graphics.h` file:
+Include the image source code into the project by adding this to the [Graphics.h](/Firmware/GMT-Geiger-Counter/Graphics.h) file:
 
 ```c++
 extern Image NAME_OF_IMAGE;

@@ -6,12 +6,22 @@ This is a hobby project and should not be relied upon to accurately determine ra
 
 ## 🖼️ Images
 
-<p align="center" style="font-size: 0px">
-    <img style="width: 45%; max-width: 400px; margin: 4px;" src="Documentation/Images/Geiger counter.jpg" alt="Geiger counter">
-    <img style="width: 45%; max-width: 400px; margin: 4px;" src="Documentation/Images/Mobile case.jpg" alt="Mobile case">
+<p align="center">
+    <img style="width: 45%; max-width: 400px;" src="Documentation/Images/Geiger counter.jpg" alt="Geiger counter">
+    <img style="width: 45%; max-width: 400px;" src="Documentation/Images/Mobile case.jpg" alt="Mobile case">
     <br>
-    <img style="width: 45%; max-width: 400px; margin: 4px;" src="Documentation/Images/Motherboard.jpg" alt="Motherboard">
-    <img style="width: 45%; max-width: 400px; margin: 4px;" src="Documentation/Images/Tube driver.jpg" alt="Tube driver">
+    <img style="width: 45%; max-width: 400px;" src="Documentation/Images/Motherboard.jpg" alt="Motherboard">
+    <img style="width: 45%; max-width: 400px;" src="Documentation/Images/Tube driver.jpg" alt="Tube driver">
+</p>
+
+## 📸 Screenshots
+
+<p align="center">
+    <img style="width: 160px;" src="Documentation/Images/Web app.jpg" alt="Web app">
+    <img style="width: 160px;" src="Documentation/Images/Web app Geiger counter.jpg" alt="Web app Geiger counter">
+    <img style="width: 160px;" src="Documentation/Images/Web app history.jpg" alt="Web app history">
+    <img style="width: 160px;" src="Documentation/Images/Web app cosmic ray detector.jpg" alt="Web app cosmic ray detector">
+    <img style="width: 160px;" src="Documentation/Images/Web app system.jpg" alt="Web app system">
 </p>
 
 ## ⚙️ Features, Settings & Usage
@@ -22,8 +32,8 @@ This is a hobby project and should not be relied upon to accurately determine ra
 
 The main Geiger counter display shows the equivalent dose, a radiation intensity rating, the counts-per-minute reading, and the integration time. From this screen, you can also access and navigate to all other system functions.
 
-<p align="center" style="font-size: 0px">
-    <img style="width: 50%; max-height: 480px" src="Documentation/Images/Geiger counter screen.svg" alt="Geiger counter screen">
+<p align="center">
+    <img style="width: 400px" src="Documentation/Images/Geiger counter screen.svg" alt="Geiger counter screen">
 </p>
 
 | ID     | Description                                                                                                                                                                                                                                                                                                                                                        |
@@ -46,12 +56,30 @@ The main Geiger counter display shows the equivalent dose, a radiation intensity
 | **16** | Tap to open the **Wi-Fi settings**.                                                                                                                                                                                                                                                                                                                                |
 | **17** | Tap to open the **system settings**.                                                                                                                                                                                                                                                                                                                               |
 
+#### Geiger counter info screens
+
+The Geiger counter info screen displays additional information about the recorded Geiger counter data, like the absolute number of counts or the total absorbed dose since power-on. In the settings section of this menu, you can also change Geiger counter properties like the measurement unit or if the measured value should auto-range.
+
+<p align="center">
+    <img style="width: 400px" src="Documentation/Images/Geiger counter counts screen.svg" alt="Geiger counter counts screen">
+    <img style="width: 400px" src="Documentation/Images/Geiger counter absorbed dose screen.svg" alt="Geiger counter absorbed dose screen">
+</p>
+
+| ID    | Descriptions                                                                                                                                                                                              |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1** | **Total number of counts / total absorbed dose** - A sum of all counts or the total absorbed dose recorded since the device was powered on. This value only increases when the Geiger counter is enabled. |
+| **2** | **Main Tube Detections** - The total number of detections or the total absorbed dose by the main tube since power-on.                                                                                     |
+| **3** | **Follower Tube Detections** - The total number of detections or the total absorbed dose by the follower tube since power-on.                                                                             |
+| **4** | Tap to **view the previous page.**                                                                                                                                                                        |
+| **5** | Tap to **view the next page.**                                                                                                                                                                            |
+| **6** | Tap to **exit the Geiger counter info** and return to the Geiger counter screen.                                                                                                                          |
+
 ### Cosmic ray detector
 
 The cosmic ray detector measures cosmic ray exposure by recording coincidence events, which are shown on this screen. While the detector is enabled, its data is also available via the serial console, the wireless API interface and the log file.
 
-<p align="center" style="font-size: 0px">
-    <img style="width: 50%; max-height: 640px" src="Documentation/Images/Cosmic ray detector screen.svg" alt="Cosmic ray detector screen">
+<p align="center">
+    <img style="width: 400px" src="Documentation/Images/Cosmic ray detector screen.svg" alt="Cosmic ray detector screen">
 </p>
 
 | ID    | Description                                                                                                                                                                                                                          |
@@ -69,8 +97,8 @@ The cosmic ray detector measures cosmic ray exposure by recording coincidence ev
 
 The true random number generator produces truly random numbers. You can set a custom range from 1 to 99, then roll to generate a number, which appears on the main result screen. While the generator is enabled, the Geiger counter is disabled. During this time, a continuous stream of random bits is also available via the serial console and wireless API interface.
 
-<p align="center" style="font-size: 0px">
-    <img style="width: 50%; max-height: 480px" src="Documentation/Images/True random number generator screen.svg" alt="True random number generator screen">
+<p align="center">
+    <img style="width: 400px" src="Documentation/Images/True random number generator screen.svg" alt="True random number generator screen">
 </p>
 
 | ID     | Description                                                                                                                                        |
@@ -86,6 +114,14 @@ The true random number generator produces truly random numbers. You can set a cu
 | **9**  | Tap to **temporarily mute detection sounds**. Tap again to re-enable them. This only mutes regular detection sounds; other alerts will still play. |
 | **10** | Tap to enter **sleep mode**, which turns off the display and mutes all buzzer sounds.                                                              |
 | **11** | Tap to **disable the true random number generator** and return to the Geiger counter screen.                                                       |
+
+## ☁️ Web-App
+
+All data recorded by the Geiger counter can also be accessed through a dedicated web app, which works in any modern browser on both PCs and smartphones. The app’s interface closely mirrors the main display on the Geiger counter itself, while also providing additional features such as extended graphical history with smoothing options. It is also required for tasks like updating Wi-Fi credentials.
+
+To use the web app, an SD card containing the necessary files from the [firmware](Firmware/GMT-Geiger-Counter/SD%20Card/) folder must be inserted. Even without the app, the wireless API remains available, allowing data to be accessed through a browser; however, without the web app, the information will not be presented in a user-friendly format.
+
+Screenshots of the web app can be found in the [screenshots](#-Screenshots) section.
 
 ## 🧩 Tube Compatibility
 
