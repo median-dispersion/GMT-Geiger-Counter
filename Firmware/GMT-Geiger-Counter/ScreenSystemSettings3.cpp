@@ -42,8 +42,8 @@ void ScreenSystemSettings3::draw(GFXcanvas16 &canvas) {
   ScreenBasicLandscape::draw(canvas);
 
   // Draw the background
-  canvas.fillRect(2,   31, 157, 181, COLOR_GRAY_DARKEST);
-  canvas.fillRect(160, 31, 158, 181, COLOR_GRAY_DARKEST);
+  canvas.fillRect(2,   31, 157, 181, COLOR_GRAY_DARK);
+  canvas.fillRect(160, 31, 158, 181, COLOR_GRAY_DARK);
 
   // Set the font family, size and color
   canvas.setFont(&FreeSans9pt7b);

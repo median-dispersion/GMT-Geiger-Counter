@@ -5,7 +5,7 @@
 #include "Configuration.h"
 #include "Logger.h"
 #include "GeigerCounter.h"
-#include "Tube.h"
+#include "CoincidenceTube.h"
 
 class CosmicRayDetector {
 
@@ -42,7 +42,7 @@ class CosmicRayDetector {
     volatile uint16_t _movingAverage[60];     // Array for storing coincidence events per hour
     volatile uint8_t  _movingAverageIndex;    // Index of the moving average array
     hw_timer_t        *_movingAverageTimer;   // Hardware timer for advancing the moving average array
-    Tube              _coincidenceTube;       // Virtual coincidence tube
+    CoincidenceTube   _coincidenceTube;       // Virtual coincidence tube
     bool              _enabled;               // Flag for checking if the cosmic ray detector is enabled
     uint64_t          _coincidenceTubeOffset; // Coincidence tube counts offset
     uint64_t          _mainTubeOffset;        // Main tube counts offset

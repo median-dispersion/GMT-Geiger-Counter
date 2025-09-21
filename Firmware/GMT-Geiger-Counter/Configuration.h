@@ -55,6 +55,13 @@
 // This value should not be changed!
 #define TUBE_PULSE_REMAINDER_THRESHOLD_MICROSECONDS (TUBE_MAXIMUM_PULSE_LENGTH_MICROSECONDS * 20 / 100)
 
+// Coincidence tube pulse threshold
+// Ideally, the coincidence tube pulse length would be 100% of the normal pulse length because both Geiger tubes should trigger almost at the same time
+// But in reality, due to circuit delays, there might be a delay between pulses, and therefore the coincidence pulse could fall short of what it should be
+// This is why the coincidence tube pulse threshold in microseconds should be around 50% of the regular pulse length in microseconds
+// This value should not be changed!
+#define TUBE_COINCIDENCE_THRESHOLD_MICROSECONDS (TUBE_MINIMUM_PULSE_LENGTH_MICROSECONDS * 50 / 100)
+
 // Name of the tube type
 // This can be set to an arbitrary string and is only used for logging
 #define TUBE_TYPE_NAME "SBM-20"
@@ -234,7 +241,7 @@
 // Firmware version
 // This can be set to any arbitrary string
 // This value should not be changed!
-#define FIRMWARE_VERSION "GMTGC-2025-08-12"
+#define FIRMWARE_VERSION "GMTGC-2025-09-21"
 
 // The minimum threshold of free heap the system is allowed to have
 // If the free heap falls below this value, the system will reboot to prevent software instability or lock-ups

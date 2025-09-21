@@ -98,8 +98,13 @@ void ScreenRadiationHistory::draw(GFXcanvas16 &canvas) {
       uint16_t dx = 306 - round(width  * sample);
       uint16_t dy = 200 - round(height * _history[wrappedIndex]);
 
-      // Draw line between the two positions
-      canvas.drawLine(x, y, dx, dy, COLOR_NEON);
+      // Draw the line 3 times with a y offset of -1 to make the line 3px thick
+      for (uint8_t yOffset = 0; yOffset < 3; yOffset++) {
+
+        // Draw line between the two positions
+        canvas.drawLine(x, y - yOffset, dx, dy - yOffset, COLOR_NEON);
+
+      }
 
       // Set the next starting position to the current end position
       x = dx;
