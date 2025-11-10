@@ -32,10 +32,10 @@ void Touchscreen::begin() {
 
     // Setup hardware pins
     pinMode(DISPLAY_CS_PIN, OUTPUT);
-    // pinMode(TOUCH_CS_PIN, OUTPUT);
+    pinMode(TOUCH_CS_PIN, OUTPUT);
     pinMode(DISPLAY_LED_PIN, OUTPUT);
     digitalWrite(DISPLAY_CS_PIN, HIGH);
-    // digitalWrite(TOUCH_CS_PIN, HIGH);
+    digitalWrite(TOUCH_CS_PIN, HIGH);
     digitalWrite(DISPLAY_LED_PIN, LOW);
 
     // Setup display

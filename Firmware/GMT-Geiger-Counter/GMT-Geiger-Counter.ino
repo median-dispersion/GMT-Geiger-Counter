@@ -1,5 +1,6 @@
 #include "Arduino.h"
 #include "Configuration.h"
+#include "Pins.h"
 #include "Logger.h"
 #include "SDCard.h"
 #include "Settings.h"
@@ -99,6 +100,9 @@ void reset();
 // Setup
 // ================================================================================================
 void setup() {
+
+  // Setup hardware pins
+  setupPins();
 
   // Initialize everything
   logger.begin();
